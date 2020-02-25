@@ -100,11 +100,6 @@ public class GameEngine implements Screen {
 	/** File storing the fire texture for the afterburner  */
 	private static final String FIRE_TEXTURE = "models/Fire.png";
 
-	/** File storing information about the 3D model */
-	private static final String PHOTON_MODEL   = "models/Photon.obj";
-	/** File storing the texture for the 3D model */
-	private static final String PHOTON_TEXTURE = "models/Photon.png";
-
 	// We keep sound information in the sound controller, as it belongs there
 	
 	/** AssetManager to load game assets (textures, sounds, etc.) */
@@ -126,9 +121,7 @@ public class GameEngine implements Screen {
     /** The grid of tiles (MODEL CLASS) */
     private Board board; 
     /** The ship objects (MODEL CLASS) */   
-    private ShipList ships; 
-    /** Collection of photons on screen. (MODEL CLASS) */ 
-    private PhotonPool photons; 
+    private ShipList ships;
 
     /** The current game state (SIMPLE FIELD) */
     private GameState gameState;
@@ -218,8 +211,7 @@ public class GameEngine implements Screen {
 		// Local constants
         int BOARD_WIDTH  = 40; 
         int BOARD_HEIGHT = 40;
-        int MAX_SHIPS    = 20;
-        int MAX_PHOTONS  = 1024;
+        int MAX_SHIPS    = 1;
 
         gameState = GameState.PLAY;
 
@@ -232,12 +224,9 @@ public class GameEngine implements Screen {
         ships.setEnemyMesh(createMesh(SHIP_MODEL,ENEMY_TEXTURE));
         ships.setFireMesh(createMesh(FIRE_MODEL,FIRE_TEXTURE));
 
-        photons = new PhotonPool(MAX_PHOTONS);
-        photons.setPhotonMesh(createMesh(PHOTON_MODEL,PHOTON_TEXTURE));
-        
 		// Create the two subcontroller
-        gameplayController = new GameplayController(board,ships,photons);
-        physicsController = new CollisionController(board, ships, photons);
+        gameplayController = new GameplayController(board,ships);
+        physicsController = new CollisionController(board, ships);
 	}
 		
 	/** 
@@ -318,7 +307,6 @@ public class GameEngine implements Screen {
 			gl20.glEnable(GL_BLEND);
 	        board.draw(canvas);
 	        ships.draw(canvas);
-	        photons.draw(canvas);
 	    } else {
 	        canvas.begin();
 	    }	
@@ -336,8 +324,6 @@ public class GameEngine implements Screen {
 
 		// Update the other elements
 		board.update();
-		photons.update();
-
 		// Resolve any collisions
 		physicsController.update();
 
@@ -347,9 +333,11 @@ public class GameEngine implements Screen {
 				gameState = GameState.FINISH;
 				Sound s = SoundController.get(SoundController.GAME_OVER_SOUND);
 				s.play(1); // LibGDX Bug: This really needs a priority system
-			} else if (ships.numActive() <= 1) {
-				gameState = GameState.FINISH;
 			}
+// REMOVED THE FOLLOWING WIN CONDITION:
+//			else if (ships.numActive() <= 1) {
+//				gameState = GameState.FINISH;
+//			}
 		} else if (gameState == GameState.FINISH) {
 			if (!ships.getPlayer().isAlive() || ships.numAlive() <= 1) {
 				gameState = GameState.AFTER;
@@ -368,7 +356,6 @@ public class GameEngine implements Screen {
 		gl20.glEnable(GL_BLEND);
         board.draw(canvas);
         ships.draw(canvas);
-        photons.draw(canvas);
 
         // Optional message pass
         switch (gameState) {
@@ -456,12 +443,6 @@ public class GameEngine implements Screen {
 		assets.add(PLAYER_TEXTURE);
 		manager.load(FIRE_TEXTURE,Texture.class);
 		assets.add(FIRE_TEXTURE);
-
-		// Photon information
-		manager.load(PHOTON_MODEL,Mesh.class,parameter);
-		assets.add(PHOTON_MODEL);
-		manager.load(PHOTON_TEXTURE,Texture.class);
-		assets.add(PHOTON_TEXTURE);
 
         // Sound controller manages its own material
         SoundController.PreLoadContent(manager);

@@ -63,7 +63,7 @@ public class Board {
 	/** The z-coordinate at which the ship is removed from the screen */
 	private static final float MAX_FALL_AMOUNT = 200.0f;
 	/** Space to leave open between tiles */
-	private static final float TILE_SPACE = 12.0f;
+	private static final float TILE_SPACE = 0.0f;
 	/** The dimensions of a single tile */
 	private static final int   TILE_WIDTH = 64; // MUST BE 2X VALUE IN GAMECANVAS
 	/** The number of normal tiles before a power tile */

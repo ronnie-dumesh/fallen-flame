@@ -40,9 +40,7 @@ public class CollisionController {
 	/** Reference to the game board */
 	public Board board; 
 	/** Reference to all the ships in the game */	
-	public ShipList ships; 
-	/** Reference to the active photons */
-	public PhotonPool photons; 
+	public ShipList ships;
 	
 	/** Cache attribute for calculations */
 	private Vector2 tmp;
@@ -53,13 +51,11 @@ public class CollisionController {
 	 * Creates a CollisionController for the given models.
 	 *
 	 * @param b The game board 
-	 * @param s The list of ships 
-	 * @param p The active photons
+	 * @param s The list of ships
 	 */
-	public CollisionController(Board b, ShipList s, PhotonPool p) {
+	public CollisionController(Board b, ShipList s) {
 		board = b;
 		ships = s;
-		photons = p;
 		
 		tmp = new Vector2();
 		random = new Random();
@@ -87,13 +83,6 @@ public class CollisionController {
 				checkForCollision(ships.get(ii), ships.get(jj));
 			}
 		}
-
-		// Test collisions between ships and photons.
-		for (Ship s : ships) {
-			for (Photon p : photons) {
-				checkForCollision(s, p);
-			}
-		}
 	}
 	
 	/** 
@@ -117,24 +106,24 @@ public class CollisionController {
 		}
 	}
 
-	/**
-	 * Keeps nudging the ship until a safe location is found.
-	 *
-	 * @param ship The ship to nudge.
-	 */
-	private void safeNudge(Ship ship) {
-		int i = 0;
-		int tileX, tileY;
-		float xNudge, yNudge;
-		do {
-			xNudge = random.nextFloat() * 2 * NUDGE_AMOUNT - NUDGE_AMOUNT;
-			yNudge = random.nextFloat() * 2 * NUDGE_AMOUNT - NUDGE_AMOUNT;
-			ship.setX(ship.getX()+xNudge);
-			ship.setY(ship.getY()+yNudge);
-			tileX = board.screenToBoard(ship.getX());
-			tileY = board.screenToBoard(ship.getY());
-		} while (!board.isSafeAt(tileX, tileY) && ++i < NUDGE_LIMIT);
-	}
+//	/**
+//	 * Keeps nudging the ship until a safe location is found.
+//	 *
+//	 * @param ship The ship to nudge.
+//	 */
+//	private void safeNudge(Ship ship) {
+//		int i = 0;
+//		int tileX, tileY;
+//		float xNudge, yNudge;
+//		do {
+//			xNudge = random.nextFloat() * 2 * NUDGE_AMOUNT - NUDGE_AMOUNT;
+//			yNudge = random.nextFloat() * 2 * NUDGE_AMOUNT - NUDGE_AMOUNT;
+//			ship.setX(ship.getX()+xNudge);
+//			ship.setY(ship.getY()+yNudge);
+//			tileX = board.screenToBoard(ship.getX());
+//			tileY = board.screenToBoard(ship.getY());
+//		} while (!board.isSafeAt(tileX, tileY) && ++i < NUDGE_LIMIT);
+//	}
 
 
 	/**
@@ -162,11 +151,11 @@ public class CollisionController {
 
 		// If the two ships occupy the same tile,
 		if (s1x == s2x && s1y == s2y) {
-			// If they have the same (continuous) location, then nudge them.
-			if (ship1.getX() == ship2.getX() && ship1.getY() == ship2.getY()) {
-				safeNudge(ship1);
-				safeNudge(ship2);
-			}
+//			// If they have the same (continuous) location, then nudge them.
+//			if (ship1.getX() == ship2.getX() && ship1.getY() == ship2.getY()) {
+//				safeNudge(ship1);
+//				safeNudge(ship2);
+//			}
 
 			// If this ship is farther from the tile center than the other one,
 			if (manhattan(ship1.getX(), ship1.getX(), board.boardToScreen(s1x), board.boardToScreen(s1y))
@@ -182,47 +171,9 @@ public class CollisionController {
 			} else {
 				// Neither ship can be pushed away in an appropriate
 				// direction, so nudge them.
-				safeNudge(ship1);
-				safeNudge(ship2);
+//				safeNudge(ship1);
+//				safeNudge(ship2);
 			}
-		}
-	}
-
-	/**
-	 * Handles collisions between a ship and a photon
-	 *
-	 *
-	 * Recall that when a photon collides with a ship, the tile at that position 
-	 * is destroyed.
-	 * 
-	 * @param ship The ship
-	 * @param photon The photon
-	 */
-	private void checkForCollision(Ship ship, Photon photon) {
-		// Do nothing if ship is off the board.
-		if (!ship.isActive()) {
-			return;
-		} else if (ship.getId() == photon.getSource()) {
-			// Our own photon; do nothing.
-			return;
-		}
-
-		// Get the tiles for ship and photon
-		int sx = board.screenToBoard(ship.getX());
-		int sy = board.screenToBoard(ship.getY());
-		int px = board.screenToBoard(photon.getX());
-		int py = board.screenToBoard(photon.getY());
-
-		// If the ship and photon occupy the same tile,
-		if (sx == px && sy == py) {
-			// Have the photon push the ship.
-			board.destroyTileAt(sx, sy);
-			float x = photon.getPushX() * (board.getTileSize() + board.getTileSpacing());
-			float y = photon.getPushY() * (board.getTileSize() + board.getTileSpacing());
-			ship.getPosition().add(x,y);
-
-			photons.destroy(photon);
-			ship.play(SoundController.BUMP_SOUND);
 		}
 	}
 	

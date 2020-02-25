@@ -34,9 +34,7 @@ public class GameplayController {
 	/** Reference to the game board */
 	public Board board; 
 	/** Reference to all the ships in the game */	
-	public ShipList ships; 
-	/** Reference to the active photons */
-	public PhotonPool photons; 
+	public ShipList ships;
 	
 	/** List of all the input (both player and AI) controllers */
 	protected InputController[] controls;
@@ -49,13 +47,11 @@ public class GameplayController {
 	 *
 	 * @param board The game board 
 	 * @param ships The list of ships 
-	 * @param photons The active photons
 	 */
-	public GameplayController(Board board, ShipList ships, PhotonPool photons) {
+	public GameplayController(Board board, ShipList ships) {
 		this.board = board;
 		this.ships = ships;
-		this.photons = photons;
-		
+
 		initShipPositions();
 		controls = new InputController[ships.size()];
 		controls[0] = new PlayerController();
@@ -116,18 +112,18 @@ public class GameplayController {
 	public void update() {
 		// Adjust for drift and remove dead ships
 		for (Ship s : ships) {
-			adjustForDrift(s);
+//			adjustForDrift(s);
 			checkForDeath(s);
 
 			if (!s.isFalling() && controls[s.getId()] != null) {
 				int action = controls[s.getId()].getAction();
-				boolean firing = (action & InputController.CONTROL_FIRE) != 0;
+//				boolean firing = (action & InputController.CONTROL_FIRE) != 0;
 				s.update(action);
-				if (firing && s.canFire()) {
-					fireWeapon(s);
-				} else {
-					s.coolDown(true);
-				}
+//				if (firing && s.canFire()) {
+//					fireWeapon(s);
+//				} else {
+//					s.coolDown(true);
+//				}
 
 			} else {
 				s.update(InputController.CONTROL_NO_ACTION);
@@ -135,32 +131,32 @@ public class GameplayController {
 		}
 	}	
 
-	/** 
-	 * Nudges the ship back to the center of a tile if it is not moving.
-	 *
-	 * @param ship The ship to adjust
-	 */
-	private void adjustForDrift(Ship ship) {
-		// Drift to line up vertically with the grid.
-		if (ship.getVX() == 0.0f) {
-			float offset = board.centerOffset(ship.getX());
-			if (offset < -DRIFT_TOLER) {
-				ship.setX(ship.getX()+DRIFT_SPEED);
-			} else if (offset > DRIFT_TOLER) {
-				ship.setX(ship.getX()-DRIFT_SPEED);
-			}
-		}
-
-		// Drift to line up horizontally with the grid.
-		if (ship.getVY() == 0.0f) {
-			float offset = board.centerOffset(ship.getY());
-			if (offset < -DRIFT_TOLER) {
-				ship.setY(ship.getY()+DRIFT_SPEED);
-			} else if (offset > DRIFT_TOLER) {
-				ship.setY(ship.getY()-DRIFT_SPEED);
-			}
-		}
-	}
+//	/**
+//	 * Nudges the ship back to the center of a tile if it is not moving.
+//	 *
+//	 * @param ship The ship to adjust
+//	 */
+//	private void adjustForDrift(Ship ship) {
+//		// Drift to line up vertically with the grid.
+//		if (ship.getVX() == 0.0f) {
+//			float offset = board.centerOffset(ship.getX());
+//			if (offset < -DRIFT_TOLER) {
+//				ship.setX(ship.getX()+DRIFT_SPEED);
+//			} else if (offset > DRIFT_TOLER) {
+//				ship.setX(ship.getX()-DRIFT_SPEED);
+//			}
+//		}
+//
+//		// Drift to line up horizontally with the grid.
+//		if (ship.getVY() == 0.0f) {
+//			float offset = board.centerOffset(ship.getY());
+//			if (offset < -DRIFT_TOLER) {
+//				ship.setY(ship.getY()+DRIFT_SPEED);
+//			} else if (offset > DRIFT_TOLER) {
+//				ship.setY(ship.getY()-DRIFT_SPEED);
+//			}
+//		}
+//	}
 	
 	/**
 	 * Determines if a ship is on a destroyed tile. 
@@ -196,28 +192,28 @@ public class GameplayController {
 	/** Half of a circle (for radian conversions) */
 	private static final float HALF_CIRCLE = 180.0f;
 	
-	/**
-	 * Creates photons and udates the ship's cooldown.
-	 *
-	 * Firing a weapon requires access to all other models, so we have factored
-	 * this behavior out of the Ship into the GameplayController.
-	 */
-	private void fireWeapon(Ship ship) {
-		// Determine the number of photons to create.
-		boolean isPower = board.isPowerTileAtScreen(ship.getX(), ship.getY());
-		float angPlus = isPower ? POWER_ANGLE : NORMAL_ANGLE;
-		Color c = isPower ? POWER_COLOR : NORMAL_COLOR;
-		for (float fireAngle = 0.0f; fireAngle < 360.0f; fireAngle += angPlus) {
-			float vx = (float) Math.cos(fireAngle * Math.PI / HALF_CIRCLE);
-			float vy = (float) Math.sin(fireAngle * Math.PI / HALF_CIRCLE);
-
-			photons.allocate(ship.getId(), ship.getX(), ship.getY(), vx, vy, c);
-		}
-
-		// Manage the sound effects.
-		ship.play(SoundController.FIRE_SOUND);
-
-		// Reset the firing cooldown.
-		ship.coolDown(false);
-	}
+//	/**
+//	 * Creates photons and udates the ship's cooldown.
+//	 *
+//	 * Firing a weapon requires access to all other models, so we have factored
+//	 * this behavior out of the Ship into the GameplayController.
+//	 */
+//	private void fireWeapon(Ship ship) {
+//		// Determine the number of photons to create.
+//		boolean isPower = board.isPowerTileAtScreen(ship.getX(), ship.getY());
+//		float angPlus = isPower ? POWER_ANGLE : NORMAL_ANGLE;
+//		Color c = isPower ? POWER_COLOR : NORMAL_COLOR;
+//		for (float fireAngle = 0.0f; fireAngle < 360.0f; fireAngle += angPlus) {
+//			float vx = (float) Math.cos(fireAngle * Math.PI / HALF_CIRCLE);
+//			float vy = (float) Math.sin(fireAngle * Math.PI / HALF_CIRCLE);
+//
+//			photons.allocate(ship.getId(), ship.getX(), ship.getY(), vx, vy, c);
+//		}
+//
+//		// Manage the sound effects.
+//		ship.play(SoundController.FIRE_SOUND);
+//
+//		// Reset the firing cooldown.
+//		ship.coolDown(false);
+//	}
 }

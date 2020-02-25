@@ -320,6 +320,16 @@ public class Ship {
 	}
 
 	/**
+	 * Copied from Board [NOT GOOD, JUST TEMPORARY FOR DEMO]
+	 */
+	public float boardToScreen(int n) {
+		return (float) (n + 0.5f) * (64);
+	}
+	public int screenToBoard(float f) {
+		return (int)(f / (64));
+	}
+
+	/**
 	 * Updates this ship position (and weapons fire) according to the control code.
 	 *
 	 * This method updates the velocity and the weapon status, but it does not change
@@ -348,9 +358,10 @@ public class Ship {
 
 		// Process movement command.
 		if (movingLeft) {
-			dstAng = 0.0f;
-			velocity.x = -MOVE_SPEED;
-			velocity.y = 0;
+			setX(boardToScreen(screenToBoard(getX())-1));
+//			dstAng = 0.0f;
+//			velocity.x = -MOVE_SPEED;
+//			velocity.y = 0;
 		} else if (movingRight) {
 			dstAng = 180.0f;
 			velocity.x = MOVE_SPEED;
