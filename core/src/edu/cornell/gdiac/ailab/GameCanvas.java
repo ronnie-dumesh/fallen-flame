@@ -73,10 +73,6 @@ public class GameCanvas {
 	private static final float SHIP_FALL_TRANS = -16f;
 	private static final float SHIP_FALL_X_SKEW = 0.04f;
 	private static final float SHIP_FALL_Z_SKEW = 0.03f;
-	/** Photon drawing constants */
-	private static final float PHOTON_TRANS = -15f;
-	private static final float PHOTON_SIZE  = 12f;
-	private static final float PHOTON_DECAY = 8f;
 	/** Constants for shader program locations */
 	private static final String SHADER_VERTEX = "shaders/Tinted.vert";
 	private static final String SHADER_FRAGMT = "shaders/Tinted.frag";
@@ -635,55 +631,7 @@ public class GameCanvas {
 		program.setUniformf(SHADER_U_TINT, model.getColor());
 		model.getMesh().render(program, GL20.GL_TRIANGLES);
 	}
-	
-	/**
-	 * Draws a photon to the screen.
-	 *
-	 * @param model The textured mesh object (with color) for the photon
-	 * @param x  The photon x-coordinate in world coordinates
-	 * @param y  The photon y-coordinate in world coordinates
-	 * @param vx The photon x-velocity
-	 * @param vy The photon y-velocity
-	 * @param r  The distance from the photon to its source (for decay)
-	 */	 
-	public void drawPhoton(TexturedMesh model, float x, float y, float vx, float vy, float r) {
-		if (!active) {
-			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
-			return;
-		} else if (!shading) {
-			Gdx.app.error("GameCanvas", "Cannot draw after a message is displayed", new IllegalStateException());
-			return;
-		} else if (model == null) {
-			Gdx.app.error("GameCanvas", "Attempt to draw photon without a model", new IllegalStateException());
-			return;
-		} else if (this.model != model) {
-			setDepthState(DepthState.READ);
-			setBlendState(BlendState.ADDITIVE);
-			setCullState(CullState.CLOCKWISE);
-			
-			this.model = model;
-			model.getTexture().bind(0);
-		}
 
-		tmp2d.set(vx,vy).nor();
-		tmpMat.idt();
-		tmpMat.val[0] = tmp2d.x;
-		tmpMat.val[1] = tmp2d.y;
-		tmpMat.val[4] = -tmp2d.y;
-		tmpMat.val[5] = tmp2d.x;
-
-		// Compute world transform
-		float scale = PHOTON_SIZE+PHOTON_DECAY*r;
-		world.setToTranslation(x, y, PHOTON_TRANS);
-		world.mul(tmpMat);
-		world.scale(scale,scale,scale);
-
-		// Draw a photon instance
-		program.setUniformMatrix(SHADER_U_WORLD, world);
-		program.setUniformf(SHADER_U_TINT, model.getColor());
-		model.getMesh().render(program, GL20.GL_TRIANGLES);
-	}
-	
 	/**
 	 * Draws a message at the center of the screen
 	 *
