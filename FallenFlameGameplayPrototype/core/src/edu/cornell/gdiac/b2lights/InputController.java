@@ -56,7 +56,12 @@ public class InputController {
 	/** Whether the exit button was pressed. */
 	private boolean exitPressed;
 	private boolean exitPrevious;
-	
+	/** Whether the gasoline button was pressed. */
+	private boolean firePressed;
+	private boolean firePrevious;
+
+	/** Are we pouring? */
+	private boolean pouring;
 	/** How much did we move horizontally? */
 	private float horizontal;
 	/** How much did we move vertically? */
@@ -85,6 +90,15 @@ public class InputController {
 	 */
 	public float getVertical() {
 		return vertical;
+	}
+
+	/**
+	 * Returns if pouring is pressed.
+	 *
+	 * @return If pouring is pressed.
+	 */
+	public boolean getPouring() {
+		return pouring;
 	}
 
 	/**
@@ -131,6 +145,15 @@ public class InputController {
 	public boolean didExit() {
 		return exitPressed && !exitPrevious;
 	}
+
+	/**
+	 * Returns true if the fire button was pressed.
+	 *
+	 * @return true if the fire button was pressed.
+	 */
+	public boolean didFire() {
+		return firePressed && !firePrevious;
+	}
 	
 	/**
 	 * Creates a new input controller
@@ -154,6 +177,7 @@ public class InputController {
 		exitPrevious = exitPressed;
 		nextPrevious = nextPressed;
 		prevPrevious = prevPressed;
+		firePrevious = firePressed;
 
 		// Check to see if a GamePad is connected
 		if (xbox.isConnected()) {
@@ -181,6 +205,8 @@ public class InputController {
 		prevPressed  = xbox.getLB();
 		debugPressed  = xbox.getY();
 
+		// TODO: Fire and gasoline for Xbox.
+
 		// Increase animation frame, but only if trying to move
 		horizontal = xbox.getLeftX();
 		vertical   = xbox.getLeftY();
@@ -202,6 +228,7 @@ public class InputController {
 		prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
 		nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
 		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
+		exitPressed  = (secondary && firePressed) || (Gdx.input.isKeyPressed(Input.Keys.F));
 		
 		// Directional controls
 		horizontal = (secondary ? horizontal : 0.0f);
@@ -210,6 +237,11 @@ public class InputController {
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			horizontal -= 1.0f;
+		}
+
+		pouring = (secondary && pouring);
+		if (Gdx.input.isKeyPressed(Input.Keys.G)) {
+			pouring = true;
 		}
 		
 		vertical = (secondary ? vertical : 0.0f);
