@@ -40,6 +40,7 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.physics.lights.*;
 import edu.cornell.gdiac.physics.obstacle.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -635,6 +636,8 @@ public class LevelModel {
 		return value;
 	}
 
+	private List<GasModel> gases = new ArrayList<>();
+
 	/**
 	 * Create gas at a given point.
 	 *
@@ -642,17 +645,18 @@ public class LevelModel {
 	 * @param y The y of gas.
 	 */
 	public void putGasAt(float x, float y) {
-		//#region Implement me!
-		//#endregion
+		GasModel g = new GasModel(x, y);
+		// Not sure about this line below...
+		g.setDrawScale(scale);
+		activate(g);
+		gases.add(g);
 	}
 
 	/**
 	 * Return a list of gas.
 	 */
 	public List<GasModel> getGasList() {
-		return null;
-		//#region Implement me!
-		//#endregion
+		return gases;
 	}
 
 	/**
