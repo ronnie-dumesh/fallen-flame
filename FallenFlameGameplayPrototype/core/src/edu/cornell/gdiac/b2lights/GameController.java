@@ -338,6 +338,11 @@ public class GameController implements Screen, ContactListener {
 		} else if (input.didBack()){
 			level.activatePrevLight();
 		}
+		if (input.getPouring()) {
+			level.putGasAt(avatar.getX(), avatar.getY());
+		} else if (input.didFire()) {
+			level.lightFromPlayer();
+		}
 		
 		// Rotate the avatar to face the direction of movement
 		angleCache.set(input.getHorizontal(),input.getVertical());
@@ -489,6 +494,11 @@ public class GameController implements Screen, ContactListener {
 				(bd1 == door   && bd2 == avatar)) {
 				setComplete(true);
 			}
+
+			//#region Implement me!
+			// Fire & gas collisions -> will need to call light for all colliding gas objects
+			// Fire & player collision -> death, game end
+			//#endregion
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

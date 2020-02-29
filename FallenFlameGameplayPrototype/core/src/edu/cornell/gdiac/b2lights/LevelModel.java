@@ -40,6 +40,8 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.physics.lights.*;
 import edu.cornell.gdiac.physics.obstacle.*;
 
+import java.util.List;
+
 /**
  * Represents a single level in our game
  *
@@ -521,6 +523,9 @@ public class LevelModel {
 			}
 			avatar.update(dt);
 			goalDoor.update(dt);
+			//#region Implement me!
+			// Check all gas (that has getLit true) and if timeToBurnout <= 0, remove
+			//#endregion
 			return true;
 		}
 		return false;
@@ -628,5 +633,44 @@ public class LevelModel {
 			pos *= 2;
 		}
 		return value;
+	}
+
+	/**
+	 * Create gas at a given point.
+	 *
+	 * @param x The x of gas.
+	 * @param y The y of gas.
+	 */
+	public void putGasAt(float x, float y) {
+		//#region Implement me!
+		//#endregion
+	}
+
+	/**
+	 * Return a list of gas.
+	 */
+	public List<GasModel> getGasList() {
+		return null;
+		//#region Implement me!
+		//#endregion
+	}
+
+	/**
+	 * Player is trying to light gas on fire.
+	 * Get coordinates of the player, and for any gas within r of the player’s position, set as lit.
+	 */
+	public void lightFromPlayer() {
+		//#region Implement me!
+		//#endregion
+	}
+
+	/**
+	 * Takes gas as input and sets gas as lit and adds light source.
+	 *
+	 * @param g The gas.
+	 */
+	public void light(GasModel g) {
+		//#region Implement me!
+		//#endregion
 	}
 }
