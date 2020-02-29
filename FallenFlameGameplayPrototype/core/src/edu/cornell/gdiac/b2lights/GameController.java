@@ -495,10 +495,28 @@ public class GameController implements Screen, ContactListener {
 				setComplete(true);
 			}
 
-			//#region Implement me!
-			// Fire & gas collisions -> will need to call light for all colliding gas objects
-			// Fire & player collision -> death, game end
-			//#endregion
+			for (GasModel g1 : level.getGasList()) {
+				if (g1.getLit()) {
+					if ((bd2 == g1 && bd1 == avatar) || (bd1 == g1 && bd2 == avatar)) {
+						System.out.println("DIE!");
+					}
+				}
+				for (GasModel g2 : level.getGasList()) {
+					GasModel fire, gas;
+					if (g1.getLit() && !g2.getLit()) {
+						fire = g1;
+						gas = g2;
+					} else if (!g1.getLit() && g2.getLit()) {
+						fire = g2;
+						gas = g1;
+					} else {
+						continue;
+					}
+					if ((bd1 == fire && bd2 == gas) || (bd1 == gas && bd2 == fire)) {
+						gas.setLit(true);
+					}
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
