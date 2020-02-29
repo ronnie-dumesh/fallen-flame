@@ -228,7 +228,7 @@ public class InputController {
 		prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
 		nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
 		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
-		exitPressed  = (secondary && firePressed) || (Gdx.input.isKeyPressed(Input.Keys.F));
+		firePressed  = (secondary && firePressed) || (Gdx.input.isKeyPressed(Input.Keys.F));
 		
 		// Directional controls
 		horizontal = (secondary ? horizontal : 0.0f);
