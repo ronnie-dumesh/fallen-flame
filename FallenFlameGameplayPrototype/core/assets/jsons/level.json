@@ -88,9 +88,15 @@
       	"walklimit":		4,
         "texture":     	"dude",
        	"debugcolor":  	"white",
-       	"debugopacity":	192,
+       	"debugopacity":	192
     },
-    "exit": {
+	"gasoline": {
+		"gastexture": 	"gasoline",
+		"firetexture":	"fire",
+		"debugcolor":	"yellow",
+		"debugopacity":  200
+	},
+	"exit": {
         "pos":          [ 1.5, 10.35],
         "size":         [ 1.25, 1.25],
         "bodytype":    	"static",
@@ -139,7 +145,7 @@
             "texture":      "earth",
             "debugcolor":   "yellow",
             "debugopacity":  200
-        },
+        }
     },
   	"interior": {
   		"maze1": {
@@ -239,6 +245,6 @@
         	"texture":      "earth",
             "debugcolor":   "yellow",
             "debugopacity":  200
-  		},
+  		}
   	}
  }

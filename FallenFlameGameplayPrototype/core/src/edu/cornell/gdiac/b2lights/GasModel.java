@@ -6,7 +6,13 @@
 
 package edu.cornell.gdiac.b2lights;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.physics.obstacle.WheelObstacle;
+import edu.cornell.gdiac.util.JsonAssetManager;
+
+import java.lang.reflect.Field;
 
 public class GasModel extends WheelObstacle {
 
@@ -22,14 +28,39 @@ public class GasModel extends WheelObstacle {
     /** Time when it started burning. **/
     private long startBurn;
 
+    /**Gasoline texture */
+    private TextureRegion gasTexture;
+
+    /**Fire texture */
+    private TextureRegion fireTexture;
+
+
     public GasModel(float x, float y) {
         super(x, y, GAS_RADIUS);
         setSensor(true);
         isLit = false;
-        // Set texture to something so it shows:
-        // setTexture(toSomething);
     }
+    public void initialize(JsonValue json) {
+        setName(json.name());
+        Color debugColor;
+        try {
+            String cname = json.get("debugcolor").asString().toUpperCase();
+            Field field = Class.forName("com.badlogic.gdx.graphics.Color").getField(cname);
+            debugColor = new Color((Color) field.get(null));
+        } catch (Exception e) {
+            debugColor = null; // Not defined
+        }
+        int opacity = json.get("debugopacity").asInt();
+        debugColor.mul(opacity / 255.0f);
+        setDebugColor(debugColor);
 
+        // Now get the texture from the AssetManager singleton
+        String gasKey = json.get("gastexture").asString();
+        String fireKey = json.get("firetexture").asString();
+        gasTexture = JsonAssetManager.getInstance().getEntry(gasKey, TextureRegion.class);
+        fireTexture = JsonAssetManager.getInstance().getEntry(fireKey, TextureRegion.class);
+        setTexture(gasTexture);
+    }
     /** Is this gas lit? */
     public boolean getLit() {
         return isLit;
@@ -42,6 +73,7 @@ public class GasModel extends WheelObstacle {
             throw new Error("Cannot unlight a fire!");
         }
         isLit = true;
+        setTexture(fireTexture);
         startBurn = System.currentTimeMillis();
     }
 
