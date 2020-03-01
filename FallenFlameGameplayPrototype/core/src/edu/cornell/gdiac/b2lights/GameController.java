@@ -339,9 +339,9 @@ public class GameController implements Screen, ContactListener {
 			level.activatePrevLight();
 		}
 		if (input.getPouring()) {
-			level.putGasAt(avatar.getX(), avatar.getY());
+			level.putGasAt(levelFormat, avatar.getX(), avatar.getY());
 		} else if (input.didFire()) {
-			level.lightFromPlayer();
+			level.lightFromPlayer(levelFormat);
 		}
 		
 		// Rotate the avatar to face the direction of movement

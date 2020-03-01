@@ -9,6 +9,7 @@ package edu.cornell.gdiac.b2lights;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.gdiac.physics.obstacle.ObstacleCanvas;
 import edu.cornell.gdiac.physics.obstacle.WheelObstacle;
 import edu.cornell.gdiac.util.JsonAssetManager;
 
@@ -33,7 +34,6 @@ public class GasModel extends WheelObstacle {
 
     /**Fire texture */
     private TextureRegion fireTexture;
-
 
     public GasModel(float x, float y) {
         super(x, y, GAS_RADIUS);
@@ -77,12 +77,19 @@ public class GasModel extends WheelObstacle {
         startBurn = System.currentTimeMillis();
     }
 
+    @Override
+    public void draw(ObstacleCanvas canvas) {
+        if (isLit && fireTexture != null) {
+            canvas.draw(fireTexture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.x, getAngle(), 1, 1);
+        } else if (!isLit && gasTexture != null) {
+            canvas.draw(gasTexture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.x, getAngle(), 1, 1);
+        }
+    }
+
     /** How long till burnout in milliseconds. */
     public int timeToBurnout() {
         if (!isLit) return Integer.MAX_VALUE;
         int timeLeft = FIRE_DURATION - (int) (System.currentTimeMillis() - startBurn);
         return Math.max(timeLeft, 0);
     }
-
-
 }

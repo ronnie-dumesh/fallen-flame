@@ -41,6 +41,7 @@ import edu.cornell.gdiac.physics.lights.*;
 import edu.cornell.gdiac.physics.obstacle.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -525,7 +526,14 @@ public class LevelModel {
 			avatar.update(dt);
 			goalDoor.update(dt);
 			//#region Implement me!
-			// Check all gas (that has getLit true) and if timeToBurnout <= 0, remove
+			Iterator<GasModel> i = gases.iterator();
+			while(i.hasNext()){
+				GasModel g = i.next();
+				if(!(Float.compare(g.timeToBurnout(), 0.0f) > 0)){
+					i.remove();
+				}
+			}
+			//System.out.println(gases.size());
 			//#endregion
 			return true;
 		}
@@ -573,11 +581,22 @@ public class LevelModel {
 			obj.draw(canvas);
 		}
 		canvas.end();
-		
+
+		// Draw all gas objects
+		int gasDebugIterator = 0;
+		canvas.begin();
+		for(GasModel gas : gases) {
+			gas.draw(canvas);
+			gasDebugIterator++;
+		}
+		canvas.end();
+		//System.out.println(gasDebugIterator + "gases drawn");
+
 		// Now draw the shadows
 		if (rayhandler != null && activeLight != -1) {
 			rayhandler.render();
 		}
+
 		
 		// Draw debugging on top of everything.
 		if (debug) {
@@ -644,8 +663,10 @@ public class LevelModel {
 	 * @param x The x of gas.
 	 * @param y The y of gas.
 	 */
-	public void putGasAt(float x, float y) {
+	public void putGasAt(JsonValue levelFormat, float x, float y) {
+		JsonValue gas = levelFormat.get("gasoline");
 		GasModel g = new GasModel(x, y);
+		g.initialize(gas);
 		// Not sure about this line below...
 		g.setDrawScale(scale);
 		activate(g);
@@ -663,18 +684,42 @@ public class LevelModel {
 	 * Player is trying to light gas on fire.
 	 * Get coordinates of the player, and for any gas within r of the player’s position, set as lit.
 	 */
-	public void lightFromPlayer() {
-		//#region Implement me!
-		//#endregion
+	public void lightFromPlayer(JsonValue levelFormat) {
+		float x = avatar.getX();
+		float y = avatar.getY();
+		float radius = 2.0f;
+		for(GasModel gas : gases){
+			float sqrdDistance = (float) ((Math.pow(x - gas.getX(), 2.0)) + (Math.pow(y - gas.getY(), 2.0)));
+			float distance = (float) Math.pow(sqrdDistance, 0.5);
+			if(distance <= radius){ light(levelFormat, gas);}
+		}
 	}
 
 	/**
 	 * Takes gas as input and sets gas as lit and adds light source.
 	 *
-	 * @param g The gas.
+	 * @param g The gas.d
 	 */
-	public void light(GasModel g) {
-		//#region Implement me!
-		//#endregion
+	public void light(JsonValue levelFormat, GasModel g) {
+		g.setLit(true);
+		//System.out.println(lights.size);
+
+		float[] color = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
+		float[] pos = new float[]{g.getX(), g.getY()};
+		float dist = 7;
+		int rays = 512;
+
+		PointSource point = new PointSource(rayhandler, rays, Color.WHITE, dist, pos[0], pos[1]);
+		point.setColor(color[0],color[1],color[2],color[3]);
+		point.setSoft(false);
+
+		// Create a filter to exclude see through items
+		Filter f = new Filter();
+		f.maskBits = bitStringToComplement("0010");
+		point.setContactFilter(f);
+		point.setActive(true); // TURN ON LATER
+		lights.add(point);
+//		System.out.println(lights.size);
+//		System.out.println("");
 	}
 }
