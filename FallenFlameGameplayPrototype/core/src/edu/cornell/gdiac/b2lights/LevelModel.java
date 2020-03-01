@@ -596,7 +596,6 @@ public class LevelModel {
 		if (rayhandler != null && activeLight != -1) {
 			rayhandler.render();
 		}
-
 		
 		// Draw debugging on top of everything.
 		if (debug) {
