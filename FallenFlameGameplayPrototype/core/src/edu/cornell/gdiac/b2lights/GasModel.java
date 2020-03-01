@@ -8,6 +8,7 @@ package edu.cornell.gdiac.b2lights;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.physics.obstacle.ObstacleCanvas;
 import edu.cornell.gdiac.physics.obstacle.WheelObstacle;
@@ -37,6 +38,9 @@ public class GasModel extends WheelObstacle {
 
     public GasModel(float x, float y) {
         super(x, y, GAS_RADIUS);
+        setBodyType(BodyDef.BodyType.DynamicBody);
+        setDensity(1.0f);
+        setFriction(0.0f);
         setSensor(true);
         isLit = false;
     }
