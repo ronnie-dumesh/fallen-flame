@@ -578,6 +578,10 @@ public class LevelModel {
 		if (rayhandler != null && activeLight != -1) {
 			rayhandler.render();
 		}
+
+		//#region Implement me!
+		// Draw all gas objects. I think doing so after shadows is better, but I could be mistaken
+		//#endregion
 		
 		// Draw debugging on top of everything.
 		if (debug) {
