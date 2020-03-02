@@ -351,6 +351,7 @@ public class LevelModel {
 			PointSource point = new PointSource(rayhandler, rays, Color.WHITE, dist, pos[0], pos[1]);
 			point.setColor(color[0],color[1],color[2],color[3]);
 			point.setSoft(light.getBoolean("soft"));
+			point.setContactFilter((short) (1 << 15), (short) 0, (short) -1);
 			
 			// Create a filter to exclude see through items
 			Filter f = new Filter();
@@ -387,6 +388,7 @@ public class LevelModel {
 			ConeSource cone = new ConeSource(rayhandler, rays, Color.WHITE, dist, pos[0], pos[1], face, angle);
 			cone.setColor(color[0],color[1],color[2],color[3]);
 			cone.setSoft(light.getBoolean("soft"));
+			cone.setContactFilter((short) (1 << 15), (short) 0, (short) -1);
 			
 			// Create a filter to exclude see through items
 			Filter f = new Filter();
@@ -708,17 +710,23 @@ public class LevelModel {
 		float dist = 7;
 		int rays = 512;
 
-		PointSource point = new PointSource(rayhandler, rays, Color.WHITE, dist, pos[0], pos[1]);
-		point.setColor(color[0],color[1],color[2],color[3]);
-		point.setSoft(false);
+		// This is the light creating logic.
+		boolean createLight = true;
+		for (LightSource l : lights) {
+			if (Math.sqrt(Math.pow(pos[0] - l.getX(), 2) + Math.pow(pos[1] - l.getY(), 2)) < .2) {
+				createLight = false;
+				break;
+			}
+		}
+		if (createLight) {
+			PointSource point = new PointSource(rayhandler, rays, Color.WHITE, dist, pos[0], pos[1]);
+			point.setColor(color[0],color[1],color[2],color[3]);
+			point.setSoft(false);
 
-		// Create a filter to exclude see through items
-		Filter f = new Filter();
-		f.maskBits = bitStringToComplement("0010");
-		point.setContactFilter(f);
-		point.setActive(true); // TURN ON LATER
-		lights.add(point);
-//		System.out.println(lights.size);
-//		System.out.println("");
+			// Create a filter to exclude see through items
+			point.setContactFilter((short) (1 << 15), (short) 0, (short) -1);
+			point.setActive(true); // TURN ON LATER
+			lights.add(point);
+		}
 	}
 }

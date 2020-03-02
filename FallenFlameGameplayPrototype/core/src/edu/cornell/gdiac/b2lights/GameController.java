@@ -498,7 +498,7 @@ public class GameController implements Screen, ContactListener {
 			for (GasModel g1 : level.getGasList()) {
 				if (g1.getLit()) {
 					if ((bd2 == g1 && bd1 == avatar) || (bd1 == g1 && bd2 == avatar)) {
-						System.out.println("DIE!");
+						System.out.println("DIE!"); // TODO: Change this to something that shows the user.
 					}
 				}
 				for (GasModel g2 : level.getGasList()) {
@@ -513,7 +513,7 @@ public class GameController implements Screen, ContactListener {
 						continue;
 					}
 					if ((bd1 == fire && bd2 == gas) || (bd1 == gas && bd2 == fire)) {
-						gas.setLit(true);
+						level.light(levelFormat, gas);
 					}
 				}
 			}

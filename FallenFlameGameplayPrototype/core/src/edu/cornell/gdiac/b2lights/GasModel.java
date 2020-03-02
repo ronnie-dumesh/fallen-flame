@@ -9,6 +9,7 @@ package edu.cornell.gdiac.b2lights;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.physics.obstacle.ObstacleCanvas;
 import edu.cornell.gdiac.physics.obstacle.WheelObstacle;
@@ -42,6 +43,9 @@ public class GasModel extends WheelObstacle {
         setDensity(1.0f);
         setFriction(0.0f);
         setSensor(true);
+        Filter contactFilter = new Filter();
+        contactFilter.maskBits = Short.MAX_VALUE >> 1;
+        setFilterData(contactFilter);
         isLit = false;
     }
     public void initialize(JsonValue json) {
