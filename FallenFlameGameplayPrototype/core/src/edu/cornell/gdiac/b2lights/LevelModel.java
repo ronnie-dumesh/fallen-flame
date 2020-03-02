@@ -710,7 +710,7 @@ public class LevelModel {
 		// This is the light creating logic.
 		boolean createLight = true;
 		for (LightSource l : lights) {
-			if (Math.sqrt(Math.pow(pos[0] - l.getX(), 2) + Math.pow(pos[1] - l.getY(), 2)) < .2) {
+			if (Math.sqrt(Math.pow(pos[0] - l.getX(), 2) + Math.pow(pos[1] - l.getY(), 2)) < .4) {
 				createLight = false;
 				break;
 			}
@@ -725,6 +725,7 @@ public class LevelModel {
 			f.maskBits = bitStringToComplement(light.getString("excludeBits"));
 			point.setContactFilter(f);
 			point.setActive(true);
+			point.setStaticLight(true);
 			lights.add(point);
 		}
 	}
