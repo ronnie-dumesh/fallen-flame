@@ -300,6 +300,9 @@ public class LevelModel {
 	    avatar.setDrawScale(scale);
 		activate(avatar);
 		attachLights(avatar);
+
+		// Clear gas list.
+		gases.clear();
 	}
 	
 	/**
@@ -477,6 +480,7 @@ public class LevelModel {
 			obj.deactivatePhysics(world);
 			obj.dispose();
 		}
+		gases.clear();
 		objects.clear();
 		if (world != null) {
 			world.dispose();
@@ -530,7 +534,19 @@ public class LevelModel {
 			while(i.hasNext()){
 				GasModel g = i.next();
 				if(!(Float.compare(g.timeToBurnout(), 0.0f) > 0)){
+					for (LightSource l : lights) {
+						if (l.getBody() == g.getBody()) {
+							l.remove();
+							lights.removeValue(l, true);
+							break;
+						}
+					}
 					i.remove();
+					assert inBounds(g);
+					g.deactivatePhysics(world);
+					g.dispose();
+					g.markRemoved(true);
+					objects.remove(g);
 				}
 			}
 			//System.out.println(gases.size());
@@ -726,6 +742,7 @@ public class LevelModel {
 			point.setContactFilter(f);
 			point.setActive(true);
 			point.setStaticLight(true);
+			point.attachToBody(g.getBody());
 			lights.add(point);
 		}
 	}
