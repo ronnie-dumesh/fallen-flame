@@ -576,23 +576,21 @@ public class LevelModel {
 	 */
 	public void draw(ObstacleCanvas canvas) {
 		canvas.clear();
+
+		// Draw all gas objects
+		canvas.begin();
+		for(GasModel gas : gases) {
+			gas.draw(canvas);
+		}
+		canvas.end();
 		
 		// Draw the sprites first (will be hidden by shadows)
 		canvas.begin();
 		for(Obstacle obj : objects) {
+			if (obj instanceof GasModel) continue;
 			obj.draw(canvas);
 		}
 		canvas.end();
-
-		// Draw all gas objects
-		int gasDebugIterator = 0;
-		canvas.begin();
-		for(GasModel gas : gases) {
-			gas.draw(canvas);
-			gasDebugIterator++;
-		}
-		canvas.end();
-		//System.out.println(gasDebugIterator + "gases drawn");
 
 		// Now draw the shadows
 		if (rayhandler != null && activeLight != -1) {
