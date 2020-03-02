@@ -351,7 +351,6 @@ public class LevelModel {
 			PointSource point = new PointSource(rayhandler, rays, Color.WHITE, dist, pos[0], pos[1]);
 			point.setColor(color[0],color[1],color[2],color[3]);
 			point.setSoft(light.getBoolean("soft"));
-			point.setContactFilter((short) (1 << 15), (short) 0, (short) -1);
 			
 			// Create a filter to exclude see through items
 			Filter f = new Filter();
@@ -388,7 +387,6 @@ public class LevelModel {
 			ConeSource cone = new ConeSource(rayhandler, rays, Color.WHITE, dist, pos[0], pos[1], face, angle);
 			cone.setColor(color[0],color[1],color[2],color[3]);
 			cone.setSoft(light.getBoolean("soft"));
-			cone.setContactFilter((short) (1 << 15), (short) 0, (short) -1);
 			
 			// Create a filter to exclude see through items
 			Filter f = new Filter();
@@ -701,6 +699,7 @@ public class LevelModel {
 	 */
 	public void light(JsonValue levelFormat, GasModel g) {
 		g.setLit(true);
+		JsonValue light = levelFormat.get("pointlights").child();
 		//System.out.println(lights.size);
 
 		float[] color = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
@@ -722,8 +721,10 @@ public class LevelModel {
 			point.setSoft(false);
 
 			// Create a filter to exclude see through items
-			point.setContactFilter((short) (1 << 15), (short) 0, (short) -1);
-			point.setActive(true); // TURN ON LATER
+			Filter f = new Filter();
+			f.maskBits = bitStringToComplement(light.getString("excludeBits"));
+			point.setContactFilter(f);
+			point.setActive(true);
 			lights.add(point);
 		}
 	}

@@ -44,7 +44,7 @@ public class GasModel extends WheelObstacle {
         setFriction(0.0f);
         setSensor(true);
         Filter contactFilter = new Filter();
-        contactFilter.maskBits = Short.MAX_VALUE >> 1;
+        contactFilter.maskBits = -1 >> 4 << 4;
         setFilterData(contactFilter);
         isLit = false;
     }
