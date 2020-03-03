@@ -384,7 +384,7 @@ public class GameController implements Screen, ContactListener {
 		} else if (failed) {
 			displayFont.setColor(Color.RED);
 			canvas.begin(); // DO NOT SCALE
-			canvas.drawTextCentered("FAILURE!", displayFont, 0.0f);
+			canvas.drawTextCentered("YOU DIED!", displayFont, 0.0f);
 			canvas.end();
 		}
 	}
@@ -498,7 +498,7 @@ public class GameController implements Screen, ContactListener {
 			for (GasModel g1 : level.getGasList()) {
 				if (g1.getLit()) {
 					if ((bd2 == g1 && bd1 == avatar) || (bd1 == g1 && bd2 == avatar)) {
-						System.out.println("DIE!"); // TODO: Change this to something that shows the user.
+						setFailure(true);
 					}
 				}
 				for (GasModel g2 : level.getGasList()) {
@@ -556,7 +556,7 @@ public class GameController implements Screen, ContactListener {
 			for (GasModel g1 : level.getGasList()) {
 				if (g1.getLit()) {
 					if ((bd2 == g1 && bd1 == avatar) || (bd1 == g1 && bd2 == avatar)) {
-						System.out.println("DIE!"); // TODO: Change this to something that shows the user.
+						setFailure(true);
 					}
 				}
 				for (GasModel g2 : level.getGasList()) {
