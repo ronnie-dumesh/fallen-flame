@@ -35,7 +35,7 @@ public class GasModel extends WheelObstacle {
     private TextureRegion gasTexture;
 
     /**Fire texture */
-    private TextureRegion fireTexture;
+    private TextureRegion[][] fireTexture;
 
     public GasModel(float x, float y) {
         super(x, y, GAS_RADIUS);
@@ -72,7 +72,8 @@ public class GasModel extends WheelObstacle {
         String gasKey = json.get("gastexture").asString();
         String fireKey = json.get("firetexture").asString();
         gasTexture = JsonAssetManager.getInstance().getEntry(gasKey, TextureRegion.class);
-        fireTexture = JsonAssetManager.getInstance().getEntry(fireKey, TextureRegion.class);
+        fireTexture = JsonAssetManager.getInstance().getEntry(fireKey, TextureRegion.class).split(
+                64, 64);
         setTexture(gasTexture);
     }
     /** Is this gas lit? */
@@ -87,13 +88,17 @@ public class GasModel extends WheelObstacle {
             throw new Error("Cannot unlight a fire!");
         }
         isLit = true;
-        setTexture(fireTexture);
+        setTexture(fireTexture[0][0]);
         startBurn = System.currentTimeMillis();
     }
 
     @Override
     public void draw(ObstacleCanvas canvas) {
+        TextureRegion fireTexture = this.fireTexture[0][0];
         if (isLit && fireTexture != null) {
+            try {
+                fireTexture = this.fireTexture[0][(int) (System.currentTimeMillis() / 300) % 4];
+            } catch (Exception ignored) { }
             canvas.draw(fireTexture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.x, getAngle(), 1, 1);
         } else if (!isLit && gasTexture != null) {
             canvas.draw(gasTexture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.x, getAngle(), 1, 1);
