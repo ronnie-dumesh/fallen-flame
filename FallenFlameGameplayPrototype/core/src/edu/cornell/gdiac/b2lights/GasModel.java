@@ -52,9 +52,9 @@ public class GasModel extends WheelObstacle {
         //System.out.println(isSensor());
 
         // Create collision filter (for light penetration)
-//        Filter contactFilter = new Filter();
-//        contactFilter.maskBits = -1 >> 4 << 4;
-//        setFilterData(contactFilter);
+        Filter contactFilter = new Filter();
+        contactFilter.categoryBits = 0b10;
+        setFilterData(contactFilter);
 
         Color debugColor;
         try {
