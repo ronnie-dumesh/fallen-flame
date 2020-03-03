@@ -528,5 +528,63 @@ public class GameController implements Screen, ContactListener {
 	/** Unused ContactListener method */
 	public void postSolve(Contact contact, ContactImpulse impulse) {}
 	/** Unused ContactListener method */
-	public void preSolve(Contact contact, Manifold oldManifold) {}
+	public void preSolve(Contact contact, Manifold oldManifold) {
+		//System.out.println("presolve: " + contact.toString());
+		Fixture fix1 = contact.getFixtureA();
+		Fixture fix2 = contact.getFixtureB();
+
+		Body body1 = fix1.getBody();
+		Body body2 = fix2.getBody();
+
+		Object fd1 = fix1.getUserData();
+		Object fd2 = fix2.getUserData();
+
+		try {
+			Obstacle bd1 = (Obstacle)body1.getUserData();
+			Obstacle bd2 = (Obstacle)body2.getUserData();
+
+			DudeModel avatar = level.getAvatar();
+			ExitModel door   = level.getExit();
+
+			// Check for win condition
+			if ((bd1 == avatar && bd2 == door  ) ||
+					(bd1 == door   && bd2 == avatar)) {
+				setComplete(true);
+				return;
+			}
+
+			for (GasModel g1 : level.getGasList()) {
+				if (g1.getLit()) {
+					if ((bd2 == g1 && bd1 == avatar) || (bd1 == g1 && bd2 == avatar)) {
+						System.out.println("DIE!"); // TODO: Change this to something that shows the user.
+					}
+				}
+				for (GasModel g2 : level.getGasList()) {
+					GasModel fire, gas;
+					boolean bothGas = false;
+					if (g1.getLit() && !g2.getLit()) {
+						fire = g1;
+						gas = g2;
+					} else if (!g1.getLit() && g2.getLit()) {
+						fire = g2;
+						gas = g1;
+					} else {
+						fire = g1;
+						gas = g2;
+						bothGas = true;
+					}
+					if ((bd1 == fire && bd2 == gas) || (bd1 == gas && bd2 == fire)) {
+						if(!bothGas)
+							level.light(levelFormat, gas);
+						else
+							contact.setEnabled(false);
+					}
+					if ((bd1 == avatar || bd2 == avatar) && (bd1 == gas || bd1 == fire || bd2 == gas || bd2 == fire))
+						contact.setEnabled(false);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

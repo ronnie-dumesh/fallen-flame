@@ -39,17 +39,23 @@ public class GasModel extends WheelObstacle {
 
     public GasModel(float x, float y) {
         super(x, y, GAS_RADIUS);
-        setBodyType(BodyDef.BodyType.DynamicBody);
-        setDensity(1.0f);
-        setFriction(0.0f);
-        setSensor(true);
-        Filter contactFilter = new Filter();
-        contactFilter.maskBits = -1 >> 4 << 4;
-        setFilterData(contactFilter);
-        isLit = false;
+        //setSensor(true);
     }
     public void initialize(JsonValue json) {
         setName(json.name());
+        setBodyType(BodyDef.BodyType.DynamicBody);
+        setDensity(1.0f);
+        setFriction(0.0f);
+        //System.out.println(this.body);
+        isLit = false;
+
+        //System.out.println(isSensor());
+
+        // Create collision filter (for light penetration)
+//        Filter contactFilter = new Filter();
+//        contactFilter.maskBits = -1 >> 4 << 4;
+//        setFilterData(contactFilter);
+
         Color debugColor;
         try {
             String cname = json.get("debugcolor").asString().toUpperCase();
