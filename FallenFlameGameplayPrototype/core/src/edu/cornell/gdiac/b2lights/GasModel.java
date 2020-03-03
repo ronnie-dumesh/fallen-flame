@@ -20,7 +20,7 @@ import java.lang.reflect.Field;
 public class GasModel extends WheelObstacle {
 
     /** Default gas radius. */
-    private static final float GAS_RADIUS = 1f; // Might want to change this!
+    private static final float GAS_RADIUS = .8f; // Might want to change this!
 
     /** How long a fire can last, in milliseconds. */
     private static final int FIRE_DURATION = 6000;
