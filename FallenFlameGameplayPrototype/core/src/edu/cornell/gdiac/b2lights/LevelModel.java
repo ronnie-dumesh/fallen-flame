@@ -670,6 +670,8 @@ public class LevelModel {
 
 	private List<GasModel> gases = new ArrayList<>();
 
+	private long lastTimeGasPut = 0;
+
 	/**
 	 * Create gas at a given point.
 	 *
@@ -677,6 +679,11 @@ public class LevelModel {
 	 * @param y The y of gas.
 	 */
 	public void putGasAt(JsonValue levelFormat, float x, float y) {
+		long ctm = System.currentTimeMillis();
+		if (ctm - lastTimeGasPut < 200) {
+			return;
+		}
+		lastTimeGasPut = ctm;
 		JsonValue gas = levelFormat.get("gasoline");
 		GasModel g = new GasModel(x, y);
 		g.initialize(gas);
