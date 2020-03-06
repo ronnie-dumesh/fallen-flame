@@ -3,10 +3,10 @@
 	"graphicSize":    	[ 800, 600],
 	"fpsRange":		  	[  20,  60],
 	"lighting": {
-		"color":	  	[0.25, 0.25, 0.25, 0.25],
+		"color":	  	[0, 0, 0, 0],
 		"gamma":		true,
 		"diffuse":		true,
-		"blur":			3
+		"blur":			1
 	},
 	"pointlights": {
 		"standard": {
@@ -82,15 +82,21 @@
       	"force": 		 80.0,
       	"damping": 		 10.0,
       	"maxspeed": 	  5.0,
-      	"collideBits":	"0001",
+      	"collideBits":	"0010",
       	"excludeBits":	"0000",
       	"startframe":       0,
       	"walklimit":		4,
         "texture":     	"dude",
        	"debugcolor":  	"white",
-       	"debugopacity":	192,
+       	"debugopacity":	192
     },
-    "exit": {
+	"gasoline": {
+		"gastexture": 	"gasoline",
+		"firetexture":	"fire",
+		"debugcolor":	"yellow",
+		"debugopacity":  200
+	},
+	"exit": {
         "pos":          [ 1.5, 10.35],
         "size":         [ 1.25, 1.25],
         "bodytype":    	"static",
@@ -139,7 +145,7 @@
             "texture":      "earth",
             "debugcolor":   "yellow",
             "debugopacity":  200
-        },
+        }
     },
   	"interior": {
   		"maze1": {
@@ -239,6 +245,6 @@
         	"texture":      "earth",
             "debugcolor":   "yellow",
             "debugopacity":  200
-  		},
+  		}
   	}
  }
