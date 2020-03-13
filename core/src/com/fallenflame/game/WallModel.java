@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import com.fallenflame.game.physics.obstacle.BoxObstacle;
-import com.fallenflame.game.physics.obstacle.ObstacleCanvas;
 import com.fallenflame.game.util.JsonAssetManager;
 
 /**
@@ -171,7 +170,7 @@ public class WallModel extends BoxObstacle {
     }
 
     @Override
-    public void draw(ObstacleCanvas canvas) {
+    public void draw(GameCanvas canvas) {
         if (region != null) {
             canvas.draw(region, Color.WHITE, 0, 0,
                     (getX() - anchor.x) * drawScale.x,
