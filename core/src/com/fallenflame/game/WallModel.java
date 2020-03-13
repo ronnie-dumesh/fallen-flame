@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
-import edu.cornell.gdiac.physics.obstacle.BoxObstacle;
-import edu.cornell.gdiac.physics.obstacle.ObstacleCanvas;
-import edu.cornell.gdiac.util.JsonAssetManager;
+import com.fallenflame.game.physics.obstacle.BoxObstacle;
+import com.fallenflame.game.physics.obstacle.ObstacleCanvas;
+import com.fallenflame.game.util.JsonAssetManager;
 
 /**
  * A rectangle shape representing a wall.
