@@ -15,6 +15,7 @@ package com.fallenflame.game.physics.obstacle;
 
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.physics.box2d.*;
+import com.fallenflame.game.GameCanvas;
 
 /**
  * THIS CODE IS CREDITED TO BOX2DLIGHTS DEMO
@@ -149,7 +150,7 @@ public class WheelObstacle extends SimpleObstacle {
 	 *
 	 * @param canvas Drawing context
 	 */
-	 public void drawDebug(ObstacleCanvas canvas) {
+	 public void drawDebug(GameCanvas canvas) {
 		 if (debugColor != null) {
 		 	 canvas.drawPhysics(shape,debugColor,getX(),getY(),drawScale.x,drawScale.y);
 		 }
