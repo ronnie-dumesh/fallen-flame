@@ -36,8 +36,14 @@ public class AIController implements InputController {
     private FSMState state;
     /** The player*/
     private PlayerModel player;
+    /**last known X coord of player */
+    private float lastKnownX;
+    /**last known Y coord of player */
+    private float lastKnownY;
     /** The flares that the enemy will investigate */
     private List<FlareModel> flares;
+    /** The flare the enemy is currently investigating */
+    private Flare targetFlare;
     /** The map's walls, used to prevent collisions */
     private List<WallModel> walls;
     /** The ship's next action. */
@@ -65,10 +71,6 @@ public class AIController implements InputController {
         state = FSMState.SPAWN;
         move  = CONTROL_NO_ACTION;
         ticks = 0;
-
-        // Select an initial target
-        target = null;
-        selectTarget();
     }
 
     /**
@@ -115,21 +117,19 @@ public class AIController implements InputController {
     private void changeStateIfApplicable() {
         Random random = new Random();
         int rand_int = random.nextInt(100);
+        int distance = cartesianDistance(player.getX(), player.getY(),
+                enemy.getX(), enemy.getY());
+        /** AI */
+        if(distance < 100 && state != FSMState.ATTACK){
+            state = FSMState.CHASE;
+        }
+
         switch (state) {
             case SPAWN:
                 state = FSMState.WANDER;
                 break;
 
             case WANDER:
-                selectTarget();
-
-                int distance = cartesianDistance(player.getX(), player.getY(),
-                                                    enemy.getX(), enemy.getY());
-                if(distance <= player.getRadius()){
-                    state = FSMState.CHASE;
-                    break;
-                }
-
                 for(FlareModel flare : flares){
                     distance = cartesianDistance(flare.getX(), flare.getY(),
                                                     enemy.getX(), enemy.getY());
@@ -138,58 +138,51 @@ public class AIController implements InputController {
                     if(distance <= 100) {
                         /**TODO MAKE MULTIPLE FLARE SUPPORT FOR PATHFINDING */
                         state = FSMState.INVESTIAGE;
+                        targetFlare = flare;
                         break;
                     }
                 }
                 break;
 
             case CHASE:
-                if(target == null || rand_int < 30 || !withinChase(ship, target)){state = FSMState.WANDER;}
-                else if(withinAttack(ship, target)){state = FSMState.ATTACK;}
+                /**TODO MAKE CONSTANT FOR ATTACK DISTANCE FROM PLAYER */
+                if(distance <= 10){
+                    state = FSMState.ATTACK;
+                } else if (distance > 100){
+                    state = FSMState.LAST_KNOWN;
+                }
                 break;
 
             case ATTACK:
-                if(target == null || rand_int < 30){state = FSMState.WANDER;}
-                else if(!withinAttack(ship, target)){state = FSMState.CHASE;}
+                /** TODO, MAKE CONSTANT */
+                if(distance > 100) {
+                    state = FSMState.CHASE;
+                }
                 break;
 
             case INVESTIAGE:
-                if()
+                /** TODO: MAKE CONSANT */
+                int flareDistance = cartesianDistance(targetFlare.getX(), targetFlare.getY(),
+                        enemy.getX(), enemy.getY());
+                if(flareDistance < 1){
+                    state = FSMState.WANDER;
+                }
+                break;
+
+            case LAST_KNOWN:
+                int lastKnownDistance = cartesianDistance(lastKnownX, lastKnownY),
+                        enemy.getX(), enemy.getY());
+                /** TODO: make constant */
+                if(lastKnownDistance <= 100){
+                    state = FSMState.Chase;
+                }
+                break;
+                if(distance)
 
             default:
                 assert (false);
                 state = FSMState.WANDER;
                 break;
-        }
-    }
-
-    /**
-     * Acquire a target to attack (and put it in field target).
-     *
-     * Insert your checking and target selection code here. Note that this
-     * code does not need to reassign <c>target</c> every single time it is
-     * called. Like all other methods, make sure it works with any number
-     * of players (between 0 and 32 players will be checked). Also, it is a
-     * good idea to make sure the ship does not target itself or an
-     * already-fallen (e.g. inactive) ship.
-     */
-    private void selectTarget() {
-        Random random = new Random();
-        ArrayList<Ship> targetArray = new ArrayList<>();
-
-        if(target == null || !target.isAlive() || !target.isActive()){target=null;}
-        if(target == null || !withinChase(ship, target)){
-            target = null;
-            for(Ship enemyShip : fleet) {
-                if (!ship.equals(enemyShip) && enemyShip.isAlive() && withinChase(ship, enemyShip)) {
-                    targetArray.add(enemyShip);
-                }
-            }
-            if(targetArray.size() > 0) {
-                target = targetArray.get(random.nextInt(targetArray.size()));
-            } else {
-                target = null;
-            }
         }
     }
 
@@ -209,35 +202,18 @@ public class AIController implements InputController {
         board.clearMarks();
         boolean setGoal = false; // Until we find a goal
 
-        // Add initialization code as necessary
-        //#region PUT YOUR CODE HERE
         int targetX = 0, targetY = 0, x = 0, y = 0;
         if(target != null){
             targetX = board.screenToBoard(target.getX());
             targetY = board.screenToBoard(target.getY());
         }
 
-        //#endregion
-
         switch (state) {
-            case SPAWN: // Do not pre-empt with FSMState in a case
-                // insert code here to mark tiles (if any) that spawning ships
-                // want to go to, and set setGoal to true if we marked any.
-                // Ships in the spawning state will immediately move to another
-                // state, so there is no need for goal tiles here.
-
-                //#region PUT YOUR CODE HERE
+            case SPAWN:
                 break;
-            //#endregion
 
-            case WANDER: // Do not pre-empt with FSMState in a case
-                // Insert code to mark tiles that will cause us to move around;
-                // set setGoal to true if we marked any tiles.
-                // NOTE: this case must work even if the ship has no target
-                // (and changeStateIfApplicable should make sure we are never
-                // in a state that won't work at the time)
+            case WANDER:
 
-                //#region PUT YOUR CODE HERE
                 Random random = new Random();
                 if(wanderGoalTileY == null || wanderGoalTileX == null || random.nextInt(100) < 10) {
                     x = random.nextInt(board.getHeight());
@@ -254,13 +230,9 @@ public class AIController implements InputController {
                     setGoal = true;
                 }
 
-                //#endregion */
                 break;
 
-            case CHASE: // Do not pre-empt with FSMState in a case
-                // Insert code to mark tiles that will cause us to chase the target;
-                // set setGoal to true if we marked any tiles.
-
+            case CHASE:
                 for(int xOffset = -1; xOffset <= 1; xOffset++){
                     for(int yOffset = -1; yOffset <=1; yOffset++) {
                         x = xOffset + targetX;
@@ -271,23 +243,23 @@ public class AIController implements InputController {
                         }
                     }
                 }
-
-                //#region PUT YOUR CODE HERE
-
-                //#endregion
                 break;
 
-            case ATTACK: // Do not pre-empty with FSMState in a case
-                // Insert code here to mark tiles we can attack from, (see
-                // canShootTargetFrom); set setGoal to true if we marked any tiles.
-                //#region PUT YOUR CODE HERE
-                //#endregion
+            case ATTACK:
                 if (board.isSafeAt(targetX, targetY) && board.inBounds(targetX, targetY)) {
                     board.setGoal(targetX, targetY);
+                    lastKnownX = targetX;
+                    lastKnownY = targetY;
                     setGoal = true;
                 }
-
                 break;
+
+            case INVESTIAGE:
+                board.setGoal(targetFlare.getX(), targetFlare.getY());
+                break;
+
+            case LAST_KNOWN:
+                board.setGoal(lastKnownX, lastKnownY);
         }
 
         // If we have no goals, mark current position as a goal
