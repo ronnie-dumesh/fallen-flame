@@ -18,10 +18,6 @@
          	"file":		"textures/helicopter.png",
          	"wrap":		false,
          },
-		"gasoline": {
-			"file":     "textures/gasoline.png",
-			"wrap":     true,
-		},
 		"fire":   {
 			"file": 	"textures/fire.png",
 			"wrap": 	true,
