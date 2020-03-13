@@ -989,6 +989,135 @@ public class GameCanvas {
     }
 
     /**
+     * Draws the outline of the given shape in the specified color
+     *
+     * @param shape The Box2d shape
+     * @param color The outline color
+     * @param x  The x-coordinate of the shape position
+     * @param y  The y-coordinate of the shape position
+     * @param angle  The shape angle of rotation
+     */
+    public void drawPhysics(PolygonShape shape, Color color, float x, float y, float angle) {
+        if (active != DrawPass.DEBUG) {
+            Gdx.app.error("GameCanvas", "Cannot draw without active beginDebug()", new IllegalStateException());
+            return;
+        }
+
+        local.setToTranslation(x,y);
+        local.rotateRad(angle);
+
+        float x0, y0, x1, y1;
+        debugRender.setColor(color);
+        for(int ii = 0; ii < shape.getVertexCount()-1; ii++) {
+            shape.getVertex(ii  ,vertex);
+            local.applyTo(vertex);
+            x0 = vertex.x; y0 = vertex.y;
+            shape.getVertex(ii+1,vertex);
+            local.applyTo(vertex);
+            x1 = vertex.x; y1 = vertex.y;
+            debugRender.line(x0, y0, x1, y1);
+        }
+        // Close the loop
+        shape.getVertex(shape.getVertexCount()-1,vertex);
+        local.applyTo(vertex);
+        x0 = vertex.x; y0 = vertex.y;
+        shape.getVertex(0,vertex);
+        local.applyTo(vertex);
+        x1 = vertex.x; y1 = vertex.y;
+        debugRender.line(x0, y0, x1, y1);
+    }
+
+    /**
+     * Draws the outline of the given shape in the specified color
+     *
+     * @param shape The Box2d shape
+     * @param color The outline color
+     * @param x  The x-coordinate of the shape position
+     * @param y  The y-coordinate of the shape position
+     * @param angle  The shape angle of rotation
+     * @param sx The amount to scale the x-axis
+     * @param sx The amount to scale the y-axis
+     */
+    public void drawPhysics(PolygonShape shape, Color color, float x, float y, float angle, float sx, float sy) {
+        if (active != DrawPass.DEBUG) {
+            Gdx.app.error("GameCanvas", "Cannot draw without active beginDebug()", new IllegalStateException());
+            return;
+        }
+
+        local.setToScaling(sx,sy);
+        local.translate(x,y);
+        local.rotateRad(angle);
+
+        float x0, y0, x1, y1;
+        debugRender.setColor(color);
+        for(int ii = 0; ii < shape.getVertexCount()-1; ii++) {
+            shape.getVertex(ii  ,vertex);
+            local.applyTo(vertex);
+            x0 = vertex.x; y0 = vertex.y;
+            shape.getVertex(ii+1,vertex);
+            local.applyTo(vertex);
+            x1 = vertex.x; y1 = vertex.y;
+            debugRender.line(x0, y0, x1, y1);
+        }
+        // Close the loop
+        shape.getVertex(shape.getVertexCount()-1,vertex);
+        local.applyTo(vertex);
+        x0 = vertex.x; y0 = vertex.y;
+        shape.getVertex(0,vertex);
+        local.applyTo(vertex);
+        x1 = vertex.x; y1 = vertex.y;
+        debugRender.line(x0, y0, x1, y1);
+    }
+
+    /**
+     * Draws the outline of the given shape in the specified color
+     *
+     * The position of the circle is ignored.  Only the radius is used. To move the
+     * circle, change the x and y parameters.
+     *
+     * @param shape The Box2d shape
+     * @param color The outline color
+     * @param x  The x-coordinate of the shape position
+     * @param y  The y-coordinate of the shape position
+     */
+    public void drawPhysics(CircleShape shape, Color color, float x, float y) {
+        if (active != DrawPass.DEBUG) {
+            Gdx.app.error("GameCanvas", "Cannot draw without active beginDebug()", new IllegalStateException());
+            return;
+        }
+
+        debugRender.setColor(color);
+        debugRender.circle(x, y, shape.getRadius(),12);
+    }
+
+    /**
+     * Draws the outline of the given shape in the specified color
+     *
+     * The position of the circle is ignored.  Only the radius is used. To move the
+     * circle, change the x and y parameters.
+     *
+     * @param shape The Box2d shape
+     * @param color The outline color
+     * @param x  The x-coordinate of the shape position
+     * @param y  The y-coordinate of the shape position
+     * @param sx The amount to scale the x-axis
+     * @param sx The amount to scale the y-axis
+     */
+    public void drawPhysics(CircleShape shape, Color color, float x, float y, float sx, float sy) {
+        if (active != DrawPass.DEBUG) {
+            Gdx.app.error("GameCanvas", "Cannot draw without active beginDebug()", new IllegalStateException());
+            return;
+        }
+
+        float x0 = x*sx;
+        float y0 = y*sy;
+        float w = shape.getRadius()*sx;
+        float h = shape.getRadius()*sy;
+        debugRender.setColor(color);
+        debugRender.ellipse(x0-w, y0-h, 2*w, 2*h, 12);
+    }
+
+    /**
      * Compute the affine transform (and store it in local) for this image.
      *
      * @param ox 	The x-coordinate of texture origin (in pixels)
