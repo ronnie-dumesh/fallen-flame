@@ -8,6 +8,7 @@ import com.fallenflame.game.physics.obstacle.BoxObstacle;
 import com.fallenflame.game.util.JsonAssetManager;
 import java.lang.reflect.*;
 
+/** Credit to Walker White for code from the B2LightsDemo */
 public class ExitModel extends BoxObstacle {
     /**
      * Create a new ExitModel with degenerate settings
