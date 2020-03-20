@@ -205,6 +205,16 @@ public class GameCanvas {
     }
 
     /**
+     * Set camera position. Called by LevelController during draw.
+     *
+     * @param pos Player position to set the camera to
+     */
+    public void setCameraPosition(Vector2 pos) {
+        camera.position.set(pos.x, pos.y, 0);
+        camera.update();
+    }
+
+    /**
      * Returns whether this canvas is currently fullscreen.
      *
      * @return whether this canvas is currently fullscreen.
@@ -1133,10 +1143,5 @@ public class GameCanvas {
         local.rotate(180.0f*angle/(float)Math.PI);
         local.scale(sx,sy);
         local.translate(-ox,-oy);
-    }
-
-    private void setCameraPosition(Vector2 pos) {
-        camera.position.set(pos.x, pos.y, 0);
-        camera.update();
     }
 }

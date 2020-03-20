@@ -24,7 +24,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.fallenflame.game.GameCanvas;
 
 /**
- * THIS CODE IS CREDITED TO BOX2DLIGHTS DEMO
+ * @author Walker White. This Code is credited to the Box2Dlights Demo
  *
  * Base model class to support collisions.
  *
