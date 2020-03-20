@@ -1,6 +1,8 @@
 package com.fallenflame.game;
 
-public class AIController implements InputController {
+import java.util.*;
+
+public class AIController {
     /**
      * Enumeration to encode the finite state machine.
      */
@@ -15,35 +17,31 @@ public class AIController implements InputController {
         ATTACK,
         /** The enemy sees something that is not the player*/
         INVESTIAGE,
-        /** Go to player's last known position */
-        LAST_KNOWN
     }
 
-//    // Constants for chase algorithms
-//    /** How close a target must be for us to chase it */
-//    private static final int CHASE_DIST  = 9;
-//    /** How close a target must be for us to attack it */
-//    private static final int ATTACK_DIST = 4;
+    /** The radius from which a monster will notice a flare and approach it*/
+    private static final int FLARE_DETECTION_RADIUS = 1000;
+    /** The radius from which a monster can chase a player */
+    private static final int CHASE_DIST = 1000;
+    /** The radius from which a monster can attack a player */
+    private static final int ATTACK_DIST = 1000;
+    /** The radius from which an enemy could have considered to have finished its investigation
+     * of a flare or of a player's last-known location*/
+    private static final int REACHED_INVESTIGATE = 1000;
 
     // Instance Attributes
     /** The ship being controlled by this AIController */
     private EnemyModel enemy;
-    /** The game board; used for pathfinding */
-    private Board board;
+    /** The game level; used for pathfinding */
+    private LevelModel level;
     /** All enemies; used to prevent collisions */
     private List<EnemyModel> enemies;
     /** The enemy's current state*/
     private FSMState state;
     /** The player*/
     private PlayerModel player;
-    /**last known X coord of player */
-    private float lastKnownX;
-    /**last known Y coord of player */
-    private float lastKnownY;
     /** The flares that the enemy will investigate */
     private List<FlareModel> flares;
-    /** The flare the enemy is currently investigating */
-    private Flare targetFlare;
     /** The map's walls, used to prevent collisions */
     private List<WallModel> walls;
     /** The ship's next action. */
@@ -51,22 +49,22 @@ public class AIController implements InputController {
     /** The number of ticks since we started this controller */
     private long ticks;
 
-
     /**
      * Creates an AIController for the ship with the given id.
      *
      * @param id The unique ship identifier
-     * @param board The game board (for pathfinding)
-     * @param ships The list of ships (for targetting)
+     * @param level The game level (for pathfinding)
+     * @param enemies The list of enemies
+     * @param player The player to target
+     * @param flares The flares that can attract the enemy
      */
-	public AIController(int id, Board board, List<EnemyModel> enemies, PlayerModel player,
-                        List<FlareModel> flares, List<WallModel> walls) {
+    public AIController(int id, LevelModel level, List<EnemyModel> enemies, PlayerModel player,
+                        List<FlareModel> flares) {
         this.enemy = enemies.get(id);
-        this.board = board;
+        this.level = level;
         this.enemies = enemies;
         this.player = player;
         this.flares = flares;
-        this.walls = walls;
 
         state = FSMState.SPAWN;
         move  = CONTROL_NO_ACTION;
@@ -81,22 +79,17 @@ public class AIController implements InputController {
      * Java does not (nicely) provide bitwise operation support for enums.
      *
      * This function tests the environment and uses the FSM to chose the next
-     * action of the ship. This function SHOULD NOT need to be modified.  It
+     * action of the enemy. This function SHOULD NOT need to be modified.  It
      * just contains code that drives the functions that you need to implement.
      *
      * @return the action selected by this InputController
      */
     public int getAction() {
-        // Increment the number of ticks.
-        //System.out.println(state);
         ticks++;
 
-        // Do not need to rework ourselves every frame. Just every 10 ticks.
-        if ((ship.getId() + ticks) % 10 == 0) {
-            // Process the FSM
+        if ((enemy.getId() + ticks) % 10 == 0) {
             changeStateIfApplicable();
 
-            // Pathfinding
             markGoalTiles();
             move = getMoveAlongPathToGoalTile();
         }
@@ -106,78 +99,63 @@ public class AIController implements InputController {
     }
 
     /**
-     * Change the state of the ship.
-     *
-     * A Finite State Machine (FSM) is just a collection of rules that,
-     * given a current state, and given certain observations about the
-     * environment, chooses a new state. For example, if we are currently
-     * in the ATTACK state, we may want to switch to the CHASE state if the
-     * target gets out of range.
+     * Change the state of the enemy using a Finite State Machine.
      */
     private void changeStateIfApplicable() {
         Random random = new Random();
         int rand_int = random.nextInt(100);
-        int distance = cartesianDistance(player.getX(), player.getY(),
-                enemy.getX(), enemy.getY());
-        /** AI */
-        if(distance < 100 && state != FSMState.ATTACK){
-            state = FSMState.CHASE;
-        }
-
         switch (state) {
             case SPAWN:
                 state = FSMState.WANDER;
                 break;
 
             case WANDER:
+                if(withinChase()){
+                    state = FSMState.CHASE;
+                    break;
+                }
+
                 for(FlareModel flare : flares){
-                    distance = cartesianDistance(flare.getX(), flare.getY(),
-                                                    enemy.getX(), enemy.getY());
-                    /**TODO MAKE CONSTANT FOR DISTANCE FROM FLARE
-                     * like FLARE_DETECTION_RADIUS*/
-                    if(distance <= 100) {
+                    int flareX = flare.getX();
+                    int flareY = flare.getY();
+                    int flareDistance = cartesianDistance(flareX, enemy.getX(),
+                            flareY, enemy.getY());
+                    if(flareDistance <= FLARE_DETECTION_RADIUS) {
                         /**TODO MAKE MULTIPLE FLARE SUPPORT FOR PATHFINDING */
+                        enemy.setInvestigateX(flareX);
+                        enemy.setInvestigateY(flareY);
                         state = FSMState.INVESTIAGE;
-                        targetFlare = flare;
                         break;
                     }
                 }
                 break;
 
             case CHASE:
-                /**TODO MAKE CONSTANT FOR ATTACK DISTANCE FROM PLAYER */
-                if(distance <= 10){
-                    state = FSMState.ATTACK;
-                } else if (distance > 100){
-                    state = FSMState.LAST_KNOWN;
+                enemy.setActivated(true);
+                if(rand_int < 30 || !withinChase()){
+                    state = FSMState.INVESTIAGE;
+                    enemy.setInvestigateX(flareX);
+                    enemy.setInvestigateY(flareY);
                 }
+                else if(withinAttack()){state = FSMState.ATTACK;}
                 break;
 
             case ATTACK:
-                /** TODO, MAKE CONSTANT */
-                if(distance > 100) {
-                    state = FSMState.CHASE;
-                }
+                if(rand_int < 30){state = FSMState.WANDER;}
+                else if(!withinAttack()){state = FSMState.CHASE;}
                 break;
 
             case INVESTIAGE:
-                /** TODO: MAKE CONSANT */
-                int flareDistance = cartesianDistance(targetFlare.getX(), targetFlare.getY(),
-                        enemy.getX(), enemy.getY());
-                if(flareDistance < 1){
+                if(withinChase()){
+                    state = FSMState.CHASE;
+                }
+                else if(investigateReached()){
+                    enemy.setActivated(false);
                     state = FSMState.WANDER;
+                    enemy.setInvestigateX(null);
+                    enemy.setInvestigateY(null);
                 }
                 break;
-
-            case LAST_KNOWN:
-                int lastKnownDistance = cartesianDistance(lastKnownX, lastKnownY),
-                        enemy.getX(), enemy.getY());
-                /** TODO: make constant */
-                if(lastKnownDistance <= 100){
-                    state = FSMState.Chase;
-                }
-                break;
-                if(distance)
 
             default:
                 assert (false);
@@ -198,86 +176,83 @@ public class AIController implements InputController {
      * when completed.
      */
     private void markGoalTiles() {
-        // Clear out previous pathfinding data.
-        board.clearMarks();
-        boolean setGoal = false; // Until we find a goal
-
-        int targetX = 0, targetY = 0, x = 0, y = 0;
-        if(target != null){
-            targetX = board.screenToBoard(target.getX());
-            targetY = board.screenToBoard(target.getY());
-        }
+        boolean setGoal = false;
+        int playerX = player.getX(), playerY = player.getY();
+        int x, y;
 
         switch (state) {
             case SPAWN:
                 break;
 
             case WANDER:
-
                 Random random = new Random();
-                if(wanderGoalTileY == null || wanderGoalTileX == null || random.nextInt(100) < 10) {
-                    x = random.nextInt(board.getHeight());
-                    y = random.nextInt(board.getWidth());
-                    if (board.isSafeAt(x, y) && board.inBounds(x, y)) {
-                        wanderGoalTileX = x;
-                        wanderGoalTileY = y;
-                        board.setGoal(x, y);
+                if (enemy.getGoalX() == null || enemy.getGoalY() == null || random.nextInt(100) < 10) {
+                    x = random.nextInt(level.getHeight());
+                    y = random.nextInt(level.getWidth());
+                    if (level.getSafe(x, y)) {
+                        enemy.setGoal(x, y);
                         setGoal = true;
                     }
-                } else if (board.isSafeAt(wanderGoalTileX, wanderGoalTileY) &&
-                        board.inBounds(wanderGoalTileX, wanderGoalTileY)){
-                    board.setGoal(wanderGoalTileX, wanderGoalTileY);
+
+                } else if (level.getSafe(enemy.getGoalX(), enemy.getGoalY())) {
                     setGoal = true;
                 }
 
                 break;
 
             case CHASE:
-                for(int xOffset = -1; xOffset <= 1; xOffset++){
-                    for(int yOffset = -1; yOffset <=1; yOffset++) {
-                        x = xOffset + targetX;
-                        y = yOffset + targetY;
-                        if (board.isSafeAt(x, y) && board.inBounds(x, y)) {
-                            board.setGoal(x, y);
-                            setGoal = true;
-                        }
-                    }
+                /* TODO: Multiple goal support */
+//                for (int xOffset = -1; xOffset <= 1; xOffset++) {
+//                    for (int yOffset = -1; yOffset <= 1; yOffset++) {
+//                        x = xOffset + playerX;
+//                        y = yOffset + playerY;
+//                        if (level.getSafe(x, y)) {
+//                            level.setGoal(x, y);
+//                            setGoal = true;
+//                        }
+//                    }
+//                }
+                if(level.getSafe(playerX, playerY)){
+                    enemy.setGoal(playerX, playerY);
                 }
                 break;
 
             case ATTACK:
-                if (board.isSafeAt(targetX, targetY) && board.inBounds(targetX, targetY)) {
-                    board.setGoal(targetX, targetY);
-                    lastKnownX = targetX;
-                    lastKnownY = targetY;
+                if (level.getSafe(playerX, playerY)) {
+                    enemy.setGoal(playerX, playerY);
                     setGoal = true;
                 }
+
                 break;
 
             case INVESTIAGE:
-                board.setGoal(targetFlare.getX(), targetFlare.getY());
+//                for (int flareOffsetX = -1; flareOffsetX <= 1; flareOffsetX++) {
+//                    for (int flareOffsetY = -1; flareOffsetY <= 1; flareOffsetY++) {
+//                        x = enemy.getFlare().getX() + flareOffsetX;
+//                        y = enemy.getFlare().getY() + flareOffsetY;
+//                        if (level.getSafe(x, y)) {
+//                            level.setGoal(x, y);
+//                            setGoal = true;
+//                        }
+//                    }
+//                }
+                int investX = enemy.getInvestigateX();
+                int investY = enemy.getInvestigateY();
+                if(level.getSafe(investX, investY)){
+                    enemy.setGoal(enemy.investX, investY);
+                }
                 break;
-
-            case LAST_KNOWN:
-                board.setGoal(lastKnownX, lastKnownY);
         }
 
-        // If we have no goals, mark current position as a goal
-        // so we do not spend time looking for nothing:
         if (!setGoal) {
-            int sx = board.screenToBoard(ship.getX());
-            int sy = board.screenToBoard(ship.getY());
-            board.setGoal(sx, sy);
+            int sx = enemy.screenToTile(enemy.getX());
+            int sy = enemy.screenToTile(enemy.getY());
+            enemy.setGoal(sx, sy);
         }
     }
 
     /**
      * Returns a movement direction that moves towards a goal tile.
-     *
-     * This is one of the longest parts of the assignment. Implement
-     * breadth-first search (from 2110) to find the best goal tile
-     * to move to. However, just return the movement direction for
-     * the next step, not the entire path.
      *
      * The value returned should be a control code.  See PlayerController
      * for more information on how to use control codes.
@@ -285,47 +260,48 @@ public class AIController implements InputController {
      * @return a movement direction that moves towards a goal tile.
      */
     private int getMoveAlongPathToGoalTile() {
-        //#region PUT YOUR CODE HERE
-        int startX = board.screenToBoard(ship.getX());
-        int startY = board.screenToBoard(ship.getY());
-        if(board.isGoal(startX, startY)){return CONTROL_NO_ACTION;}
+        int startX = level.screenToTile(enemy.getX());
+        int startY = level.screenToTile(enemy.getY());
+        if (enemy.isGoal(startX, startY)) {
+            return CONTROL_NO_ACTION;
+        }
         Coordinate start = new Coordinate(startX, startY, null);
         Coordinate c = start;
 
         Queue<Coordinate> queue = new LinkedList<>();
         queue.add(c);
 
-        while(!queue.isEmpty()){
+        HashSet<Coordinate> visited = new HashSet<>();
+
+        while (!queue.isEmpty()) {
 
             c = queue.poll();
-            if(board.isGoal(c.getX(), c.getY())){break;}
+            if (enemy.isGoal(c.getX(), c.getY())) {
+                break;
+            }
 
-            if(!board.isVisited(c.getX(), c.getY())){
-                board.setVisited(c.getX(), c.getY());
+            if (visited.contains(c)) {
+                visited.add(c);
 
-                for(int yOffSet = -1; yOffSet<=1; yOffSet++){
-                    for(int xOffSet = -1; xOffSet<=1; xOffSet++){
+                for (int yOffSet = -1; yOffSet <= 1; yOffSet++) {
+                    for (int xOffSet = -1; xOffSet <= 1; xOffSet++) {
                         int x = c.getX() + xOffSet;
                         int y = c.getY() + yOffSet;
-                        if(board.inBounds(x, y) && board.isSafeAt(x, y)){
+                        if (level.getSafe(x, y)) {
                             queue.add(new Coordinate(x, y, c));
                         }
                     }
                 }
             }
         }
-        while(c.getPrev().getPrev() != null){
+        while (c.getPrev().getPrev() != null) {
             c = c.getPrev();
         }
 
-        //if(c == null){return CONTROL_NO_ACTION;}
         return c.getDirectionFromPrev();
-        //#endregion*/
-        //return CONTROL_NO_ACTION;
     }
 
-    // Add any auxiliary methods or data structures here
-    //#region PUT YOUR CODE HERE
+
     private class Coordinate {
         private int x;
         private int y;
@@ -341,15 +317,17 @@ public class AIController implements InputController {
         public int getY() {return y;}
         public Coordinate getPrev() {return prev;}
 
+        /** Determines the correct direction to move to based on the desired goal and current state */
         public int getDirectionFromPrev(){
             if(prev == null){return randAction();}
-            if(this.x > prev.x && board.isSafeAt(this.x + 1, this.y)) {return CONTROL_MOVE_RIGHT;
-            } else if(this.x < prev.x && board.isSafeAt(this.x - 1, this.y)){return CONTROL_MOVE_LEFT;
-            } else if(this.y < prev.y && board.isSafeAt(this.x, this.y-1)){return CONTROL_MOVE_UP;
-            } else if (this.y > prev.y && board.isSafeAt(this.x, this.y + 1)){return CONTROL_MOVE_DOWN;
+            if(this.x > prev.x && level.getSafe(this.x + 1, this.y)) {return CONTROL_MOVE_RIGHT;
+            } else if(this.x < prev.x && level.getSafe(this.x - 1, this.y)){return CONTROL_MOVE_LEFT;
+            } else if(this.y < prev.y && level.getSafe(this.x, this.y-1)){return CONTROL_MOVE_UP;
+            } else if (this.y > prev.y && level.getSafe(this.x, this.y + 1)){return CONTROL_MOVE_DOWN;
             } else {return randAction();}
         }
 
+        /** Selects a random cardinal direction to move */
         public int randAction(){
             Random random = new Random();
             int[] arr = {CONTROL_MOVE_DOWN, CONTROL_MOVE_LEFT, CONTROL_MOVE_RIGHT, CONTROL_MOVE_UP};
@@ -357,24 +335,37 @@ public class AIController implements InputController {
         }
     }
 
-    public boolean withinChase(Ship myShip, Ship enemyShip){
-        double distance = cartesianDistance(board.screenToBoard(myShip.getX()),
-                board.screenToBoard(enemyShip.getX()),
-                board.screenToBoard(myShip.getY()),
-                board.screenToBoard(enemyShip.getY()));
+
+    /** Returns whether an enemy is in range to chase a player */
+    public boolean withinChase(){
+        double distance = cartesianDistance(level.screenToTile(enemy.getX()),
+                level.screenToTile(player.getX()),
+                level.screenToTile(enemy.getY()),
+                level.screenToTile(player.getY()));
 
         return distance <= CHASE_DIST;
     }
 
-    public boolean withinAttack(Ship myShip, Ship enemyShip){
-        double distance = cartesianDistance(board.screenToBoard(myShip.getX()),
-                board.screenToBoard(enemyShip.getX()),
-                board.screenToBoard(myShip.getY()),
-                board.screenToBoard(enemyShip.getY()));
+    /** Returns whether an enemy is in range to attack a player */
+    public boolean withinAttack(){
+        double distance = cartesianDistance(level.screenToTile(enemy.getX()),
+                level.screenToTile(player.getX()),
+                level.screenToTile(enemy.getY()),
+                level.screenToTile(player.getY()));
 
         return distance <= ATTACK_DIST;
     }
 
+    /** Determines whether the player has reached the coordinates they are investigating */
+    public boolean investigateReached(){
+        double distance = cartesianDistance(level.screenToTile(enemy.getX()),
+                level.screenToTile(enemy.getInvestigateX()),
+                level.screenToTile(enemy.getY()),
+                level.screenToTile(enemy.getInvestigateY()));
+        return distance <= REACHED_INVESTIGATE;
+    }
+
+    /** Returns the Cartesian distance of coordinates (x1, y1) and (x2, y2) */
     public double cartesianDistance(int x1, int x2, int y1, int y2){
         return Math.pow((Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)), 0.5);
     }
