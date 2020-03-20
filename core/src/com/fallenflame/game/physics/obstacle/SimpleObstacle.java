@@ -21,9 +21,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.fallenflame.game.GameCanvas;
 
 /**
- * THIS CODE IS CREDITED TO BOX2DLIGHTS DEMO
+ * @author Walker White. This Code is credited to the Box2Dlights Demo
  *
  * Base model class to support collisions.
  *
@@ -774,7 +775,7 @@ public abstract class SimpleObstacle extends Obstacle {
 	 *
 	 * @param canvas Drawing context
 	 */
-	public void draw(ObstacleCanvas canvas) {
+	public void draw(GameCanvas canvas) {
 		if (texture != null) {
 			canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.x,getAngle(),1,1);
 		}

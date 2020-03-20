@@ -19,7 +19,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.physics.box2d.*;
 
 /**
- * THIS CODE IS CREDITED TO BOX2DLIGHTS DEMO
+ * @author Walker White. This Code is credited to the Box2Dlights Demo
  *
  * A light shaped as a circle with a given radius
  */
