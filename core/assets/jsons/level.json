@@ -1,0 +1,11 @@
+{
+  "physicsSize":      [16.0,12.0],
+  "graphicSize":      [ 800, 600],
+  "fpsRange":         [  20,  60],
+  "player":           { },
+  "exit":             { },
+  "enemies":          [ ],
+  "walls" :           [ ],
+  "flare" :           { },
+  "lighting":         { }
+}
