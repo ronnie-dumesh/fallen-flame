@@ -21,6 +21,17 @@ public class AIController {
         INVESTIAGE,
     }
 
+    /**
+     * Enumeration to encode actions
+     */
+    private static enum Action {
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN,
+        NO_ACTION
+    }
+
     // Constants
     /** The radius from which a monster will notice a flare and approach it*/
     private static final int FLARE_DETECTION_RADIUS = 1000;
@@ -50,7 +61,7 @@ public class AIController {
     /** The last-known position of the player*/
     private Vector2 investigationPosition;
     /** The ship's next action. */
-    private int move; // A ControlCode
+    private Action move; // A ControlCode
     /** The number of ticks since we started this controller */
     private long ticks;
     /** A random-number generator for use within the class */
@@ -77,7 +88,7 @@ public class AIController {
         this.flares = flares;
 
         state = FSMState.SPAWN;
-        move  = CONTROL_NO_ACTION;
+        move  = Action.NO_ACTION;
         ticks = 0;
 
         random = new Random(randomSeed);
@@ -97,7 +108,7 @@ public class AIController {
      *
      * @return the action selected by this InputController
      */
-    public int getAction() {
+    public Action getAction() {
         ticks++;
 
         if ((randomID + ticks) % 10 == 0) {
@@ -107,7 +118,7 @@ public class AIController {
             move = getMoveAlongPathToGoalTile();
         }
 
-        int action = move;
+        Action action = move;
         return action;
     }
 
@@ -132,13 +143,16 @@ public class AIController {
                 //This is to prevent an enemy from getting stuck between two flares
                 int closestFlareDistance = FLARE_DETECTION_RADIUS;
                 for(FlareModel flare : flares){
-                    int flareX = flare.getX();
-                    int flareY = flare.getY();
-                    int flareDistance = cartesianDistance(flareX, enemy.getX(), flareY, enemy.getY());
+                    double flareDistance = cartesianDistance(
+                            level.screenToTile(flare.getX()),
+                            level.screenToTile(enemy.getX()),
+                            level.screenToTile(flare.getY()),
+                            level.screenToTile(enemy.getY())
+                    );
 
                     if(flareDistance <= closestFlareDistance) {
                         closestFlare = flare;
-                        closestFlareDistance = flareDistance;
+                        closestFlareDistance = (int) flareDistance;
                     }
                 }
 
@@ -279,11 +293,11 @@ public class AIController {
      *
      * @return a movement direction that moves towards a goal tile.
      */
-    private int getMoveAlongPathToGoalTile() {
+    private Action getMoveAlongPathToGoalTile() {
         int startX = level.screenToTile(enemy.getX());
         int startY = level.screenToTile(enemy.getY());
         if (enemy.isGoal(startX, startY)) {
-            return CONTROL_NO_ACTION;
+            return Action.NO_ACTION;
         }
         Coordinate start = new Coordinate(startX, startY, null);
         Coordinate c = start;
@@ -327,36 +341,36 @@ public class AIController {
         private int y;
         private Coordinate prev;
 
-        public Coordinate(int x, int y, Coordinate prev){
+        private Coordinate(int x, int y, Coordinate prev){
             this.x = x;
             this.y = y;
             this.prev = prev;
         }
 
-        public int getX() {return x;}
-        public int getY() {return y;}
-        public Coordinate getPrev() {return prev;}
+        private int getX() {return x;}
+        private int getY() {return y;}
+        private Coordinate getPrev() {return prev;}
 
         /** Determines the correct direction to move to based on the desired goal and current state */
-        public int getDirectionFromPrev(){
+        private Action getDirectionFromPrev(){
             if(prev == null){return randAction();}
-            if(this.x > prev.x && level.getSafe(this.x + 1, this.y)) {return CONTROL_MOVE_RIGHT;
-            } else if(this.x < prev.x && level.getSafe(this.x - 1, this.y)){return CONTROL_MOVE_LEFT;
-            } else if(this.y < prev.y && level.getSafe(this.x, this.y-1)){return CONTROL_MOVE_UP;
-            } else if (this.y > prev.y && level.getSafe(this.x, this.y + 1)){return CONTROL_MOVE_DOWN;
+            if(this.x > prev.x && level.getSafe(this.x + 1, this.y)) {return Action.RIGHT;
+            } else if(this.x < prev.x && level.getSafe(this.x - 1, this.y)){return Action.LEFT;
+            } else if(this.y < prev.y && level.getSafe(this.x, this.y-1)){return Action.UP;
+            } else if (this.y > prev.y && level.getSafe(this.x, this.y + 1)){return Action.DOWN;
             } else {return randAction();}
         }
 
         /** Selects a random cardinal direction to move */
-        public int randAction(){
-            int[] arr = {CONTROL_MOVE_DOWN, CONTROL_MOVE_LEFT, CONTROL_MOVE_RIGHT, CONTROL_MOVE_UP};
+        private Action randAction(){
+            Action[] arr = {Action.DOWN, Action.UP, Action.LEFT, Action.RIGHT};
             return arr[random.nextInt(arr.length)];
         }
     }
 
 
     /** Returns whether an enemy is in range to chase a player */
-    public boolean withinChase(){
+    private boolean withinChase(){
         double distance = cartesianDistance(level.screenToTile(enemy.getX()),
                 level.screenToTile(player.getX()),
                 level.screenToTile(enemy.getY()),
@@ -366,7 +380,7 @@ public class AIController {
     }
 
     /** Returns whether an enemy is in range to attack a player */
-    public boolean withinAttack(){
+    private boolean withinAttack(){
         double distance = cartesianDistance(level.screenToTile(enemy.getX()),
                 level.screenToTile(player.getX()),
                 level.screenToTile(enemy.getY()),
@@ -376,7 +390,7 @@ public class AIController {
     }
 
     /** Determines whether the player has reached the coordinates they are investigating */
-    public boolean investigateReached(){
+    private boolean investigateReached(){
         double distance = cartesianDistance(level.screenToTile(enemy.getX()),
                 level.screenToTile(enemy.getGoalX()),
                 level.screenToTile(enemy.getY()),
@@ -391,7 +405,7 @@ public class AIController {
      * @param y2 the y coordinate of the second point
      * @return The cartesian distance between the points
      */
-    public double cartesianDistance(int x1, int x2, int y1, int y2){
+    private double cartesianDistance(int x1, int x2, int y1, int y2){
         return Math.pow((Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)), 0.5);
     }
 }
