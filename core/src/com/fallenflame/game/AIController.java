@@ -1,5 +1,7 @@
 package com.fallenflame.game;
 
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.*;
 
 public class AIController {
@@ -19,6 +21,7 @@ public class AIController {
         INVESTIAGE,
     }
 
+    // Constants
     /** The radius from which a monster will notice a flare and approach it*/
     private static final int FLARE_DETECTION_RADIUS = 1000;
     /** The radius from which a monster can chase a player */
@@ -42,6 +45,10 @@ public class AIController {
     private PlayerModel player;
     /** The flares that the enemy will investigate */
     private List<FlareModel> flares;
+    /** The flare closest to the enemy */
+    private FlareModel closestFlare;
+    /** The last-known position of the player*/
+    private Vector2 lastKnownPosition;
     /** The map's walls, used to prevent collisions */
     private List<WallModel> walls;
     /** The ship's next action. */
@@ -109,52 +116,64 @@ public class AIController {
                 state = FSMState.WANDER;
                 break;
 
-            case WANDER:
+
+            case WANDER: //Precondition that closestFlare is null
                 if(withinChase()){
                     state = FSMState.CHASE;
                     break;
                 }
 
+                closestFlare = null; //Safety for if closestFlare is not null for some-reason.
+                //This is to prevent an enemy from getting stuck between two flares
+                int closestFlareDistance = FLARE_DETECTION_RADIUS;
                 for(FlareModel flare : flares){
                     int flareX = flare.getX();
                     int flareY = flare.getY();
-                    int flareDistance = cartesianDistance(flareX, enemy.getX(),
-                            flareY, enemy.getY());
-                    if(flareDistance <= FLARE_DETECTION_RADIUS) {
-                        /**TODO MAKE MULTIPLE FLARE SUPPORT FOR PATHFINDING */
-                        enemy.setInvestigateX(flareX);
-                        enemy.setInvestigateY(flareY);
-                        state = FSMState.INVESTIAGE;
-                        break;
+                    int flareDistance = cartesianDistance(flareX, enemy.getX(), flareY, enemy.getY());
+
+                    if(flareDistance <= closestFlareDistance) {
+                        closestFlare = flare;
+                        closestFlareDistance = flareDistance;
                     }
                 }
+
+                if(closestFlare != null){
+                    state = FSMState.INVESTIAGE;
+                }
+
                 break;
 
             case CHASE:
                 enemy.setActivated(true);
-                if(rand_int < 30 || !withinChase()){
+
+                if(rand_int < 30 || !withinChase()){ //random chance of quitting chase
                     state = FSMState.INVESTIAGE;
-                    enemy.setInvestigateX(flareX);
-                    enemy.setInvestigateY(flareY);
+                    lastKnownPosition = new Vector2(player.getX(), player.getY());
                 }
-                else if(withinAttack()){state = FSMState.ATTACK;}
+
+                else if(withinAttack()){
+                    state = FSMState.ATTACK;
+                }
+
                 break;
 
             case ATTACK:
-                if(rand_int < 30){state = FSMState.WANDER;}
-                else if(!withinAttack()){state = FSMState.CHASE;}
+                if(!withinAttack()){
+                    state = FSMState.CHASE;
+                }
+
                 break;
 
             case INVESTIAGE:
                 if(withinChase()){
                     state = FSMState.CHASE;
                 }
+
                 else if(investigateReached()){
                     enemy.setActivated(false);
                     state = FSMState.WANDER;
-                    enemy.setInvestigateX(null);
-                    enemy.setInvestigateY(null);
                 }
+
                 break;
 
             default:
@@ -201,17 +220,6 @@ public class AIController {
                 break;
 
             case CHASE:
-                /* TODO: Multiple goal support */
-//                for (int xOffset = -1; xOffset <= 1; xOffset++) {
-//                    for (int yOffset = -1; yOffset <= 1; yOffset++) {
-//                        x = xOffset + playerX;
-//                        y = yOffset + playerY;
-//                        if (level.getSafe(x, y)) {
-//                            level.setGoal(x, y);
-//                            setGoal = true;
-//                        }
-//                    }
-//                }
                 if(level.getSafe(playerX, playerY)){
                     enemy.setGoal(playerX, playerY);
                 }
@@ -226,16 +234,6 @@ public class AIController {
                 break;
 
             case INVESTIAGE:
-//                for (int flareOffsetX = -1; flareOffsetX <= 1; flareOffsetX++) {
-//                    for (int flareOffsetY = -1; flareOffsetY <= 1; flareOffsetY++) {
-//                        x = enemy.getFlare().getX() + flareOffsetX;
-//                        y = enemy.getFlare().getY() + flareOffsetY;
-//                        if (level.getSafe(x, y)) {
-//                            level.setGoal(x, y);
-//                            setGoal = true;
-//                        }
-//                    }
-//                }
                 int investX = enemy.getInvestigateX();
                 int investY = enemy.getInvestigateY();
                 if(level.getSafe(investX, investY)){
@@ -359,13 +357,19 @@ public class AIController {
     /** Determines whether the player has reached the coordinates they are investigating */
     public boolean investigateReached(){
         double distance = cartesianDistance(level.screenToTile(enemy.getX()),
-                level.screenToTile(enemy.getInvestigateX()),
+                level.screenToTile(enemy.getGoalX()),
                 level.screenToTile(enemy.getY()),
-                level.screenToTile(enemy.getInvestigateY()));
+                level.screenToTile(enemy.getGoalY()));
         return distance <= REACHED_INVESTIGATE;
     }
 
-    /** Returns the Cartesian distance of coordinates (x1, y1) and (x2, y2) */
+    /**
+     * @param x1 the x coordinate of the first point
+     * @param x2 the x coordinate of the second point
+     * @param y1 the y coordinate of the first point
+     * @param y2 the y coordinate of the second point
+     * @return The cartesian distance between the points
+     */
     public double cartesianDistance(int x1, int x2, int y1, int y2){
         return Math.pow((Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)), 0.5);
     }
