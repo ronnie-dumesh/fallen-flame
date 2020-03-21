@@ -45,16 +45,18 @@ public class AIController {
     private PlayerModel player;
     /** The flares that the enemy will investigate */
     private List<FlareModel> flares;
-    /** The flare closest to the enemy */
-    private FlareModel closestFlare;
+    /** The flares that have been investigated by the enemy */
+    private HashSet<FlareModel> investigatedFlares;
     /** The last-known position of the player*/
-    private Vector2 lastKnownPosition;
-    /** The map's walls, used to prevent collisions */
-    private List<WallModel> walls;
+    private Vector2 investigationPosition;
     /** The ship's next action. */
     private int move; // A ControlCode
     /** The number of ticks since we started this controller */
     private long ticks;
+    /** A random-number generator for use within the class */
+    private Random random;
+    /** A randomID to stagger the amount of processing of each enemy per frame */
+    private int randomID;
 
     /**
      * Creates an AIController for the ship with the given id.
@@ -64,9 +66,10 @@ public class AIController {
      * @param enemies The list of enemies
      * @param player The player to target
      * @param flares The flares that can attract the enemy
+     * @param randomSeed a random seed to make a random ID for the enemy
      */
     public AIController(int id, LevelModel level, List<EnemyModel> enemies, PlayerModel player,
-                        List<FlareModel> flares) {
+                        List<FlareModel> flares, long randomSeed) {
         this.enemy = enemies.get(id);
         this.level = level;
         this.enemies = enemies;
@@ -76,6 +79,9 @@ public class AIController {
         state = FSMState.SPAWN;
         move  = CONTROL_NO_ACTION;
         ticks = 0;
+
+        random = new Random(randomSeed);
+        randomID = random.nextInt();
     }
 
     /**
@@ -94,7 +100,7 @@ public class AIController {
     public int getAction() {
         ticks++;
 
-        if ((enemy.getId() + ticks) % 10 == 0) {
+        if ((randomID + ticks) % 10 == 0) {
             changeStateIfApplicable();
 
             markGoalTiles();
@@ -109,7 +115,6 @@ public class AIController {
      * Change the state of the enemy using a Finite State Machine.
      */
     private void changeStateIfApplicable() {
-        Random random = new Random();
         int rand_int = random.nextInt(100);
         switch (state) {
             case SPAWN:
@@ -117,13 +122,13 @@ public class AIController {
                 break;
 
 
-            case WANDER: //Precondition that closestFlare is null
+            case WANDER:
                 if(withinChase()){
                     state = FSMState.CHASE;
                     break;
                 }
 
-                closestFlare = null; //Safety for if closestFlare is not null for some-reason.
+                FlareModel closestFlare = null; //Safety for if closestFlare is not null for some-reason.
                 //This is to prevent an enemy from getting stuck between two flares
                 int closestFlareDistance = FLARE_DETECTION_RADIUS;
                 for(FlareModel flare : flares){
@@ -138,6 +143,8 @@ public class AIController {
                 }
 
                 if(closestFlare != null){
+                    investigatedFlares.add(closestFlare);
+                    investigationPosition = new Vector2(closestFlare.getX(), closestFlare.getY());
                     state = FSMState.INVESTIAGE;
                 }
 
@@ -148,7 +155,7 @@ public class AIController {
 
                 if(rand_int < 30 || !withinChase()){ //random chance of quitting chase
                     state = FSMState.INVESTIAGE;
-                    lastKnownPosition = new Vector2(player.getX(), player.getY());
+                    investigationPosition = new Vector2(player.getX(), player.getY());
                 }
 
                 else if(withinAttack()){
@@ -164,12 +171,15 @@ public class AIController {
 
                 break;
 
-            case INVESTIAGE:
+            case INVESTIAGE: //investigation position must not be null
+                assert investigationPosition != null;
                 if(withinChase()){
                     state = FSMState.CHASE;
+                    investigationPosition = null;
                 }
 
                 else if(investigateReached()){
+                    investigationPosition = null;
                     enemy.setActivated(false);
                     state = FSMState.WANDER;
                 }
@@ -196,56 +206,68 @@ public class AIController {
      */
     private void markGoalTiles() {
         boolean setGoal = false;
-        int playerX = player.getX(), playerY = player.getY();
-        int x, y;
+        float playerX = player.getX(), playerY = player.getY();
+        int sx, sy;
 
         switch (state) {
             case SPAWN:
                 break;
 
             case WANDER:
-                Random random = new Random();
-                if (enemy.getGoalX() == null || enemy.getGoalY() == null || random.nextInt(100) < 10) {
-                    x = random.nextInt(level.getHeight());
-                    y = random.nextInt(level.getWidth());
-                    if (level.getSafe(x, y)) {
+                float x, y;
+                if (enemy.getGoal() == null || random.nextInt(100) < 10) {
+                    x = random.nextFloat() * level.getHeight();
+                    y = random.nextFloat() * level.getWidth();
+                    sx = level.screenToTile(x);
+                    sy = level.screenToTile(y);
+                    if (level.getSafe(sx, sy)) {
                         enemy.setGoal(x, y);
                         setGoal = true;
                     }
 
-                } else if (level.getSafe(enemy.getGoalX(), enemy.getGoalY())) {
+                }
+
+                x = enemy.getGoalX();
+                y = enemy.getGoalY();
+                sx = level.screenToTile(x);
+                sy = level.screenToTile(y);
+                if (level.getSafe(sx, sy)) {
                     setGoal = true;
                 }
 
                 break;
 
             case CHASE:
-                if(level.getSafe(playerX, playerY)){
+                sx = level.screenToTile(playerX);
+                sy = level.screenToTile(playerY);
+                if(level.getSafe(sx, sy)){
                     enemy.setGoal(playerX, playerY);
+                    setGoal = true;
                 }
                 break;
 
             case ATTACK:
-                if (level.getSafe(playerX, playerY)) {
+                sx = level.screenToTile(playerX);
+                sy = level.screenToTile(playerY);
+                if(level.getSafe(sx, sy)){
                     enemy.setGoal(playerX, playerY);
                     setGoal = true;
                 }
-
                 break;
 
-            case INVESTIAGE:
-                int investX = enemy.getInvestigateX();
-                int investY = enemy.getInvestigateY();
-                if(level.getSafe(investX, investY)){
-                    enemy.setGoal(enemy.investX, investY);
+            case INVESTIAGE: //investigationPosition must not be null
+                float investX = investigationPosition.x;
+                float investY = investigationPosition.y;
+                sx = level.screenToTile(playerX);
+                sy = level.screenToTile(playerY);
+                if(level.getSafe(sx, sy)){
+                    enemy.setGoal(investX, investY);
                 }
                 break;
         }
 
         if (!setGoal) {
-            int sx = enemy.screenToTile(enemy.getX());
-            int sy = enemy.screenToTile(enemy.getY());
-            enemy.setGoal(sx, sy);
+            enemy.clearGoal();
         }
     }
 
@@ -327,7 +349,6 @@ public class AIController {
 
         /** Selects a random cardinal direction to move */
         public int randAction(){
-            Random random = new Random();
             int[] arr = {CONTROL_MOVE_DOWN, CONTROL_MOVE_LEFT, CONTROL_MOVE_RIGHT, CONTROL_MOVE_UP};
             return arr[random.nextInt(arr.length)];
         }
