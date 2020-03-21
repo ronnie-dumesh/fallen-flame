@@ -377,13 +377,13 @@ public class LevelController {
         Iterator<FlareModel> i = flares.iterator();
         while(i.hasNext()){
             FlareModel flare = i.next();
-            if(!flare.isActive()){
+            if(!(Float.compare(flare.timeToBurnout(), 0.0f) > 0)){
                 flare.deactivatePhysics(world);
                 flare.dispose();
                 i.remove();
             }
             else {
-                flare.update();
+                flare.update(dt);
             }
         }
 
@@ -398,7 +398,9 @@ public class LevelController {
      * @param mousePosition Position of mouse when flare launched
      */
     public void createFlare(Vector2 mousePosition){
-        FlareModel flare = new FlareModel(player.getPosition(), mousePosition, flareJSON);
+        FlareModel flare = new FlareModel(player.getPosition());
+        flare.initialize(flareJSON);
+        flare.applyInitialForce(mousePosition.angle(), mousePosition.cpy());
         flares.add(flare);
     }
 
@@ -494,7 +496,7 @@ public class LevelController {
             // Check for win condition
             if ((bd1 == player && bd2 == exit  )
                     || (bd1 == exit && bd2 == player)) {
-                setLevelState(levelState.WIN);
+            setLevelState(levelState.WIN);
                 return;
             }
             // Check for loss condition (player runs into enemy)
@@ -502,6 +504,14 @@ public class LevelController {
                     || (bd1 instanceof  EnemyModel && bd2 == player)){
                 setLevelState(LevelState.LOSS);
                 return;
+            }
+            // Check if flare collides with wall and if so stop it
+            if((bd1 instanceof FlareModel && bd2 instanceof WallModel
+                    || bd1 instanceof  WallModel && bd2 instanceof FlareModel)) {
+                if(bd1 instanceof FlareModel)
+                    ((FlareModel) bd1).stopMovement();
+                else
+                    ((FlareModel) bd2).stopMovement();
             }
             // Ensure flare does not collide with player or enemy
             if ((bd1 == player && bd2 instanceof FlareModel)
