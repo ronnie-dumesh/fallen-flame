@@ -31,6 +31,18 @@ public class FlareModel extends WheelObstacle {
     /** Time when it was fired **/
     private long startTime;
 
+    /** Light Radius */
+    private static float LIGHT_RADIUS = 2; // TODO: may not want to be static later
+
+    /**
+     * Returns the light radius of this flare.
+     *
+     * @return the light radius of this flare.
+     */
+    public float getLightRadius() {
+        return LIGHT_RADIUS;
+    }
+
     /**
      * Returns the directional movement of this flare.
      *
