@@ -132,7 +132,7 @@ public class AIController {
                             level.screenToTile(enemy.getY())
                     );
 
-                    if(flareDistance <= closestFlareDistance) {
+                    if(flareDistance <= closestFlareDistance && !investigatedFlares.contains(flare)) {
                         closestFlare = flare;
                         closestFlareDistance = (int) flareDistance;
                     }
