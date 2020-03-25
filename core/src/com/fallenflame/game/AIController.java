@@ -31,11 +31,11 @@ public class AIController {
     }
 
     // Constants
-    /** The radius from which a monster will notice a flare and approach it*/
+    /** The radius from which an enemy will notice a flare and approach it*/
     private static final int FLARE_DETECTION_RADIUS = 1000;
-    /** The radius from which a monster can chase a player */
+    /** The radius from which an enemy can chase a player */
     private static final int CHASE_DIST = 1000;
-    /** The radius from which a monster can attack a player */
+    /** The radius from which an enemy can attack a player */
     private static final int ATTACK_DIST = 1000;
     /** The radius from which an enemy could have considered to have finished its investigation
      * of a flare or of a player's last-known location*/
@@ -46,8 +46,7 @@ public class AIController {
     private EnemyModel enemy;
     /** The game level; used for pathfinding */
     private LevelModel level;
-    /** All enemies; used to prevent collisions */
-    private List<EnemyModel> enemies;
+
     /** The enemy's current state*/
     private FSMState state;
     /** The player*/
@@ -75,13 +74,11 @@ public class AIController {
      * @param enemies The list of enemies
      * @param player The player to target
      * @param flares The flares that can attract the enemy
-     * @param randomSeed a random seed to make a random ID for the enemy
      */
     public AIController(int id, LevelModel level, List<EnemyModel> enemies, PlayerModel player,
-                        List<FlareModel> flares, long randomSeed) {
+                        List<FlareModel> flares) {
         this.enemy = enemies.get(id);
         this.level = level;
-        this.enemies = enemies;
         this.player = player;
         this.flares = flares;
 
@@ -89,20 +86,12 @@ public class AIController {
         move  = Action.NO_ACTION;
         ticks = 0;
 
-        random = new Random(randomSeed);
+        random = new Random(id);
         randomID = random.nextInt();
     }
 
     /**
      * Returns the action selected by this InputController
-     *
-     * The returned int is a bit-vector of more than one possible input
-     * option. This is why we do not use an enumeration of Control Codes;
-     * Java does not (nicely) provide bitwise operation support for enums.
-     *
-     * This function tests the environment and uses the FSM to chose the next
-     * action of the enemy. This function SHOULD NOT need to be modified.  It
-     * just contains code that drives the functions that you need to implement.
      *
      * @return the action selected by this InputController
      */
@@ -160,7 +149,8 @@ public class AIController {
             case CHASE:
                 enemy.setActivated(true);
 
-                if(rand_int < 30 || !withinChase()){ //random chance of quitting chase
+                //TODO: consider random chance of quitting chase
+                if(!withinChase()){
                     state = FSMState.INVESTIGATE;
                     investigationPosition = new Vector2(player.getX(), player.getY());
                 }
@@ -204,9 +194,6 @@ public class AIController {
      * Mark all desirable tiles to move to.
      *
      * This method implements pathfinding through the use of goal tiles.
-     * It searches for all desirable tiles to move to (there may be more than
-     * one), and marks each one as a goal. Then, the pathfinding method
-     * getMoveAlongPathToGoalTile() moves the enemy towards the closest one.
      *
      * POSTCONDITION: There is guaranteed to be at least one goal tile
      * when completed.
