@@ -30,7 +30,92 @@
     "debugopacity":   200
   },
   "enemies":          [ ],
-  "walls" :           [ ],
+  "walls" :           [
+    {
+      "pos":        	[ 1.75f, 3.0f],
+      "size":       	[ 2.5f, 0.5f],
+      "pad":       	[ 0.1f, 0.1f],
+      "bodytype":     "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":      "earth",
+      "debugcolor":   "yellow",
+      "debugopacity":  200
+    },
+    {
+      "pos":          [ 2.75f, 4.75f],
+      "size":         [ 0.5f, 4.0f],
+      "pad":       	[ 0.1f, 0.1f],
+      "bodytype":     "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":      "earth",
+      "debugcolor":   "yellow",
+      "debugopacity":  200
+    },
+    {
+      "pos":          [  11.0f, 6.5f],
+      "size":         [ 5.0f,  0.5f],
+      "pad":       	[ 0.1f, 0.1f],
+      "bodytype":     "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":      "earth",
+      "debugcolor":   "yellow",
+      "debugopacity":  200
+    },
+    {
+      "pos":          [ 13.25f, 4.5f],
+      "size":         [  0.5f, 4.5f],
+      "pad":       	[ 0.1f, 0.1f],
+      "bodytype":     "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":      "earth",
+      "debugcolor":   "yellow",
+      "debugopacity":  200
+    },
+    {
+      "pos":          [ 6.0f, 6.5f],
+      "size":         [  0.5f, 0.5f],
+      "pad":       	[ 0.1f, 0.1f],
+      "bodytype":     "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":      "earth",
+      "debugcolor":   "yellow",
+      "debugopacity":  200
+    },
+    {
+      "pos":          [ 10.0f, 3.5f],
+      "size":         [  0.5f, 0.5f],
+      "pad":       	[ 0.1f, 0.1f],
+      "bodytype":     "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":      "earth",
+      "debugcolor":   "yellow",
+      "debugopacity":  200
+    },
+    {
+      "pos":          [  7.0f, 9.0f],
+      "size":         [ 13.0f,  0.5f],
+      "pad":       	[ 0.1f, 0.1f],
+      "bodytype":     "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":      "earth",
+      "debugcolor":   "yellow",
+      "debugopacity":  200
+    }
+  ],
   "flare" :           {
     "radius":      	  0.1,
     "bodytype":    	  "dynamic",

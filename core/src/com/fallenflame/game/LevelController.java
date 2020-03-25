@@ -10,10 +10,10 @@ import java.util.*;
 /** Credit to Walker White for some code reused from B2LightsDemo */
 public class LevelController implements ContactListener {
     //  MAY NEED THESE:
-//    /** Number of velocity iterations for the constrain solvers */
-//    public static final int WORLD_VELOC = 6;
-//    /** Number of position iterations for the constrain solvers */
-//    public static final int WORLD_POSIT = 2;
+    /** Number of velocity iterations for the constrain solvers */
+    public static final int WORLD_VELOC = 6;
+    /** Number of position iterations for the constrain solvers */
+    public static final int WORLD_POSIT = 2;
 
     /** Whether or not the level has been populated */
     private boolean populated;
@@ -362,12 +362,14 @@ public class LevelController implements ContactListener {
      * @param dt the time passed since the last frame
      */
     public void update(float dt) {
-        // Update player (and update levelModel) and exit
-        levelModel.removePlayer(player);
-        player.update(dt);
-        levelModel.placePlayer(player);
+        if(fixedStep(dt)){
+            world.step(dt, WORLD_VELOC, WORLD_POSIT);
+            // Update player (and update levelModel) and exit
+            // TODO: level model bugs levelModel.removePlayer(player);
+            player.update(dt);
+            // TODO: level model bugs levelModel.placePlayer(player);
 
-        // TODO: Waiting for AI Controller to be finished
+            // TODO: Waiting for AI Controller to be finished
 //        // Get Enemy Actions
 //        Iterator<AIController> ctrlI = AIControllers.iterator();
 //        LinkedList<EnemyModel.Action> actions = new LinkedList();
@@ -385,23 +387,49 @@ public class LevelController implements ContactListener {
 //            levelModel.placeEnemy(enemy);
 //        }
 
-        // Update flares
-        Iterator<FlareModel> i = flares.iterator();
-        while(i.hasNext()){
-            FlareModel flare = i.next();
-            if(!(Float.compare(flare.timeToBurnout(), 0.0f) > 0)){
-                flare.deactivatePhysics(world);
-                flare.dispose();
-                i.remove();
+            // Update flares
+            Iterator<FlareModel> i = flares.iterator();
+            while(i.hasNext()){
+                FlareModel flare = i.next();
+                if(!(Float.compare(flare.timeToBurnout(), 0.0f) > 0)){
+                    flare.deactivatePhysics(world);
+                    flare.dispose();
+                    i.remove();
+                }
+                else {
+                    flare.update(dt);
+                }
             }
-            else {
-                flare.update(dt);
-            }
+
+            // Update lights
+            lightController.updateLights(player, flares, enemies);
+        }
+    }
+
+    /**
+     * Fixes the physics frame rate to be in sync with the animation framerate
+     *
+     * http://gafferongames.com/game-physics/fix-your-timestep/
+     *
+     * @param dt the time passed since the last frame
+     */
+    private boolean fixedStep(float dt) {
+        if (world == null) return false;
+
+        physicsTimeLeft += dt;
+        if (physicsTimeLeft > maxTimePerFrame) {
+            physicsTimeLeft = maxTimePerFrame;
         }
 
-        // Update lights
-        lightController.updateLights(player, flares, enemies);
+        boolean stepped = false;
+        while (physicsTimeLeft >= timeStep) {
+            world.step(timeStep, WORLD_VELOC, WORLD_POSIT);
+            physicsTimeLeft -= timeStep;
+            stepped = true;
+        }
+        return stepped;
     }
+
 
     /**
      * Launch a flare from the player towards the mouse position based on preset flareJSON data.
