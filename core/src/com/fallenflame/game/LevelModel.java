@@ -39,7 +39,7 @@ public class LevelModel {
             setWheelObstacleInGrid(e, false);
         }
         for(WallModel w : walls) {
-            // TODO: fix index out of bounds exception: setBoxObstacleInGrid(w, false);
+            setBoxObstacleInGrid(w, false);
         }
     }
 

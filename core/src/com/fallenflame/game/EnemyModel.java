@@ -22,6 +22,7 @@ public class EnemyModel extends CharacterModel {
     public void initialize(JsonValue json) {
         super.initialize(json);
         // Enemy specific initialization
+        setForce(getForce() * 1.4f); // temporary way to make enemy faster than player
         // Now get the texture from the AssetManager singleton
         String key = getDefaultTexture(); // TODO: should get from JSON?
         TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
@@ -123,5 +124,41 @@ public class EnemyModel extends CharacterModel {
      */
     public float getLightRadius() {
         return getActivated() ? 1 : 0;
+    }
+
+    /**
+     * Executes enemy action
+     * @param action for enemy to execute. can be left, right, up, down movement or no action
+     * @return true if enemy has moved
+     */
+    public boolean executeAction(AIController.Action action) {
+        Vector2 tempAngle = new Vector2(); // x: -1 = left, 1 = right, 0 = still; y: -1 = down, 1 = up, 0 = still
+        switch(action){
+            case NO_ACTION:
+                return false;
+            case LEFT:
+                tempAngle.set(-1,0);
+                break;
+            case RIGHT:
+                tempAngle.set(1,0);
+                break;
+            case UP:
+                tempAngle.set(0,1);
+                break;
+            case DOWN:
+                tempAngle.set(0,-1);
+                break;
+            default:
+                System.out.println("invalid enemy action");
+                assert false;
+        }
+        tempAngle.scl(getForce());
+        setMovement(tempAngle.x, tempAngle.y);
+        float angle = tempAngle.angle();
+        // Convert to radians with up as 0
+        angle = (float)Math.PI*(angle-90.0f)/180.0f;
+        setAngle(angle);
+        applyForce();
+        return true;
     }
 }
