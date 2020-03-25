@@ -27,6 +27,10 @@
 		"fire":   {
 			"file": 	"textures/fire.png",
 			"wrap": 	true,
+		},
+		"earth": {
+			"file": 	"textures/earthtile.png",
+			"wrap": 	true,
 		}
   	},
   	"fonts": {
