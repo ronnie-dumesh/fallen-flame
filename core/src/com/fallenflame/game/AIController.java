@@ -33,6 +33,7 @@ public class AIController {
     // Constants
     /** The radius from which an enemy will notice a flare and approach it*/
     private static final int FLARE_DETECTION_RADIUS = 1000;
+    //TODO: consider chase distance relative to player light radius
     /** The radius from which an enemy can chase a player */
     private static final int CHASE_DIST = 1000;
     /** The radius from which an enemy can attack a player */
@@ -54,7 +55,7 @@ public class AIController {
     /** The flares that the enemy will investigate */
     private List<FlareModel> flares;
     /** The flares that have been investigated by the enemy */
-    private HashSet<FlareModel> investigatedFlares;
+    private HashSet<FlareModel> investigatedFlares = new HashSet<>();
     /** The last-known position of the player of an encountered flare*/
     private Vector2 investigationPosition;
     /** The enemy's next move */
@@ -106,6 +107,8 @@ public class AIController {
         }
 
         Action action = move;
+
+        //TODO: insert non-movement actions
         return action;
     }
 
@@ -113,7 +116,8 @@ public class AIController {
      * Change the state of the enemy using a Finite State Machine.
      */
     private void changeStateIfApplicable() {
-        int rand_int = random.nextInt(100);
+        //TODO: consider randomness
+        //int rand_int = random.nextInt(100);
         switch (state) {
             case IDLE:
                 if(withinChase()){
@@ -201,7 +205,6 @@ public class AIController {
     private void markGoalTiles() {
         boolean setGoal = false;
         float playerX = player.getX(), playerY = player.getY();
-        int sx, sy;
 
         switch (state) {
             case IDLE:
@@ -250,8 +253,8 @@ public class AIController {
         if (enemy.isGoal(startX, startY)) {
             return Action.NO_ACTION;
         }
-        Coordinate start = new Coordinate(startX, startY, null);
-        Coordinate c = start;
+
+        Coordinate c = new Coordinate(startX, startY, null);
 
         Queue<Coordinate> queue = new LinkedList<>();
         queue.add(c);
