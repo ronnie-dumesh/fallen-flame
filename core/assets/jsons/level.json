@@ -19,7 +19,7 @@
     "debugopacity":	192
   },
   "exit":             {
-    "pos":            [ 1.5, 10.35],
+    "pos":            [ 1.5, 5.35],
     "size":           [ 1.25, 1.25],
     "bodytype":    	  "static",
     "density":  	  0.0,
