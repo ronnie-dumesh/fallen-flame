@@ -8,7 +8,7 @@ public class AIController {
     /**
      * Enumeration to encode the finite state machine.
      */
-    private static enum FSMState {
+    private enum FSMState {
         /** The enemy does not have a target */
         IDLE,
         /** The enemy has a target, but must get closer */
@@ -22,7 +22,7 @@ public class AIController {
     /**
      * Enumeration to encode actions
      */
-    private static enum Action {
+    private enum Action {
         LEFT,
         RIGHT,
         UP,
@@ -209,51 +209,25 @@ public class AIController {
                 if (enemy.getGoal() == null || random.nextInt(100) < 10) {
                     x = random.nextFloat() * level.getHeight();
                     y = random.nextFloat() * level.getWidth();
-                    sx = level.screenToTile(x);
-                    sy = level.screenToTile(y);
-                    if (level.getSafe(sx, sy)) {
-                        enemy.setGoal(x, y);
-                        setGoal = true;
-                    }
-
-                }
-
-                x = enemy.getGoalX();
-                y = enemy.getGoalY();
-                sx = level.screenToTile(x);
-                sy = level.screenToTile(y);
-                if (level.getSafe(sx, sy)) {
+                    enemy.setGoal(x, y);
                     setGoal = true;
                 }
-
                 break;
 
             case CHASE:
-                sx = level.screenToTile(playerX);
-                sy = level.screenToTile(playerY);
-                if(level.getSafe(sx, sy)){
-                    enemy.setGoal(playerX, playerY);
-                    setGoal = true;
-                }
+                enemy.setGoal(playerX, playerY);
+                setGoal = true;
                 break;
 
             case ATTACK:
-                sx = level.screenToTile(playerX);
-                sy = level.screenToTile(playerY);
-                if(level.getSafe(sx, sy)){
-                    enemy.setGoal(playerX, playerY);
-                    setGoal = true;
-                }
+                enemy.setGoal(playerX, playerY);
+                setGoal = true;
                 break;
 
             case INVESTIGATE: //investigationPosition must not be null
                 float investX = investigationPosition.x;
                 float investY = investigationPosition.y;
-                sx = level.screenToTile(playerX);
-                sy = level.screenToTile(playerY);
-                if(level.getSafe(sx, sy)){
-                    enemy.setGoal(investX, investY);
-                }
+                enemy.setGoal(investX, investY);
                 break;
         }
 
