@@ -101,7 +101,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /** AssetManager to be loading in the background */
     private AssetManager manager;
     /** Reference to GameCanvas created by the root */
-    private ObstacleCanvas canvas;
+    private GameCanvas canvas;
     /** Listener that will update the player mode when we are done */
     private ScreenListener listener;
 

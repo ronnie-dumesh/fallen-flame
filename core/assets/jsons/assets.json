@@ -1,11 +1,17 @@
 {
     "textures": {
-    	"earth": {
-    		"file":		"textures/earthtile.png",
-    		"wrap":		true,
+    	"enemy": {
+    		"file":		"textures/enemy-walking.png",
+    		"wrap":		false,
+			"strip":	{
+				"size":		4,
+				"rows":		1,
+				"cols":		4,
+				"first":	0
+			}
     	},
-    	"dude": {      
-    		"file": 	"textures/walking.png",
+    	"player": {
+    		"file": 	"textures/player-walking.png",
     		"wrap":  	false,
     		"strip":	{
     			"size":		4,
@@ -20,6 +26,10 @@
          },
 		"fire":   {
 			"file": 	"textures/fire.png",
+			"wrap": 	true,
+		},
+		"earth": {
+			"file": 	"textures/earthtile.png",
 			"wrap": 	true,
 		}
   	},

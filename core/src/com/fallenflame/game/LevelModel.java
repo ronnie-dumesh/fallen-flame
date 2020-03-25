@@ -22,7 +22,7 @@ public class LevelModel {
     public LevelModel(){ }
 
     public void initialize(Rectangle bounds, PlayerModel player, List<WallModel> walls, List<EnemyModel> enemies) {
-        tileSize = (int) player.getRadius();
+        tileSize = Math.max((int)player.getRadius(),1);
         width = bounds.getWidth();
         height = bounds.getHeight();
 
@@ -39,7 +39,7 @@ public class LevelModel {
             setWheelObstacleInGrid(e, false);
         }
         for(WallModel w : walls) {
-            setBoxObstacleInGrid(w, false);
+            // TODO: fix index out of bounds exception: setBoxObstacleInGrid(w, false);
         }
     }
 
@@ -69,7 +69,7 @@ public class LevelModel {
      * Sets tiles previously covered by enemy as available
      * @param enemy
      */
-    public void removeEnemy(EnemyModel enemy) { setWheelObstacleInGrid(enemy, true) }
+    public void removeEnemy(EnemyModel enemy) { setWheelObstacleInGrid(enemy, true); }
 
     /**
      * Sets tiles currently covered by enemy as unavailable
