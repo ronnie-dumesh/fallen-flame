@@ -9,16 +9,14 @@ public class AIController {
      * Enumeration to encode the finite state machine.
      */
     private static enum FSMState {
-        /** The enemy just spawned */
-        SPAWN,
-        /** The enemy is patrolling around without a target */
-        WANDER,
+        /** The enemy does not have a target */
+        IDLE,
         /** The enemy has a target, but must get closer */
         CHASE,
         /** The enemy has a target and is attacking it */
         ATTACK,
         /** The enemy sees something that is not the player*/
-        INVESTIAGE,
+        INVESTIGATE,
     }
 
     /**
@@ -44,7 +42,7 @@ public class AIController {
     private static final int REACHED_INVESTIGATE = 1000;
 
     // Instance Attributes
-    /** The ship being controlled by this AIController */
+    /** The enemy being controlled by this AIController */
     private EnemyModel enemy;
     /** The game level; used for pathfinding */
     private LevelModel level;
@@ -58,9 +56,9 @@ public class AIController {
     private List<FlareModel> flares;
     /** The flares that have been investigated by the enemy */
     private HashSet<FlareModel> investigatedFlares;
-    /** The last-known position of the player*/
+    /** The last-known position of the player of an encountered flare*/
     private Vector2 investigationPosition;
-    /** The ship's next action. */
+    /** The enemy's next move */
     private Action move; // A ControlCode
     /** The number of ticks since we started this controller */
     private long ticks;
@@ -70,9 +68,9 @@ public class AIController {
     private int randomID;
 
     /**
-     * Creates an AIController for the ship with the given id.
+     * Creates an AIController for the enemy with the given id.
      *
-     * @param id The unique ship identifier
+     * @param id The unique enemy identifier
      * @param level The game level (for pathfinding)
      * @param enemies The list of enemies
      * @param player The player to target
@@ -87,7 +85,7 @@ public class AIController {
         this.player = player;
         this.flares = flares;
 
-        state = FSMState.SPAWN;
+        state = FSMState.IDLE;
         move  = Action.NO_ACTION;
         ticks = 0;
 
@@ -128,12 +126,7 @@ public class AIController {
     private void changeStateIfApplicable() {
         int rand_int = random.nextInt(100);
         switch (state) {
-            case SPAWN:
-                state = FSMState.WANDER;
-                break;
-
-
-            case WANDER:
+            case IDLE:
                 if(withinChase()){
                     state = FSMState.CHASE;
                     break;
@@ -159,7 +152,7 @@ public class AIController {
                 if(closestFlare != null){
                     investigatedFlares.add(closestFlare);
                     investigationPosition = new Vector2(closestFlare.getX(), closestFlare.getY());
-                    state = FSMState.INVESTIAGE;
+                    state = FSMState.INVESTIGATE;
                 }
 
                 break;
@@ -168,7 +161,7 @@ public class AIController {
                 enemy.setActivated(true);
 
                 if(rand_int < 30 || !withinChase()){ //random chance of quitting chase
-                    state = FSMState.INVESTIAGE;
+                    state = FSMState.INVESTIGATE;
                     investigationPosition = new Vector2(player.getX(), player.getY());
                 }
 
@@ -185,7 +178,7 @@ public class AIController {
 
                 break;
 
-            case INVESTIAGE: //investigation position must not be null
+            case INVESTIGATE: //investigation position must not be null
                 assert investigationPosition != null;
                 if(withinChase()){
                     state = FSMState.CHASE;
@@ -195,14 +188,14 @@ public class AIController {
                 else if(investigateReached()){
                     investigationPosition = null;
                     enemy.setActivated(false);
-                    state = FSMState.WANDER;
+                    state = FSMState.IDLE;
                 }
 
                 break;
 
             default:
                 assert (false);
-                state = FSMState.WANDER;
+                state = FSMState.IDLE;
                 break;
         }
     }
@@ -213,7 +206,7 @@ public class AIController {
      * This method implements pathfinding through the use of goal tiles.
      * It searches for all desirable tiles to move to (there may be more than
      * one), and marks each one as a goal. Then, the pathfinding method
-     * getMoveAlongPathToGoalTile() moves the ship towards the closest one.
+     * getMoveAlongPathToGoalTile() moves the enemy towards the closest one.
      *
      * POSTCONDITION: There is guaranteed to be at least one goal tile
      * when completed.
@@ -224,10 +217,7 @@ public class AIController {
         int sx, sy;
 
         switch (state) {
-            case SPAWN:
-                break;
-
-            case WANDER:
+            case IDLE:
                 float x, y;
                 if (enemy.getGoal() == null || random.nextInt(100) < 10) {
                     x = random.nextFloat() * level.getHeight();
@@ -269,7 +259,7 @@ public class AIController {
                 }
                 break;
 
-            case INVESTIAGE: //investigationPosition must not be null
+            case INVESTIGATE: //investigationPosition must not be null
                 float investX = investigationPosition.x;
                 float investY = investigationPosition.y;
                 sx = level.screenToTile(playerX);
@@ -286,12 +276,12 @@ public class AIController {
     }
 
     /**
-     * Returns a movement direction that moves towards a goal tile.
+     * Returns a movement direction that moves towards a goal tile or NO_ACTION.
      *
      * The value returned should be a control code.  See PlayerController
      * for more information on how to use control codes.
      *
-     * @return a movement direction that moves towards a goal tile.
+     * @return a movement direction that moves towards a goal tile or NO_ACTION.
      */
     private Action getMoveAlongPathToGoalTile() {
         int startX = level.screenToTile(enemy.getX());
@@ -314,7 +304,7 @@ public class AIController {
                 break;
             }
 
-            if (visited.contains(c)) {
+            if (!visited.contains(c)) {
                 visited.add(c);
 
                 for (int yOffSet = -1; yOffSet <= 1; yOffSet++) {
@@ -376,7 +366,7 @@ public class AIController {
                 level.screenToTile(enemy.getY()),
                 level.screenToTile(player.getY()));
 
-        return distance <= CHASE_DIST;
+        return distance <= player.getLightRadius();
     }
 
     /** Returns whether an enemy is in range to attack a player */
