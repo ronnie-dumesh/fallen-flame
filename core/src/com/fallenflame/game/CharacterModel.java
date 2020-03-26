@@ -168,11 +168,6 @@ public abstract class CharacterModel extends WheelObstacle {
         walkLimit = value;
     }
 
-    /** Return character default max speed */
-    protected float getDefaultMaxSpeed() {
-        return 4;
-    }
-
     /**
      * Gets light radius for character
      * @return light radius
@@ -206,15 +201,15 @@ public abstract class CharacterModel extends WheelObstacle {
 
         // Technically, we should do error checking here.
         // A JSON field might accidentally be missing
-        setBodyType(BodyDef.BodyType.DynamicBody);
-        setDensity(1);
-        setFriction(0);
-        setRestitution(0);
-        setForce(80);
-        setDamping(10);
-        setMaxSpeed(getDefaultMaxSpeed());
-        setStartFrame(0);
-        setWalkLimit(4);
+        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+        setDensity(json.get("density").asFloat());
+        setFriction(json.get("friction").asFloat());
+        setRestitution(json.get("restitution").asFloat());
+        setForce(json.get("force").asFloat());
+        setDamping(json.get("damping").asFloat());
+        setMaxSpeed(json.get("maxspeed").asFloat());
+        setStartFrame(json.get("startframe").asInt());
+        setWalkLimit(json.get("walklimit").asInt());
 
         // Reflection is best way to convert name to color
 //        Color debugColor;
@@ -228,6 +223,16 @@ public abstract class CharacterModel extends WheelObstacle {
 //        int opacity = json.get("debugopacity").asInt();
 //        debugColor.mul(opacity/255.0f);
 //        setDebugColor(debugColor);
+
+        // Now get the texture from the AssetManager singleton
+        String key = json.get("texture").asString();
+        TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        try {
+            filmstrip = (FilmStrip)texture;
+        } catch (Exception e) {
+            filmstrip = null;
+        }
+        setTexture(texture);
     }
 
     /**

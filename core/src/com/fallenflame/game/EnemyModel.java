@@ -1,46 +1,11 @@
 package com.fallenflame.game;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.utils.JsonValue;
-import com.fallenflame.game.util.FilmStrip;
-import com.fallenflame.game.util.JsonAssetManager;
 
 public class EnemyModel extends CharacterModel {
     protected boolean activated = false;
 
     protected Vector2 goal;
-    /**
-     * Initializes the player via the given JSON value
-     *
-     * The JSON value has been parsed and is part of a bigger level file.  However,
-     * this JSON value is limited to the player subtree
-     *
-     * @param json	the JSON subtree defining the player
-     */
-    public void initialize(JsonValue json) {
-        super.initialize(json);
-        // Enemy specific initialization
-        setForce(getForce() * 1.4f); // temporary way to make enemy faster than player
-        // Now get the texture from the AssetManager singleton
-        String key = getDefaultTexture(); // TODO: should get from JSON?
-        TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-        try {
-            filmstrip = (FilmStrip)texture;
-        } catch (Exception e) {
-            filmstrip = null;
-        }
-        setTexture(texture);
-    }
-
-    protected float getDefaultMaxSpeed() {
-        return super.getDefaultMaxSpeed() * 1.25f;
-    }
-
-    protected String getDefaultTexture() {
-        return "enemy-walking";
-    }
 
     /**
      * Gets enemy's active status
