@@ -76,20 +76,13 @@ public class LightController {
      * @param player The player instance.
      * @param levelLighting The lighting JSON config of this level.
      * @param world The instance of Box2D {@code World}.
-     * @param bound The bound of the viewport.
+     * @param bounds The bound of the viewport.
      */
-    public void initialize(PlayerModel player, JsonValue levelLighting, World world, Rectangle bound) {
-        if (rayhandler != null) {
-            throw new Error("It seems that this controller is initialised already.");
-        }
-
+    public void initialize(PlayerModel player, JsonValue levelLighting, World world, Rectangle bounds) {
+        dispose();
+        
         // Set up camera first.
-        raycamera = new OrthographicCamera(bound.x, bound.y);
-        // TODO: This defo doesn't work. Need testing.
-        // TODO: [Leo] Determine if this is the correct value
-        float z = 0;
-        raycamera.position.set(player.getPosition(), z);
-        raycamera.update();
+        raycamera = new OrthographicCamera(bounds.width, bounds.height);
 
         // set up ray handler.
         RayHandler.setGammaCorrection(true);
@@ -167,6 +160,9 @@ public class LightController {
      * @param enemies A collection of enemies.
      */
     public void updateLights(Collection<FlareModel> flares, Collection<EnemyModel> enemies) {
+        raycamera.position.set(player.getX(), player.getY(), 0);
+        raycamera.update();
+        rayhandler.setCombinedMatrix(raycamera);
         playerLight.setDistance(player.getLightRadius());
         flareLights.keySet().stream().filter(i -> !flares.contains(i)).forEach(i -> {
             PointSource f = flareLights.get(i);
@@ -190,6 +186,7 @@ public class LightController {
             attachLightTo(f, i);
             enemyLights.put(i, f);
         });
+        rayhandler.update();
     }
 
     /**
