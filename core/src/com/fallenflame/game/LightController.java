@@ -11,10 +11,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.fallenflame.game.physics.lights.PointSource;
 import com.fallenflame.game.physics.obstacle.Obstacle;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -175,12 +172,17 @@ public class LightController {
             attachLightTo(f, i);
             flareLights.put(i, f);
         });
-        enemyLights.keySet().stream().filter(i -> !enemies.contains(i) || !i.getActivated()).forEach(i -> {
-            PointSource f = enemyLights.get(i);
-            f.setActive(false);
-            f.dispose();
-            enemyLights.remove(i);
-        });
+        // Iterate through all enemy lights and if the enemy is no longer activated or the enemy is gone, remove the light
+        Iterator<EnemyModel> iter = enemyLights.keySet().iterator();
+        while(iter.hasNext()){
+            EnemyModel e = iter.next();
+            if(!enemies.contains(e) || !e.getActivated()){
+                PointSource f = enemyLights.get(e);
+                f.setActive(false);
+                f.dispose();
+                iter.remove();
+            }
+        }
         enemies.stream().filter(i -> !enemyLights.containsKey(i)).forEach(i -> {
             PointSource f = createPointLight(i.getLightRadius());
             attachLightTo(f, i);
