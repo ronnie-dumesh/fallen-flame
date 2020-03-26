@@ -39,7 +39,7 @@ public class LevelModel {
             setWheelObstacleInGrid(e, false);
         }
         for(WallModel w : walls) {
-            // TODO: fix index out of bounds exception: setBoxObstacleInGrid(w, false);
+            setBoxObstacleInGrid(w, false);
         }
     }
 
@@ -147,6 +147,6 @@ public class LevelModel {
      * @return isSafe boolean
      */
     public boolean getSafe(int x, int y) {
-        return tileGrid[x][y];
-    }
+        return true;
+    } //TODO: temporary change
 }
