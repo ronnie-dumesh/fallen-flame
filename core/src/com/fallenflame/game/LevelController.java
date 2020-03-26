@@ -474,7 +474,7 @@ public class LevelController implements ContactListener {
      */
     public void draw(GameCanvas canvas) {
         canvas.clear();
-        canvas.setCameraPosition(player.getPosition());
+        canvas.setCameraPosition(player.getPosition().x * scale.x, player.getPosition().y * scale.y);
 
         // Draw all objects
         canvas.begin();
