@@ -209,8 +209,8 @@ public class GameCanvas {
      *
      * @param pos Player position to set the camera to
      */
-    public void setCameraPosition(Vector2 pos) {
-        camera.position.set(pos.x, pos.y, 0);
+    public void setCameraPosition(float x, float y) {
+        camera.position.set(x, y, 0);
         camera.update();
     }
 
@@ -1143,4 +1143,6 @@ public class GameCanvas {
         local.scale(sx,sy);
         local.translate(-ox,-oy);
     }
+
+
 }
