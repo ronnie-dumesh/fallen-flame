@@ -22,7 +22,7 @@ public class AIController {
     /**
      * Enumeration to encode actions
      */
-    private enum Action {
+    public enum Action {
         LEFT,
         RIGHT,
         UP,

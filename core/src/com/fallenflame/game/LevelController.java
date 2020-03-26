@@ -268,33 +268,37 @@ public class LevelController implements ContactListener {
         player.initialize(levelJson.get("player"));
         player.setDrawScale(scale);
         player.activatePhysics(world);
+        assert inBounds(player);
         // Create Exit
         exit = new ExitModel();
         exit.initialize(levelJson.get("exit"));
         exit.setDrawScale(scale);
         exit.activatePhysics(world);
+        assert inBounds(exit);
         for(JsonValue wallJSON : levelJson.get("walls")) {
             WallModel wall = new WallModel();
             wall.initialize(wallJSON);
             wall.setDrawScale(scale);
             wall.activatePhysics(world);
             walls.add(wall);
+            assert inBounds(wall);
         }
+        int enemyID = 0;
         for(JsonValue enemyJSON : levelJson.get("enemies")) {
-            //TODO #6 INIT enemies --> waiting for AIController to be finished
             EnemyModel enemy = new EnemyModel();
             enemy.initialize(enemyJSON);
             enemy.setDrawScale(scale);
             enemy.activatePhysics(world);
             enemies.add(enemy);
-            // AIController controller = new AIController(enemy, levelModel);
-            // AIControllers.add(controller);
-            //TODO #6
+            AIController controller = new AIController(enemyID, levelModel, enemies, player, flares);
+            enemyID++;
+            AIControllers.add(controller);
+            assert inBounds(enemy);
         }
         flareJSON = levelJson.get("flare");
 
         // Initialize levelModel
-        levelModel.initialize(bounds, player, walls, enemies);
+        // TODO: levelModel.initialize(bounds, player, walls, enemies);
 
         lightController.initialize(player, levelJson.get("lighting"), world, bounds);
     }
@@ -365,27 +369,28 @@ public class LevelController implements ContactListener {
         if(fixedStep(dt)){
             world.step(dt, WORLD_VELOC, WORLD_POSIT);
             // Update player (and update levelModel) and exit
-            // TODO: level model bugs levelModel.removePlayer(player);
+            //TODO: levelModel.removePlayer(player);
             player.update(dt);
-            // TODO: level model bugs levelModel.placePlayer(player);
+            assert inBounds(player);
+            //TODO: levelModel.placePlayer(player);
 
-            // TODO: Waiting for AI Controller to be finished
-//        // Get Enemy Actions
-//        Iterator<AIController> ctrlI = AIControllers.iterator();
-//        LinkedList<EnemyModel.Action> actions = new LinkedList();
-//        while(ctrlI.hasNext()){
-//            AIController ctrl = ctrlI.next();
-//            actions.add(ctrl.getAction());
-//        }
-//        // Execute Enemy Actions (and update levelModel)
-//        Iterator<EnemyModel> enemyI = enemies.iterator();
-//        Iterator<EnemyModel> actionI = enemies.iterator();
-//        while(enemyI.hasNext()){
-//            EnemyModel enemy = enemyI.next();
-//            levelModel.removeEnemy(enemy);
-//            enemy.executeAction(actionI.next()); // TODO handle here or in enemyModel?
-//            levelModel.placeEnemy(enemy);
-//        }
+            // Get Enemy Actions
+            Iterator<AIController> ctrlI = AIControllers.iterator();
+            LinkedList<AIController.Action> actions = new LinkedList();
+            while(ctrlI.hasNext()){
+                AIController ctrl = ctrlI.next();
+                actions.add(ctrl.getAction());
+            }
+            // Execute Enemy Actions (and update levelModel)
+            Iterator<EnemyModel> enemyI = enemies.iterator();
+            Iterator<AIController.Action> actionI = actions.iterator();
+            while(enemyI.hasNext()){
+                EnemyModel enemy = enemyI.next();
+                //TODO: levelModel.removeEnemy(enemy);
+                enemy.executeAction(actionI.next());
+                assert inBounds(enemy);
+                //TODO: levelModel.placeEnemy(enemy);
+            }
 
             // Update flares
             Iterator<FlareModel> i = flares.iterator();
@@ -402,7 +407,7 @@ public class LevelController implements ContactListener {
             }
 
             // Update lights
-            lightController.updateLights(player, flares, enemies);
+            lightController.updateLights(flares, enemies);
         }
     }
 
@@ -442,6 +447,7 @@ public class LevelController implements ContactListener {
         flare.initialize(flareJSON);
         flare.applyInitialForce(mousePosition.angle(), mousePosition.cpy());
         flares.add(flare);
+        assert inBounds(flare);
     }
 
     /**
