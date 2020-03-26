@@ -25,7 +25,6 @@ public class LevelModel {
         tileSize = Math.max((int)player.getRadius(),1);
         width = bounds.getWidth();
         height = bounds.getHeight();
-        System.out.println(width +","+height);
 
         tileGrid = new boolean[(int) width / tileSize][(int) height / tileSize];
         // Initialize grid to true
@@ -148,6 +147,6 @@ public class LevelModel {
      * @return isSafe boolean
      */
     public boolean getSafe(int x, int y) {
-        return tileGrid[x][y];
-    }
+        return true;
+    } //TODO: temporary change
 }

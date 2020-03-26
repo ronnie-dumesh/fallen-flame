@@ -298,7 +298,7 @@ public class LevelController implements ContactListener {
         flareJSON = levelJson.get("flare");
 
         // Initialize levelModel
-        levelModel.initialize(bounds, player, walls, enemies);
+        // TODO: levelModel.initialize(bounds, player, walls, enemies);
 
         lightController.initialize(player, levelJson.get("lighting"), world, bounds);
     }
@@ -369,10 +369,10 @@ public class LevelController implements ContactListener {
         if(fixedStep(dt)){
             world.step(dt, WORLD_VELOC, WORLD_POSIT);
             // Update player (and update levelModel) and exit
-            levelModel.removePlayer(player);
+            //TODO: levelModel.removePlayer(player);
             player.update(dt);
             assert inBounds(player);
-            levelModel.placePlayer(player);
+            //TODO: levelModel.placePlayer(player);
 
             // Get Enemy Actions
             Iterator<AIController> ctrlI = AIControllers.iterator();
@@ -386,10 +386,10 @@ public class LevelController implements ContactListener {
             Iterator<AIController.Action> actionI = actions.iterator();
             while(enemyI.hasNext()){
                 EnemyModel enemy = enemyI.next();
-                levelModel.removeEnemy(enemy);
+                //TODO: levelModel.removeEnemy(enemy);
                 enemy.executeAction(actionI.next());
                 assert inBounds(enemy);
-                levelModel.placeEnemy(enemy);
+                //TODO: levelModel.placeEnemy(enemy);
             }
 
             // Update flares
