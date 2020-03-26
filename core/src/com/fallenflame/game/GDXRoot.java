@@ -1,8 +1,6 @@
 package com.fallenflame.game;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.fallenflame.game.util.*;
 
 /*
@@ -29,6 +27,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	private LoadingMode loading;
 	/** Player mode for the the game */
 	private GameEngine engine;
+	/**Input Processor for the game itself */
+	private LightInputProcessor lightInputProcessor;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -44,9 +44,16 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void create() {
 		canvas  = new GameCanvas();
 		loading = new LoadingMode(canvas,1);
+		engine = new GameEngine();
+		lightInputProcessor = new LightInputProcessor(engine);
+		InputMultiplexer multiplexer = new InputMultiplexer(); //Allows for multiple InputProcessors
+		//Multiplexer is an ordered list, so when an event occurs, it'll check loadingMode first, and then
+		// LightInputProcessor
+		multiplexer.addProcessor(loading);
+		multiplexer.addProcessor(lightInputProcessor);
+		Gdx.input.setInputProcessor(multiplexer);
 
 		// Initialize the three game worlds
-		engine = new GameEngine();
 		engine.preLoadContent();
 		loading.setScreenListener(this);
 		setScreen(loading);

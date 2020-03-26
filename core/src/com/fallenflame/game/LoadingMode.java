@@ -213,7 +213,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         statusFrgMiddle = new TextureRegion(statusBar,PROGRESS_CAP,offset,PROGRESS_MIDDLE,PROGRESS_HEIGHT);
 
         startButton = (System.getProperty("os.name").equals("Mac OS X") ? MAC_OS_X_START : WINDOWS_START);
-        Gdx.input.setInputProcessor(this);
         // Let ANY connected controller start the game.
         for(Controller controller : Controllers.getControllers()) {
             controller.addListener(this);
@@ -540,7 +539,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return whether to hand the event to other listeners.
      */
     public boolean scrolled(int amount) {
-        return true;
+        return false;
     }
 
     /**
