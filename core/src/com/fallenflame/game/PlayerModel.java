@@ -61,7 +61,5 @@ public class PlayerModel extends CharacterModel {
      * Increments light radius by i (can be positive or negative) ensuring lightRadius is never less than 0.
      * @param i value to increment radius by
      */
-    public void incrementLightRadius(float i) {
-        lightRadius = Math.max(lightRadius + i, 0);
-    }
+    public void incrementLightRadius(float i) { lightRadius = Math.max(lightRadius + i, 0); }
 }

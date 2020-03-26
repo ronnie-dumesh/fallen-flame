@@ -242,13 +242,6 @@ public class InputController {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             horizontal -= 1.0f;
         }
-        lightRadius = (secondary ? lightRadius : 0);
-        if(Gdx.input.getInputProcessor().scrolled(1)){
-            lightRadius += 1.0f;
-        }
-        if(Gdx.input.getInputProcessor().scrolled(-1)){
-            lightRadius += -1.0f;
-        }
 
         // TODO: REMOVE CODE BELOW WHEN MOUSE WHEEL IS FIXED.
         //#region mouse wheel alternative
