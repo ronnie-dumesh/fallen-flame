@@ -78,8 +78,6 @@ public class LightController {
      * @param bounds The bound of the viewport.
      */
     public void initialize(PlayerModel player, JsonValue levelLighting, World world, Rectangle bounds) {
-        dispose();
-        
         // Set up camera first.
         raycamera = new OrthographicCamera(bounds.width, bounds.height);
 
