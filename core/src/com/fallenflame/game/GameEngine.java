@@ -288,6 +288,7 @@ public class GameEngine implements Screen {
         }
         // Rotate the avatar to face the direction of movement
         tempAngle.set(input.getHorizontal(),input.getVertical());
+        tempAngle.setLength(1); // Fix diagonal too-fast issue.
         float angle = 0;
         if (tempAngle.len2() > 0.0f) {
             angle = tempAngle.angle();
