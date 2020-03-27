@@ -10,7 +10,7 @@ import com.fallenflame.game.physics.obstacle.WheelObstacle;
 import com.fallenflame.game.util.*;
 import com.badlogic.gdx.graphics.*;
 
-public class FlareModel extends WheelObstacle {
+public class FlareModel extends WheelObstacle implements ILightRadius {
     // Physics constants
     /** The force with which flare is originally thrown */
     private float initialForce;
@@ -188,6 +188,8 @@ public class FlareModel extends WheelObstacle {
             filmstrip = null;
         }
         setTexture(texture);
+
+
     }
 
     /**

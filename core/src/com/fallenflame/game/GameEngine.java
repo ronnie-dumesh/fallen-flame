@@ -2,6 +2,8 @@ package com.fallenflame.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -25,6 +27,9 @@ public class GameEngine implements Screen {
     /** Exit code for quitting the game */
     public static final int EXIT_QUIT = 0;
 
+    /** How long the game should countdown */
+    public static final int COUNTDOWN_TIME = 80;
+
  /**@author: Professor White */
     private JsonReader jsonReader;
     /**@author: Professor White */
@@ -40,6 +45,9 @@ public class GameEngine implements Screen {
     /**What actually keeps track of the assetState. Initially set to empty, as no resources will be in at that point*/
     private AssetState currentAssetState = AssetState.EMPTY;
 
+    /** The font for giving messages to the player */
+    protected BitmapFont displayFont;
+
     /**@author: Professor White */
     /**Main game canvas*/
     protected GameCanvas canvas;
@@ -53,8 +61,14 @@ public class GameEngine implements Screen {
     /**Boolean to keep track if the player won the level*/
     private boolean isSuccess;
 
+    /** Boolean to prevent countdown from becoming infinite */
+    private boolean prevSuccess;
+
     /**Boolean to keep track if the player died*/
     private boolean isFailed;
+
+    /**Boolean to keep track if the player had died */
+    private boolean prevFailed;
 
     /**Boolean to keep track if the player paused the game*/
     private boolean isPaused;
@@ -65,6 +79,9 @@ public class GameEngine implements Screen {
     /**Rectangle canvasBounds to keep track of the current canvas size for drawing purposes
      * @author: Professor White in ShipDemo*/
     private Rectangle canvasBounds;
+
+    /** Countdown active for winning or losing */
+    private int countdown;
     /**
      * Preloads the assets for this controller.
      *
@@ -106,6 +123,7 @@ public class GameEngine implements Screen {
         }
 
         JsonAssetManager.getInstance().allocateDirectory();
+        displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
         currentAssetState = AssetState.COMPLETE;
     }
 
@@ -127,22 +145,9 @@ public class GameEngine implements Screen {
      * @return: boolean that is true if the level is completed*/
     public boolean isSuccess(){return isSuccess;}
 
-    /**Set if the level has been completed
-     * @param: boolean isSuccess that is true if the level is completed*/
-
-    public void setIsSuccess(boolean isSuccess){
-        this.isSuccess = isSuccess;
-    }
     /**Return true if the level has failed
      * @return: boolean that is true if the level is failed*/
     public boolean isFailed(){return isFailed;}
-
-    /**Set if the level has been failed
-     * @param: boolean isFailed that is true if the level is completed*/
-
-    public void setIsFailed(boolean isFailed){
-        this.isFailed = isFailed;
-    }
 
     /**Return true if the level has paused
      * @return: boolean that is true if the level is failed*/
@@ -189,9 +194,12 @@ public class GameEngine implements Screen {
         level = new LevelController();
         isSuccess = false;
         isFailed = false;
+        prevFailed = false;
+        prevSuccess = false;
         isScreenActive = false;
         isPaused = false;
         canvasBounds = new Rectangle();
+        countdown = -1;
     }
 
     /**
@@ -211,15 +219,19 @@ public class GameEngine implements Screen {
      */
     public void reset() {
         level.dispose();
+        level = new LevelController();
 
-        setIsSuccess(false);
-        setIsFailed(false);
-        // countdown = -1; TODO Laura: what is this for?
+        isSuccess = false;
+        isFailed = false;
+        prevFailed = false;
+        prevSuccess = false;
+         countdown = -1;
 
         // Reload the json each time
         String currentLevelPath = "jsons/" + saveJson.getString("current");
         levelJson = jsonReader.parse(Gdx.files.internal("jsons/level.json"));
         level.populate(levelJson);
+        level.setLevelState(LevelController.LevelState.IN_PROGRESS);
         level.getWorld().setContactListener(level);
     }
 
@@ -253,6 +265,13 @@ public class GameEngine implements Screen {
             listener.exitScreen(this, EXIT_QUIT);
             return false;
         }
+        //If countdown is > -1, then the player must have won or lost. Either continue to show the win condition message
+        //Or reset, if the countdown is up.
+        else if (countdown > 0) {
+            countdown--;
+        } else if (countdown == 0) {
+            reset();
+        }
 
         return true;
     }
@@ -270,6 +289,7 @@ public class GameEngine implements Screen {
         }
         // Rotate the avatar to face the direction of movement
         tempAngle.set(input.getHorizontal(),input.getVertical());
+        tempAngle.setLength(1); // Fix diagonal too-fast issue.
         float angle = 0;
         if (tempAngle.len2() > 0.0f) {
             angle = tempAngle.angle();
@@ -280,6 +300,11 @@ public class GameEngine implements Screen {
         level.update(delta);
         isSuccess = level.getLevelState() == LevelController.LevelState.WIN;
         isFailed = level.getLevelState() == LevelController.LevelState.LOSS;
+        if((isSuccess && !prevSuccess) || (isFailed && !prevFailed)){
+            countdown = COUNTDOWN_TIME;
+        }
+        prevSuccess = isSuccess;
+        prevFailed = isFailed;
     }
 
     /**Increments the player's light radius
@@ -306,10 +331,17 @@ public class GameEngine implements Screen {
 
         // Final message
         if (isSuccess) {
-            //TODO: Print some message here about winning
+            displayFont.setColor(Color.YELLOW);
+            canvas.begin(); // DO NOT SCALE
+            canvas.drawText("VICTORY!", displayFont, 0, canvas.getHeight());
+            canvas.end();
         } else if (isFailed) {
-            //TODO: Print some message here about winning
+            displayFont.setColor(Color.RED);
+            canvas.begin(); // DO NOT SCALE
+            canvas.drawTextCentered("YOU DIED!", displayFont, 0.0f);
+            canvas.end();
         }
+
     }
 
     /**

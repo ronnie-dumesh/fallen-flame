@@ -9,7 +9,7 @@ import com.fallenflame.game.physics.obstacle.WheelObstacle;
 import com.fallenflame.game.util.FilmStrip;
 import com.fallenflame.game.util.JsonAssetManager;
 
-public abstract class CharacterModel extends WheelObstacle {
+public abstract class CharacterModel extends WheelObstacle implements ILightRadius {
     // Physics constants
     /** The factor to multiply by the input */
     private float force;
@@ -172,7 +172,7 @@ public abstract class CharacterModel extends WheelObstacle {
      * Gets light radius for character
      * @return light radius
      */
-    protected abstract float getLightRadius();
+    public abstract float getLightRadius();
 
     /**
      * Creates a new character with degenerate settings
