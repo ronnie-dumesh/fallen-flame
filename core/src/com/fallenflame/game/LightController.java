@@ -11,7 +11,9 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.fallenflame.game.physics.lights.PointSource;
 import com.fallenflame.game.physics.obstacle.Obstacle;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -150,6 +152,33 @@ public class LightController {
         return p;
     }
 
+    protected <T extends Obstacle & ILightRadius>
+    void updateLightsForList(Collection<T> list, Map<T, PointSource> lightMap) {
+        // First step: Remove lights of things that are no longer in the list.
+        Set<Map.Entry<T, PointSource>> entrySet = lightMap.entrySet();
+        entrySet.removeIf(i -> {
+            if (!list.contains(i.getKey())) {
+                PointSource l = i.getValue();
+                l.setActive(false);
+                l.remove();
+                return true;
+            }
+            return false;
+        });
+
+        // Second step: Update light radii for lights already there.
+        for (Map.Entry<T, PointSource> entry : entrySet) {
+            entry.getValue().setDistance(entry.getKey().getLightRadius());
+        }
+
+        // Last step: Create lights for new things in the list.
+        list.stream().filter(i -> !lightMap.containsKey(i)).forEach(i -> {
+            PointSource f = createPointLight(i.getLightRadius());
+            attachLightTo(f, i);
+            lightMap.put(i, f);
+        });
+    }
+
     /**
      * Update all lights, call this before {@code draw()}.
      *
@@ -157,37 +186,20 @@ public class LightController {
      * @param enemies A collection of enemies.
      */
     public void updateLights(Collection<FlareModel> flares, Collection<EnemyModel> enemies) {
+        // Update raycamera.
         raycamera.position.set(player.getX(), player.getY(), 0);
         raycamera.update();
         rayhandler.setCombinedMatrix(raycamera);
+
+        // Update player light.
         playerLight.setDistance(player.getLightRadius());
-        flareLights.keySet().stream().filter(i -> !flares.contains(i)).forEach(i -> {
-            PointSource f = flareLights.get(i);
-            f.setActive(false);
-            f.dispose();
-            flareLights.remove(i);
-        });
-        flares.stream().filter(i -> !flareLights.containsKey(i)).forEach(i -> {
-            PointSource f = createPointLight(i.getLightRadius());
-            attachLightTo(f, i);
-            flareLights.put(i, f);
-        });
-        // Iterate through all enemy lights and if the enemy is no longer activated or the enemy is gone, remove the light
-        Iterator<EnemyModel> iter = enemyLights.keySet().iterator();
-        while(iter.hasNext()){
-            EnemyModel e = iter.next();
-            if(!enemies.contains(e) || !e.getActivated()){
-                PointSource f = enemyLights.get(e);
-                f.setActive(false);
-                f.dispose();
-                iter.remove();
-            }
-        }
-        enemies.stream().filter(i -> !enemyLights.containsKey(i)).forEach(i -> {
-            PointSource f = createPointLight(i.getLightRadius());
-            attachLightTo(f, i);
-            enemyLights.put(i, f);
-        });
+
+        // Update flare lights.
+        updateLightsForList(flares, flareLights);
+
+        // Update enemy lights.
+        updateLightsForList(enemies, enemyLights);
+
         rayhandler.update();
     }
 
