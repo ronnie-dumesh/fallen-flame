@@ -57,7 +57,6 @@ public class GameController implements Screen, ContactListener {
 	private JsonValue  assetDirectory;
 	/** The JSON defining the level model */
 	private JsonValue  levelFormat;
-	
 	/** The font for giving messages to the player */
 	protected BitmapFont displayFont;
 	
