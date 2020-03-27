@@ -25,8 +25,7 @@ public class LevelModel {
         tileSize = Math.max((int)player.getRadius(),1);
         width = bounds.getWidth();
         height = bounds.getHeight();
-
-        tileGrid = new boolean[(int) width / tileSize][(int) height / tileSize];
+        tileGrid = new boolean[(int) Math.ceil(width / tileSize)][(int) Math.ceil(height / tileSize)];
         // Initialize grid to true
         for(int x = 0; x < tileGrid.length; x++) {
             for(int y = 0; y < tileGrid[x].length; y++) {
@@ -99,9 +98,9 @@ public class LevelModel {
      */
     public void setBoxObstacleInGrid(BoxObstacle obs, boolean b) {
         for(int x = screenToTile(obs.getX() - obs.getWidth()/2);
-            x < screenToTile(obs.getX() + obs.getWidth()); x++) {
+            x < screenToTile(obs.getX() + obs.getWidth()/2); x++) {
             for(int y = screenToTile(obs.getY() - obs.getHeight()/2);
-                y < screenToTile(obs.getY() + obs.getHeight()); y++) {
+                y < screenToTile(obs.getY() + obs.getHeight()/2); y++) {
                 tileGrid[x][y] = b;
             }
         }
@@ -147,6 +146,6 @@ public class LevelModel {
      * @return isSafe boolean
      */
     public boolean getSafe(int x, int y) {
-        return true;
-    } //TODO: temporary change
+        return tileGrid[x][y];
+    }
 }

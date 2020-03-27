@@ -1,9 +1,5 @@
 package com.fallenflame.game;
 
-import com.badlogic.gdx.utils.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.fallenflame.game.util.*;
-
 /**
  * Player avatar for the plaform game.
  *
@@ -13,33 +9,6 @@ import com.fallenflame.game.util.*;
 public class PlayerModel extends CharacterModel {
     /** Radius of player's light */
     protected float lightRadius = 0;
-
-    /**
-     * Initializes the player via the given JSON value
-     *
-     * The JSON value has been parsed and is part of a bigger level file.  However,
-     * this JSON value is limited to the player subtree
-     *
-     * @param json	the JSON subtree defining the player
-     */
-    public void initialize(JsonValue json) {
-        super.initialize(json);
-        // Enemy specific initialization
-        // Now get the texture from the AssetManager singleton
-        String key = getDefaultTexture(); // TODO: should get from JSON? --> json.get("texture").asString();
-        TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-        try {
-            filmstrip = (FilmStrip)texture;
-        } catch (Exception e) {
-            filmstrip = null;
-        }
-        setTexture(texture);
-    }
-
-    /** Return player default texture */
-    protected String getDefaultTexture() {
-        return "player";
-    }
 
     /**
      * Gets player light radius
