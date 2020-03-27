@@ -188,6 +188,8 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
             filmstrip = null;
         }
         setTexture(texture);
+
+
     }
 
     /**

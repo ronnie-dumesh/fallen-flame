@@ -27,6 +27,12 @@
 		"fire":   {
 			"file": 	"textures/fire.png",
 			"wrap": 	true,
+			"strip":	{
+				"size":		4,
+				"rows":		1,
+				"cols":		4,
+				"first":	0
+			}
 		},
 		"earth": {
 			"file": 	"textures/earthtile.png",
