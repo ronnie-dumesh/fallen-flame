@@ -28,6 +28,9 @@ public abstract class CharacterModel extends WheelObstacle implements ILightRadi
     /** The standard number of frames to wait until we can walk again */
     private int walkLimit;
 
+    /** Number of flares the player can have on the screen at once */
+    private int flareCount;
+
     /** FilmStrip pointer to the texture region */
     protected FilmStrip filmstrip;
     /** The current animation frame of the avatar */
@@ -169,6 +172,24 @@ public abstract class CharacterModel extends WheelObstacle implements ILightRadi
     }
 
     /**
+     * Returns the number of flares the player can have on the screen at once
+     *
+     * @return the number of flares the player can have on the screen at once
+     */
+    public int getFlareCount() {
+        return flareCount;
+    }
+
+    /**
+     * Sets the number of flares the player can have on the screen at once
+     *
+     * @param value	the number of flares the player can have on the screen at once
+     */
+    public void setFlareCount(int value) {
+        flareCount = value;
+    }
+
+    /**
      * Gets light radius for character
      * @return light radius
      */
@@ -210,6 +231,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILightRadi
         setMaxSpeed(json.get("maxspeed").asFloat());
         setStartFrame(json.get("startframe").asInt());
         setWalkLimit(json.get("walklimit").asInt());
+        setFlareCount(json.get("flarecount").asInt());
 
         // Reflection is best way to convert name to color
 //        Color debugColor;

@@ -367,7 +367,6 @@ public class LevelController implements ContactListener {
      */
     public void update(float dt) {
         if(fixedStep(dt)){
-            world.step(dt, WORLD_VELOC, WORLD_POSIT);
             // Update player (and update levelModel) and exit
             levelModel.removePlayer(player);
             player.update(dt);
@@ -437,23 +436,26 @@ public class LevelController implements ContactListener {
 
 
     /**
-     * Launch a flare from the player towards the mouse position based on preset flareJSON data.
+     * Launch a flare from the player towards the mouse position based on preset flareJSON data, or does nothing if the
+     * player has already created the max number of flares.
      * (Called by GameEngine)
      *
      * @param mousePosition Position of mouse when flare launched
      */
     public void createFlare(Vector2 mousePosition){
-        FlareModel flare = new FlareModel(player.getPosition());
-        flare.setDrawScale(scale);
-        flare.initialize(flareJSON);
-        flare.activatePhysics(world);
-        Vector2 centerScreenPosition = new Vector2((bounds.width * scale.x) / 2,(bounds.height * scale.y) / 2);
-        Vector2 posDif = new Vector2(mousePosition.x - centerScreenPosition.x, mousePosition.y - centerScreenPosition.y);
-        float angleRad = posDif.angleRad(new Vector2(1,0));
-        Vector2 force = (new Vector2(flare.getInitialForce(),0)).rotateRad(angleRad);
-        flare.applyInitialForce(angleRad, force);
-        flares.add(flare);
-        assert inBounds(flare);
+        if (flares.size() < player.getFlareCount()) {
+            FlareModel flare = new FlareModel(player.getPosition());
+            flare.setDrawScale(scale);
+            flare.initialize(flareJSON);
+            flare.activatePhysics(world);
+            Vector2 centerScreenPosition = new Vector2((bounds.width * scale.x) / 2, (bounds.height * scale.y) / 2);
+            Vector2 posDif = new Vector2(mousePosition.x - centerScreenPosition.x, mousePosition.y - centerScreenPosition.y);
+            float angleRad = posDif.angleRad(new Vector2(1, 0));
+            Vector2 force = (new Vector2(flare.getInitialForce(), 0)).rotateRad(angleRad);
+            flare.applyInitialForce(angleRad, force);
+            flares.add(flare);
+            assert inBounds(flare);
+        }
     }
 
     /**
@@ -564,14 +566,6 @@ public class LevelController implements ContactListener {
                     ((FlareModel) bd1).stopMovement();
                 else
                     ((FlareModel) bd2).stopMovement();
-            }
-            // Ensure flare does not collide with player or enemy
-            if ((bd1 == player && bd2 instanceof FlareModel)
-                    || (bd1 instanceof FlareModel && bd2 == player)
-                    || (bd1 instanceof EnemyModel && bd2 instanceof FlareModel)
-                    || (bd1 instanceof FlareModel && bd2 instanceof EnemyModel)) {
-                contact.setEnabled(false);
-                return;
             }
 
         } catch (Exception e) {
