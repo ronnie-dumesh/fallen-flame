@@ -139,6 +139,7 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
     public FlareModel(Vector2 pos) {
         super(pos.x,pos.y,1.0f);
         setFixedRotation(false);
+        this.setSensor(true);
         startTime = System.currentTimeMillis();
     }
 
