@@ -44,5 +44,9 @@
   			"file": 	"fonts/MarkerFelt.ttf",
   			"size": 	64
   		},
+		"debug": {
+			"file": 	"fonts/RetroGame.ttf",
+			"size":		20
+		},
   	},
 }
