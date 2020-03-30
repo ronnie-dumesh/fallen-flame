@@ -1,5 +1,7 @@
 package com.fallenflame.game;
 
+import com.badlogic.gdx.utils.JsonValue;
+
 /**
  * Player avatar for the plaform game.
  *
@@ -9,6 +11,11 @@ package com.fallenflame.game;
 public class PlayerModel extends CharacterModel {
     /** Radius of player's light */
     protected float lightRadius = 0;
+
+    public void initialize(JsonValue json) {
+        super.initialize(json);
+        setFlareCount(json.get("flarecount").asInt());
+    }
 
     /**
      * Gets player light radius

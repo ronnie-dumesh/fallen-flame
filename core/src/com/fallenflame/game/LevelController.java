@@ -1,5 +1,7 @@
 package com.fallenflame.game;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
@@ -75,6 +77,10 @@ public class LevelController implements ContactListener {
     protected float maxTimePerFrame;
     /** The amount of time that has passed without updating the frame */
     protected float physicsTimeLeft;
+    /** FPS of game */
+    private float fps;
+    /** Number of ticks sense we started this controller (used to limit number of fps updates) */
+    private long ticks;
 
     /**
      * Returns the bounding rectangle for the physics world
@@ -486,7 +492,7 @@ public class LevelController implements ContactListener {
      *
      * @param canvas	the drawing context
      */
-    public void draw(GameCanvas canvas) {
+    public void draw(GameCanvas canvas, float delta, BitmapFont displayFont) {
         canvas.clear();
         canvas.setCameraPosition(player.getPosition().x * scale.x, player.getPosition().y * scale.y);
 
@@ -522,6 +528,14 @@ public class LevelController implements ContactListener {
                 flare.drawDebug(canvas);
             }
             canvas.endDebug();
+            if(ticks % 10 == 0){
+                fps = 1/delta;
+            }
+            displayFont.setColor(Color.YELLOW);
+            canvas.begin();
+            canvas.drawText(Float.toString(fps), displayFont, 0, canvas.getHeight()/2);
+            canvas.end();
+            ticks++;
         }
     }
 

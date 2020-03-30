@@ -231,7 +231,6 @@ public abstract class CharacterModel extends WheelObstacle implements ILightRadi
         setMaxSpeed(json.get("maxspeed").asFloat());
         setStartFrame(json.get("startframe").asInt());
         setWalkLimit(json.get("walklimit").asInt());
-        setFlareCount(json.get("flarecount").asInt());
 
         // Reflection is best way to convert name to color
 //        Color debugColor;

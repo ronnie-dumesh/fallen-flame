@@ -48,6 +48,9 @@ public class GameEngine implements Screen {
     /** The font for giving messages to the player */
     protected BitmapFont displayFont;
 
+    /** The font for giving messages when in debug mode */
+    protected BitmapFont debugFont;
+
     /**@author: Professor White */
     /**Main game canvas*/
     protected GameCanvas canvas;
@@ -124,6 +127,7 @@ public class GameEngine implements Screen {
 
         JsonAssetManager.getInstance().allocateDirectory();
         displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
+        debugFont = JsonAssetManager.getInstance().getEntry("debug", BitmapFont.class);
         currentAssetState = AssetState.COMPLETE;
     }
 
@@ -327,7 +331,7 @@ public class GameEngine implements Screen {
     public void draw(float delta) {
         canvas.clear();
 
-        level.draw(canvas);
+        level.draw(canvas, delta, debugFont);
 
         // Final message
         if (isSuccess) {
