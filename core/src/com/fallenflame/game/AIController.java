@@ -1,5 +1,6 @@
 package com.fallenflame.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.*;
@@ -11,11 +12,9 @@ public class AIController {
     private enum FSMState {
         /** The enemy does not have a target */
         IDLE,
-        /** The enemy has a target, but must get closer */
+        /** The enemy is chasing the player */
         CHASE,
-        /** The enemy has a target and is attacking it */
-        ATTACK,
-        /** The enemy sees something that is not the player*/
+        /** The enemy is moving towards the player's last known location or a flare */
         INVESTIGATE,
     }
 
@@ -31,39 +30,23 @@ public class AIController {
     }
 
     // Constants
-    /** The radius from which an enemy will notice a flare and approach it*/
-    private static final int FLARE_DETECTION_RADIUS = 1000;
-    //TODO: consider chase distance relative to player light radius
-    /** The radius from which an enemy can chase a player */
-    private static final int CHASE_DIST = 1000;
-    /** The radius from which an enemy can attack a player */
-    private static final int ATTACK_DIST = 1000;
     /** The radius from which an enemy could have considered to have finished its investigation
      * of a flare or of a player's last-known location*/
-    private static final int REACHED_INVESTIGATE = 1000;
+    private static final int REACHED_INVESTIGATE = 1;
 
     // Instance Attributes
     /** The enemy being controlled by this AIController */
     private EnemyModel enemy;
     /** The game level; used for pathfinding */
     private LevelModel level;
-
     /** The enemy's current state*/
     private FSMState state;
     /** The player*/
     private PlayerModel player;
-    /** The flares that the enemy will investigate */
-    private List<FlareModel> flares;
-    /** The flares that have been investigated by the enemy */
-    private HashSet<FlareModel> investigatedFlares = new HashSet<>();
-    /** The last-known position of the player of an encountered flare*/
-    private Vector2 investigationPosition;
     /** The enemy's next move */
-    private Action move; // A ControlCode
+    private Action action;
     /** The number of ticks since we started this controller */
     private long ticks;
-    /** A random-number generator for use within the class */
-    private Random random;
     /** A randomID to stagger the amount of processing of each enemy per frame */
     private int randomID;
 
@@ -74,20 +57,20 @@ public class AIController {
      * @param level The game level (for pathfinding)
      * @param enemies The list of enemies
      * @param player The player to target
-     * @param flares The flares that can attract the enemy
+     * @param flares The flares that may attract the enemy
      */
     public AIController(int id, LevelModel level, List<EnemyModel> enemies, PlayerModel player,
                         List<FlareModel> flares) {
         this.enemy = enemies.get(id);
         this.level = level;
         this.player = player;
-        this.flares = flares;
-
+        // this.flares = flares;
+        action = Action.NO_ACTION;
         state = FSMState.IDLE;
-        move  = Action.NO_ACTION;
+        // action = Action.NO_ACTION;
         ticks = 0;
 
-        random = new Random(id);
+        Random random = new Random(id);
         randomID = random.nextInt();
     }
 
@@ -99,16 +82,13 @@ public class AIController {
     public Action getAction() {
         ticks++;
 
-        if ((randomID + ticks) % 10 == 0) {
+        if ((randomID + ticks) % 5 == 0) {
+            level.clearAllTiles();
             changeStateIfApplicable();
-
             markGoalTiles();
-            move = getMoveAlongPathToGoalTile();
+            chooseAction();
         }
 
-        Action action = move;
-
-        //TODO: insert non-movement actions
         return action;
     }
 
@@ -116,81 +96,40 @@ public class AIController {
      * Change the state of the enemy using a Finite State Machine.
      */
     private void changeStateIfApplicable() {
-        //TODO: consider randomness
-        //int rand_int = random.nextInt(100);
-        switch (state) {
+        switch(state) {
             case IDLE:
+                enemy.setActivated(false);
                 if(withinChase()){
                     state = FSMState.CHASE;
                     break;
                 }
-
-                FlareModel closestFlare = null; //Safety for if closestFlare is not null for some-reason.
-                //This is to prevent an enemy from getting stuck between two flares
-                int closestFlareDistance = FLARE_DETECTION_RADIUS;
-                for(FlareModel flare : flares){
-                    double flareDistance = cartesianDistance(
-                            level.screenToTile(flare.getX()),
-                            level.screenToTile(enemy.getX()),
-                            level.screenToTile(flare.getY()),
-                            level.screenToTile(enemy.getY())
-                    );
-
-                    if(flareDistance <= closestFlareDistance && !investigatedFlares.contains(flare)) {
-                        closestFlare = flare;
-                        closestFlareDistance = (int) flareDistance;
-                    }
-                }
-
-                if(closestFlare != null){
-                    investigatedFlares.add(closestFlare);
-                    investigationPosition = new Vector2(closestFlare.getX(), closestFlare.getY());
-                    state = FSMState.INVESTIGATE;
-                }
-
                 break;
 
             case CHASE:
                 enemy.setActivated(true);
 
-                //TODO: consider random chance of quitting chase
                 if(!withinChase()){
                     state = FSMState.INVESTIGATE;
-                    investigationPosition = new Vector2(player.getX(), player.getY());
+                    enemy.setInvestigatePosition(new Vector2(player.getX(), player.getY()));
                 }
-
-                else if(withinAttack()){
-                    state = FSMState.ATTACK;
-                }
-
                 break;
 
-            case ATTACK:
-                if(!withinAttack()){
-                    state = FSMState.CHASE;
-                }
-
-                break;
-
-            case INVESTIGATE: //investigation position must not be null
-                assert investigationPosition != null;
+            case INVESTIGATE:
+                assert enemy.getInvestigatePosition() != null;
                 if(withinChase()){
                     state = FSMState.CHASE;
-                    investigationPosition = null;
+                    enemy.setInvestigatePosition(null);
                 }
 
                 else if(investigateReached()){
-                    investigationPosition = null;
+                    enemy.setInvestigatePosition(null);
                     enemy.setActivated(false);
                     state = FSMState.IDLE;
                 }
-
                 break;
 
             default:
-                assert (false);
-                state = FSMState.IDLE;
-                break;
+                assert false;
         }
     }
 
@@ -198,159 +137,116 @@ public class AIController {
      * Mark all desirable tiles to move to.
      *
      * This method implements pathfinding through the use of goal tiles.
-     *
-     * POSTCONDITION: There is guaranteed to be at least one goal tile
-     * when completed.
      */
     private void markGoalTiles() {
-        boolean setGoal = false;
-        float playerX = player.getX(), playerY = player.getY();
-
-        switch (state) {
+        switch(state) {
             case IDLE:
-                float x, y;
-                if (enemy.getGoal() == null || random.nextInt(100) < 10) {
-                    x = random.nextFloat() * level.getHeight();
-                    y = random.nextFloat() * level.getWidth();
-                    enemy.setGoal(x, y);
-                    setGoal = true;
-                }
-                break;
+                break; // no goal tile
 
             case CHASE:
-                enemy.setGoal(playerX, playerY);
-                setGoal = true;
+                level.setGoal(level.screenToTile(player.getX()), level.screenToTile(player.getY()));
+                //System.out.println("Goal chase: " + level.screenToTile(player.getX()) + ", " + level.screenToTile(player.getY()));
                 break;
 
-            case ATTACK:
-                enemy.setGoal(playerX, playerY);
-                setGoal = true;
+            case INVESTIGATE:
+                level.setGoal(level.screenToTile(enemy.getInvestigatePositionX()),
+                        level.screenToTile(enemy.getInvestigatePositionY()));
+                //System.out.println("Goal inv: " + level.screenToTile(enemy.getInvestigatePositionX()) + "," + level.screenToTile(enemy.getInvestigatePositionY()));
                 break;
 
-            case INVESTIGATE: //investigationPosition must not be null
-                float investX = investigationPosition.x;
-                float investY = investigationPosition.y;
-                enemy.setGoal(investX, investY);
-                break;
-        }
-
-        if (!setGoal) {
-            enemy.clearGoal();
+            default:
+                assert false;
         }
     }
 
     /**
-     * Returns a movement direction that moves towards a goal tile or NO_ACTION.
-     *
-     * The value returned should be a control code.  See PlayerController
-     * for more information on how to use control codes.
+     * Determines action based on enemy state and goal tiles and saves action to `action` variable
+     */
+    private void chooseAction() {
+        if(state == FSMState.IDLE)
+            action = Action.NO_ACTION;
+        else
+            action = getMoveAlongPathToGoalTile();
+    }
+
+    /**
+     * Get enemy movement toward goal
      *
      * @return a movement direction that moves towards a goal tile or NO_ACTION.
      */
     private Action getMoveAlongPathToGoalTile() {
         int startX = level.screenToTile(enemy.getX());
         int startY = level.screenToTile(enemy.getY());
-        if (enemy.isGoal(startX, startY)) {
-            return Action.NO_ACTION;
+
+        if(!level.isSafe(startX, startY))
+            System.out.println("start not safe");
+
+        // Initialize queue with movement options
+        Queue<TileIndex> queue = new LinkedList<TileIndex>();
+        if(level.isSafe(startX+1, startY)){
+            queue.add(new TileIndex(startX+1, startY, Action.RIGHT));}
+        if(level.isSafe(startX, startY+1))
+            queue.add(new TileIndex(startX, startY+1, Action.UP));
+        if(level.isSafe(startX-1, startY))
+            queue.add(new TileIndex(startX-1, startY, Action.LEFT));
+        if(level.isSafe(startX, startY-1))
+            queue.add(new TileIndex(startX, startY-1, Action.DOWN));
+
+
+        while(queue.peek() != null){
+            TileIndex curr = queue.poll();
+            // Already visited
+            if(level.isVisited(curr.x, curr.y))
+                continue;
+            // Set visited
+            level.setVisited(curr.x, curr.y);
+            // Find goal
+            if(level.isGoal(curr.x, curr.y))
+                return curr.a;
+
+            // Push all valid movements to queue (with current action because that is the first move from start location
+            // that has shortest path to this point)
+            if(level.isSafe(curr.x+1, curr.y))
+                queue.add(new TileIndex(curr.x+1, curr.y, curr.a));
+            if(level.isSafe(curr.x, curr.y+1))
+                queue.add(new TileIndex(curr.x, curr.y+1, curr.a));
+            if(level.isSafe(curr.x-1, curr.y))
+                queue.add(new TileIndex(curr.x-1, curr.y, curr.a));
+            if(level.isSafe(curr.x, curr.y-1))
+                queue.add(new TileIndex(curr.x, curr.y-1, curr.a));
         }
-
-        Coordinate c = new Coordinate(startX, startY, null);
-
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(c);
-
-        HashSet<Coordinate> visited = new HashSet<>();
-
-        while (!queue.isEmpty()) {
-
-            c = queue.poll();
-            if (enemy.isGoal(c.getX(), c.getY())) {
-                break;
-            }
-
-            if (!visited.contains(c)) {
-                visited.add(c);
-
-                for (int yOffSet = -1; yOffSet <= 1; yOffSet++) {
-                    for (int xOffSet = -1; xOffSet <= 1; xOffSet++) {
-                        int x = c.getX() + xOffSet;
-                        int y = c.getY() + yOffSet;
-                        if (level.getSafe(x, y)) {
-                            queue.add(new Coordinate(x, y, c));
-                        }
-                    }
-                }
-            }
-        }
-        while (c.getPrev().getPrev() != null) {
-            c = c.getPrev();
-        }
-
-        return c.getDirectionFromPrev();
+        //System.out.println("Goal not acquired");
+        return Action.NO_ACTION;
     }
 
-
-    private class Coordinate {
-        private int x;
-        private int y;
-        private Coordinate prev;
-
-        private Coordinate(int x, int y, Coordinate prev){
-            this.x = x;
-            this.y = y;
-            this.prev = prev;
+    /** Tile Index Object for queue in path finder
+     * 	Holds an action attribute that indicates best starting action to get to the current x,y tile index
+     */
+    private class TileIndex {
+        int x; int y; Action a;
+        public TileIndex(int x, int y) {
+            this.x = x; this.y = y;
         }
-
-        private int getX() {return x;}
-        private int getY() {return y;}
-        private Coordinate getPrev() {return prev;}
-
-        /** Determines the correct direction to move to based on the desired goal and current state */
-        private Action getDirectionFromPrev(){
-            if(prev == null){return randAction();}
-            if(this.x > prev.x && level.getSafe(this.x + 1, this.y)) {return Action.RIGHT;
-            } else if(this.x < prev.x && level.getSafe(this.x - 1, this.y)){return Action.LEFT;
-            } else if(this.y < prev.y && level.getSafe(this.x, this.y-1)){return Action.UP;
-            } else if (this.y > prev.y && level.getSafe(this.x, this.y + 1)){return Action.DOWN;
-            } else {return randAction();}
+        public TileIndex(int x, int y, Action a) {
+            this.x = x; this.y = y; this.a = a;
         }
-
-        /** Selects a random cardinal direction to move */
-        private Action randAction(){
-            Action[] arr = {Action.DOWN, Action.UP, Action.LEFT, Action.RIGHT};
-            return arr[random.nextInt(arr.length)];
-        }
-    }
-
-
-    /** Returns whether an enemy is in range to chase a player */
-    private boolean withinChase(){
-        double distance = cartesianDistance(level.screenToTile(enemy.getX()),
-                level.screenToTile(player.getX()),
-                level.screenToTile(enemy.getY()),
-                level.screenToTile(player.getY()));
-
-        return distance <= player.getLightRadius();
-    }
-
-    /** Returns whether an enemy is in range to attack a player */
-    private boolean withinAttack(){
-        double distance = cartesianDistance(level.screenToTile(enemy.getX()),
-                level.screenToTile(player.getX()),
-                level.screenToTile(enemy.getY()),
-                level.screenToTile(player.getY()));
-
-        return distance <= ATTACK_DIST;
     }
 
     /** Determines whether the player has reached the coordinates they are investigating */
     private boolean investigateReached(){
         double distance = cartesianDistance(level.screenToTile(enemy.getX()),
-                level.screenToTile(enemy.getGoalX()),
+                level.screenToTile(enemy.getInvestigatePositionX()),
                 level.screenToTile(enemy.getY()),
-                level.screenToTile(enemy.getGoalY()));
+                level.screenToTile(enemy.getInvestigatePositionY()));
         return distance <= REACHED_INVESTIGATE;
     }
+
+    /** Returns whether an enemy is in range to chase a player */
+    private boolean withinChase(){
+        double distance = cartesianDistance(enemy.getX(),player.getX(),enemy.getY(),player.getY());
+        return distance <= player.getLightRadius();
+    }
+
 
     /**
      * @param x1 the x coordinate of the first point
@@ -359,7 +255,7 @@ public class AIController {
      * @param y2 the y coordinate of the second point
      * @return The cartesian distance between the points
      */
-    private double cartesianDistance(int x1, int x2, int y1, int y2){
+    private double cartesianDistance(float x1, float x2, float y1, float y2){
         return Math.pow((Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)), 0.5);
     }
 }

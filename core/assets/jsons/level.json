@@ -3,7 +3,7 @@
   "graphicSize":      [ 800, 600],
   "fpsRange":         [  20,  60],
   "player":           {
-    "pos":        	[ 1.5, 1.5],
+    "pos":        	[ 5, 5],
     "radius":      	0.4,
     "bodytype":    	"dynamic",
     "density":        1.0,
@@ -15,6 +15,7 @@
     "startframe":       0,
     "walklimit":		4,
     "flarecount":       5,
+    "minlightradius":   2,
     "texture":     	"player",
     "debugcolor":  	"white",
     "debugopacity":	192
@@ -30,7 +31,27 @@
     "debugcolor":    "yellow",
     "debugopacity":   200
   },
-  "enemies":          [ ],
+  "enemies":          [
+    {
+      "pos": [
+        4.0,
+        3.0
+      ],
+      "radius": 0.4,
+      "bodytype": "dynamic",
+      "density": 1.0,
+      "friction": 0.0,
+      "restitution": 0.0,
+      "force": 80.0,
+      "damping": 10.0,
+      "maxspeed": 5.0,
+      "startframe": 0,
+      "walklimit": 4,
+      "texture": "enemy",
+      "debugcolor": "white",
+      "debugopacity": 192
+    }
+  ],
   "walls" :           [
     {
       "pos":        	[ 1.75f, 3.0f],

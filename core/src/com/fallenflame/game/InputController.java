@@ -54,6 +54,9 @@ public class InputController {
     /** Whether the debug toggle was pressed. */
     private boolean debugPressed;
     private boolean debugPrevious;
+    /** Whether the debug2 toggle was pressed. */
+    private boolean debug2Pressed;
+    private boolean debug2Previous;
     /** Whether the exit button was pressed. */
     private boolean exitPressed;
     private boolean exitPrevious;
@@ -143,6 +146,15 @@ public class InputController {
     }
 
     /**
+     * Returns true if the player wants to go toggle the debug 2 mode.
+     *
+     * @return true if the player wants to go toggle the debug 2 mode.
+     */
+    public boolean didDebug2() {
+        return debug2Pressed && !debug2Previous;
+    }
+
+    /**
      * Returns true if the exit button was pressed.
      *
      * @return true if the exit button was pressed.
@@ -181,6 +193,7 @@ public class InputController {
         // Helps us ignore buttons that are held down
         resetPrevious  = resetPressed;
         debugPrevious  = debugPressed;
+        debug2Previous = debug2Pressed;
         exitPrevious = exitPressed;
         nextPrevious = nextPressed;
         prevPrevious = prevPressed;
@@ -209,6 +222,7 @@ public class InputController {
         nextPressed  = xbox.getRB();
         prevPressed  = xbox.getLB();
         debugPressed  = xbox.getY();
+        debug2Pressed = xbox.getX();
         flarePressed = xbox.getB();
         // Increase animation frame, but only if trying to move
         horizontal = xbox.getLeftX();
@@ -229,6 +243,7 @@ public class InputController {
         // Give priority to gamepad results
         resetPressed = (secondary && resetPressed) || (Gdx.input.isKeyPressed(Input.Keys.R));
         debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.D));
+        debug2Pressed = (secondary && debug2Pressed) || (Gdx.input.isKeyPressed(Input.Keys.E));
         prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
         nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
         exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));

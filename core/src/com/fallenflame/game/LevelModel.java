@@ -1,42 +1,50 @@
 package com.fallenflame.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.fallenflame.game.physics.obstacle.BoxObstacle;
 import com.fallenflame.game.physics.obstacle.WheelObstacle;
 
 import java.util.*;
 
-// TODO: ASSUMES OBSTACLE POSITION IS AT CENTER, NEED TO VERIFY IF TRUE
-
 public class LevelModel {
 
+    public static class Tile {
+        /** Is this a goal tiles */
+        public boolean goal = false;
+        /** Has this tile been visited by pathfinding? */
+        public boolean visited = false;
+        /** Is this tile safe */
+        public boolean safe = true;
+    }
+
+
     /** 2D tile representation of board where TRUE indicates tile is available for movement*/
-    private boolean[][] tileGrid;
-    /** Size of tiles (tiles are square so is x and y) */
-    private int tileSize;
+    private Tile[][] tileGrid;
+    /** Constant tile size (tiles are square so this is x and y) */
+    private static final float TILE_SIZE = .4f;
     /** Width of screen */
     private float width;
     /** Height of screen */
     private float height;
 
+
     public LevelModel(){ }
 
-    public void initialize(Rectangle bounds, PlayerModel player, List<WallModel> walls, List<EnemyModel> enemies) {
-        tileSize = Math.max((int)player.getRadius(),1);
+    public void initialize(Rectangle bounds, List<WallModel> walls, List<EnemyModel> enemies) {
         width = bounds.getWidth();
         height = bounds.getHeight();
-        tileGrid = new boolean[(int) Math.ceil(width / tileSize)][(int) Math.ceil(height / tileSize)];
-        // Initialize grid to true
-        for(int x = 0; x < tileGrid.length; x++) {
-            for(int y = 0; y < tileGrid[x].length; y++) {
-                tileGrid[x][y] = true;
+
+        tileGrid = new Tile[(int) Math.ceil(width / TILE_SIZE)][(int) Math.ceil(height / TILE_SIZE)];
+        for(int x = 0; x < tileGrid.length; x++){
+            for(int y = 0; y < tileGrid[0].length; y++){
+                tileGrid[x][y] = new Tile();
+                tileGrid[x][y].safe = true;
             }
         }
         // Set grid to false where obstacle exists
-        setWheelObstacleInGrid(player, false);
-        for(EnemyModel e : enemies) {
-            setWheelObstacleInGrid(e, false);
-        }
+        // TODO: place enemies?
         for(WallModel w : walls) {
             setBoxObstacleInGrid(w, false);
         }
@@ -83,10 +91,11 @@ public class LevelModel {
      */
     public void setWheelObstacleInGrid(WheelObstacle obs, boolean b) {
         for(int x = screenToTile(obs.getX() - obs.getRadius());
-            x < screenToTile(obs.getX() + obs.getRadius()); x++) {
+            x <= screenToTile(obs.getX() + obs.getRadius()); x++) {
             for(int y = screenToTile(obs.getY() - obs.getRadius());
-                y < screenToTile(obs.getY() + obs.getRadius()); y++) {
-                tileGrid[x][y] = b;
+                y <= screenToTile(obs.getY() + obs.getRadius()); y++) {
+                if (!inBounds(x, y)) continue;
+                tileGrid[x][y].safe = b;
             }
         }
     }
@@ -98,10 +107,11 @@ public class LevelModel {
      */
     public void setBoxObstacleInGrid(BoxObstacle obs, boolean b) {
         for(int x = screenToTile(obs.getX() - obs.getWidth()/2);
-            x < screenToTile(obs.getX() + obs.getWidth()/2); x++) {
+            x <= screenToTile(obs.getX() + obs.getWidth()/2); x++) {
             for(int y = screenToTile(obs.getY() - obs.getHeight()/2);
-                y < screenToTile(obs.getY() + obs.getHeight()/2); y++) {
-                tileGrid[x][y] = b;
+                y <= screenToTile(obs.getY() + obs.getHeight()/2); y++) {
+                if (!inBounds(x, y)) continue;
+                tileGrid[x][y].safe = b;
             }
         }
     }
@@ -119,7 +129,7 @@ public class LevelModel {
      * @return the tile cell index for a screen position.
      */
     public int screenToTile(float f) {
-        return (int)(f / tileSize);
+        return (int)(f / TILE_SIZE);
     }
 
     /**
@@ -135,7 +145,21 @@ public class LevelModel {
      * @return the screen position coordinate for a tile cell index.
      */
     public float tileToScreen(int n) {
-        return (float) (n + 0.5f) * tileSize;
+        return (float) (n + 0.5f) * TILE_SIZE;
+    }
+
+    /**
+     * Returns true if the given position is a valid tile
+     *
+     * It does not return if the tile is safe or not
+     *
+     * @param x The x index for the Tile cell
+     * @param y The y index for the Tile cell
+     *
+     * @return true if the given position is a valid tile
+     */
+    public boolean inBounds(int x, int y) {
+        return x >= 0 && y >= 0 && x < tileGrid.length && y < tileGrid[0].length;
     }
 
     /**
@@ -145,7 +169,103 @@ public class LevelModel {
      * @param y Tile y-coor
      * @return isSafe boolean
      */
-    public boolean getSafe(int x, int y) {
-        return tileGrid[x][y];
+    public boolean isSafe(int x, int y) {
+        //TODO: should return inBounds(x, y) and whether Tile.safe is true.
+        //TODO: Tile.safe is false when it's an obstacle on it and true otherwise.
+        return (inBounds(x,y) && tileGrid[x][y].safe) || tileGrid[x][y].goal;
+    } //TODO: temporary change
+
+    /**
+     * Returns true if the tile has been visited.
+     *
+     * A tile position that is not on the board will return false.
+     * Precondition: tile in bounds
+     *
+     * @param x The x index for the Tile cell
+     * @param y The y index for the Tile cell
+     *
+     * @return true if the tile is a goal.
+     */
+    public boolean isVisited(int x, int y){
+        if (!inBounds(x,y)) {
+            Gdx.app.error("Board", "Illegal tile "+x+","+y, new IndexOutOfBoundsException());
+            return false;
+        }
+        return tileGrid[x][y].visited;
+    }
+
+    /**
+     * Marks a tile as visited.
+     *
+     * A marked tile will return true for isVisited(), until a call to clearAllTiles().
+     * A tile position that is not on the board will raise an error
+     * Precondition: tile in bounds
+     *
+     * @param x The x index for the Tile cell
+     * @param y The y index for the Tile cell
+     */
+    public void setVisited(int x, int y){
+        if (!inBounds(x,y)) {
+            Gdx.app.error("Board", "Illegal tile "+x+","+y, new IndexOutOfBoundsException());
+            return;
+        }
+        tileGrid[x][y].visited = true;
+    }
+
+    /**
+     * Returns true if the tile is a goal.
+     *
+     * A tile position that is not on the board will return false.
+     * Precondition: tile in bounds
+     *
+     * @param x The x index for the Tile cell
+     * @param y The y index for the Tile cell
+     *
+     * @return true if the tile is a goal.
+     */
+    public boolean isGoal(int x, int y){
+        if (!inBounds(x,y)) {
+            Gdx.app.error("Board", "Illegal tile "+x+","+y, new IndexOutOfBoundsException());
+            return false;
+        }
+        return tileGrid[x][y].goal;
+    }
+
+    /**
+     * Marks a tile as a goal.
+     *
+     * A marked tile will return true for isGoal(), until a call to clearAllTiles().
+     * A tile position that is not on the board will raise an error
+     * Precondition: tile in bounds
+     *
+     * @param x The x index for the Tile cell
+     * @param y The y index for the Tile cell
+     */
+    public void setGoal(int x, int y){
+        if (!inBounds(x,y)) {
+            Gdx.app.error("Board", "Illegal tile "+x+","+y, new IndexOutOfBoundsException());
+            return;
+        }
+        tileGrid[x][y].goal = true;
+    }
+
+    /**
+     * Set the goal and visited of each tile to false
+     */
+    public void clearAllTiles() {
+        for (int x = 0; x < tileGrid.length; x++) {
+            for (int y = 0; y < tileGrid[0].length; y++) {
+                tileGrid[x][y].goal = false;
+                tileGrid[x][y].visited = false;
+            }
+        }
+    }
+
+    public void drawDebug(GameCanvas canvas, Vector2 drawScale) {
+        for (int x = 0; x < tileGrid.length; x++) {
+            for (int y = 0; y < tileGrid[0].length; y++) {
+                canvas.drawGrid(x, y, tileGrid[x][y], drawScale, TILE_SIZE);
+            }
+        }
     }
 }
