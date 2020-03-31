@@ -16,6 +16,11 @@ public class PlayerModel extends CharacterModel {
     protected float minLightRadius;
 
 
+    /**
+     * Initializes the character via the given JSON value
+     *
+     * @param json	the JSON subtree defining the player
+     */
     public void initialize(JsonValue json) {
         super.initialize(json);
         flareCount = json.get("flarecount").asInt();
@@ -37,11 +42,6 @@ public class PlayerModel extends CharacterModel {
      */
     public int getFlareCount() {
         return flareCount;
-    }
-
-    public void initialize(JsonValue json) {
-        super.initialize(json);
-        setFlareCount(json.get("flarecount").asInt());
     }
 
     /**
