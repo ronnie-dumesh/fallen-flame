@@ -484,6 +484,33 @@ public class LevelController implements ContactListener {
     }
 
     /**
+     * Change the player's movement to sprint
+     * (Called by GameEngine)
+     *
+     */
+    public void makeSprint(){
+        player.setForce(player.getForceSprint());
+    }
+
+    /**
+     * Change the player's movement to walk
+     * (Called by GameEngine)
+     *
+     */
+    public void makeWalk(){
+        player.setForce(player.getForceWalk());
+    }
+
+    /**
+     * Change the player's movement to sneak
+     * (Called by GameEngine)
+     *
+     */
+    public void makeSneak(){
+        player.setForce(player.getForceSneak());
+    }
+
+    /**
      * Moves the player. (Called by GameEngine)
      * @param angle angle player is facing
      * @param tempAngle movement angle of player (to be scaled by player force)

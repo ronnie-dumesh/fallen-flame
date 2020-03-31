@@ -15,6 +15,7 @@
     "startframe":       0,
     "walklimit":		4,
     "flarecount":       5,
+    "sprintlightrad":  10,
     "minlightradius":   2,
     "texture":     	"player",
     "debugcolor":  	"white",
