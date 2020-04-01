@@ -28,7 +28,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	/** Player mode for the the game */
 	private GameEngine engine;
 	/**Input Processor for the game itself */
-	private LightInputProcessor lightInputProcessor;
+	private EventInputProcessor eventInputProcessor;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -45,12 +45,12 @@ public class GDXRoot extends Game implements ScreenListener {
 		canvas  = new GameCanvas();
 		loading = new LoadingMode(canvas,1);
 		engine = new GameEngine();
-		lightInputProcessor = new LightInputProcessor(engine);
+		eventInputProcessor = new EventInputProcessor(engine);
 		InputMultiplexer multiplexer = new InputMultiplexer(); //Allows for multiple InputProcessors
 		//Multiplexer is an ordered list, so when an event occurs, it'll check loadingMode first, and then
 		// LightInputProcessor
 		multiplexer.addProcessor(loading);
-		multiplexer.addProcessor(lightInputProcessor);
+		multiplexer.addProcessor(eventInputProcessor);
 		Gdx.input.setInputProcessor(multiplexer);
 
 		// Initialize the three game worlds

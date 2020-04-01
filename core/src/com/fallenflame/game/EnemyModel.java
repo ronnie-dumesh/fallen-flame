@@ -8,6 +8,13 @@ public class EnemyModel extends CharacterModel {
     protected Vector2 investigatePosition;
 
     /**
+     * Control Codes to encode actions
+     */
+    public static final int CONTROL_NO_ACTION = 0x00;
+    public static final int CONTROL_MOVE_LEFT = 0X01;
+    
+
+    /**
      * Gets enemy's active status
      * @return whether this enemy is activated
      */

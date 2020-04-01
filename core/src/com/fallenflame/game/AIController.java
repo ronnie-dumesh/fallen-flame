@@ -18,17 +18,6 @@ public class AIController {
         INVESTIGATE,
     }
 
-    /**
-     * Enumeration to encode actions
-     */
-    public enum Action {
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN,
-        NO_ACTION
-    }
-
     // Constants
     /** The radius from which an enemy could have considered to have finished its investigation
      * of a flare or of a player's last-known location*/
