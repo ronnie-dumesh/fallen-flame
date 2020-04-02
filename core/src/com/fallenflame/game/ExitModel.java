@@ -26,9 +26,8 @@ public class ExitModel extends BoxObstacle {
      *
      * @param json	the JSON subtree defining the dude
      */
-    public void initialize(JsonValue json) {
+    public void initialize(JsonValue json, float[] pos) {
         setName(json.name());
-        float[] pos  = json.get("pos").asFloatArray();
         float[] size = json.get("size").asFloatArray();
         setPosition(pos[0],pos[1]);
         setDimension(size[0],size[1]);

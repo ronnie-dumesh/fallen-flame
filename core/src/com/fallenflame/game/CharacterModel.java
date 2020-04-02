@@ -192,10 +192,9 @@ public abstract class CharacterModel extends WheelObstacle implements ILightRadi
      *
      * @param json	the JSON subtree defining the player
      */
-    public void initialize(JsonValue json){
+    public void initialize(JsonValue json, float[] pos){
         setName(json.name());
-        float[] pos  = json.get("pos").asFloatArray();
-        float radius = 0.4f;//json.get("radius").asFloat();
+        float radius = json.get("radius").asFloat();
         setPosition(pos[0],pos[1]);
         setRadius(radius);
 

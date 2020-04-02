@@ -1,0 +1,68 @@
+{
+  "player":  {
+    "radius":      	0.4,
+    "bodytype":    	"dynamic",
+    "density":        1.0,
+    "friction":       0.0,
+    "restitution":    0.0,
+    "force": 		 80.0,
+    "damping": 		 10.0,
+    "maxspeed": 	  5.0,
+    "startframe":       0,
+    "walklimit":		4,
+    "flarecount":       5,
+    "sprintlightrad":  10,
+    "minlightradius":   2,
+    "texture":     	"player",
+    "debugcolor":  	"white",
+    "debugopacity":	192
+  },
+  "enemies": {
+    "typeA":  {
+      "radius": 0.4,
+      "bodytype": "dynamic",
+      "density": 1.0,
+      "friction": 0.0,
+      "restitution": 0.0,
+      "force": 80.0,
+      "damping": 10.0,
+      "maxspeed": 5.0,
+      "startframe": 0,
+      "walklimit": 4,
+      "texture": "enemy",
+      "debugcolor": "white",
+      "debugopacity": 192
+    }
+  },
+  "exit": {
+    "size":           [ 1.25, 1.25],
+    "bodytype":    	  "static",
+    "density":  	  0.0,
+    "friction":       0.0,
+    "restitution":    0.0,
+    "texture":       "goal",
+    "debugcolor":    "yellow",
+    "debugopacity":   200
+  },
+  "flare" : {
+    "radius":      	  0.1,
+    "bodytype":    	  "dynamic",
+    "density":        1.0,
+    "friction":       0.0,
+    "restitution":    0.0,
+    "texture":        "fire",
+    "initialforce":   3.0,
+    "damping": 		 0.0,
+    "startframe":       0
+  },
+  "wall": {
+    "pad":       	[ 0.1f, 0.1f],
+    "bodytype":     "static",
+    "density":        0.0,
+    "friction":       0.4,
+    "restitution":    0.1,
+    "texture":      "earth",
+    "debugcolor":   "yellow",
+    "debugopacity":  200
+  }
+}

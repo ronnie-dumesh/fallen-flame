@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.fallenflame.game.physics.obstacle.BoxObstacle;
 import com.fallenflame.game.util.JsonAssetManager;
@@ -152,13 +153,13 @@ public class WallModel extends BoxObstacle {
         initRegion();
     }
 
-    public void initialize(JsonValue json) {
-        setName(json.name());
-        float[] pos = json.get("pos").asFloatArray(),
-                size = json.get("size").asFloatArray(),
-                pad = json.get("pad").asFloatArray();
+    public void initialize(JsonValue globalJson, JsonValue levelJson) {
+        setName(globalJson.name());
+        float[] pos = levelJson.get("pos").asFloatArray(),
+                size = levelJson.get("size").asFloatArray(),
+                pad = globalJson.get("pad").asFloatArray();
 
-        setBodyType(BodyDef.BodyType.StaticBody);
+        setBodyType(globalJson.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
         setPosition(pos[0], pos[1]);
         setDimension(size[0], size[1]);
         setPadding(pad[0], pad[1]);
@@ -167,7 +168,10 @@ public class WallModel extends BoxObstacle {
 
         // TODO: Debug?
 
-        String key = json.get("texture").asString();
+        // Get default texture
+        String key = globalJson.get("texture").asString();;
+        if(levelJson.has("texture"))
+            levelJson.get("texture").asString(); // Get specific texture if available
         TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
         setTexture(texture);
     }
