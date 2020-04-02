@@ -1,6 +1,7 @@
-package com.fallenflame.game;
+package com.fallenflame.game.enemies;
 
 import com.badlogic.gdx.math.Vector2;
+import com.fallenflame.game.CharacterModel;
 
 public class EnemyModel extends CharacterModel {
     protected boolean activated = false;
@@ -17,7 +18,21 @@ public class EnemyModel extends CharacterModel {
         UP,
         DOWN
     }
-    
+
+    // Constants for the control codes
+    // We would normally use an enum here, but Java enums do not bitmask nicely
+    /** Do not do anything */
+    public static final int CONTROL_NO_ACTION  = 0x00;
+    /** Move the ship to the left */
+    public static final int CONTROL_MOVE_LEFT  = 0x01;
+    /** Move the ship to the right */
+    public static final int CONTROL_MOVE_RIGHT = 0x02;
+    /** Move the ship to the up */
+    public static final int CONTROL_MOVE_UP    = 0x04;
+    /** Move the ship to the down */
+    public static final int CONTROL_MOVE_DOWN  = 0x08;
+    /** Fire the ship weapon */
+    public static final int CONTROL_FIRE 	   = 0x10;
 
     /**
      * Gets enemy's active status
@@ -87,30 +102,26 @@ public class EnemyModel extends CharacterModel {
 
     /**
      * Executes enemy action
-     * @param action for enemy to execute. can be left, right, up, down movement or no action
+     * @param ctrlCode action for enemy to execute. can be left, right, up, down movement or no action
      * @return true if enemy has moved
      */
-    public boolean executeAction(Action action) {
+    public boolean executeAction(int ctrlCode) {
+        // Determine how we are moving.
+        boolean movingLeft  = (ctrlCode & CONTROL_MOVE_LEFT) != 0;
+        boolean movingRight = (ctrlCode & CONTROL_MOVE_RIGHT) != 0;
+        boolean movingUp    = (ctrlCode & CONTROL_MOVE_UP) != 0;
+        boolean movingDown  = (ctrlCode & CONTROL_MOVE_DOWN) != 0;
         Vector2 tempAngle = new Vector2(); // x: -1 = left, 1 = right, 0 = still; y: -1 = down, 1 = up, 0 = still
-        switch(action){
-            case NO_ACTION:
-                break; // Do not return false immediately, because then the previous movement will not be cleared.
-            case LEFT:
-                tempAngle.set(-1,0);
-                break;
-            case RIGHT:
-                tempAngle.set(1,0);
-                break;
-            case UP:
-                tempAngle.set(0,1);
-                break;
-            case DOWN:
-                tempAngle.set(0,-1);
-                break;
-            default:
-                System.out.println("invalid enemy action");
-                assert false;
+        if(movingLeft) {
+            tempAngle.set(-1, 0);
+        } else if(movingRight) {
+            tempAngle.set(1,0);
+        } else if(movingUp) {
+            tempAngle.set(0,1);
+        } else if(movingDown) {
+            tempAngle.set(0,-1);
         }
+
         tempAngle.scl(getForce());
         setMovement(tempAngle.x, tempAngle.y);
         // Only set angle if our temp angle is not 0. If temp angle is 0 then it means no movement, in which case leave
@@ -122,6 +133,6 @@ public class EnemyModel extends CharacterModel {
             setAngle(angle);
         }
         applyForce();
-        return action != Action.NO_ACTION; // Return false if no action.
+        return ctrlCode != CONTROL_NO_ACTION; // Return false if no action.
     }
 }
