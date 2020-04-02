@@ -40,6 +40,8 @@ public class GameEngine implements Screen {
     /**@author: Professor White */
     /** The JSON defining the level model */
     private JsonValue levelJson;
+    /** Global JSON defining objects */
+    private JsonValue globalJson;
 
     /**@author: Professor White */
     /**What actually keeps track of the assetState. Initially set to empty, as no resources will be in at that point*/
@@ -93,7 +95,6 @@ public class GameEngine implements Screen {
      * we have an AssetState that determines the current loading state.  If the
      * assets are already loaded, this method will do nothing.
      *
-     * @param manager Reference to global asset manager.
      * @author Professor White
      */
     public void preLoadContent() {
@@ -106,6 +107,7 @@ public class GameEngine implements Screen {
         jsonReader = new JsonReader();
         assetJson = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
         saveJson = jsonReader.parse(Gdx.files.internal("jsons/save.json"));
+        globalJson = jsonReader.parse(Gdx.files.internal("jsons/global.json"));
 
         JsonAssetManager.getInstance().loadDirectory(assetJson);
     }
@@ -117,7 +119,6 @@ public class GameEngine implements Screen {
      * we have an AssetState that determines the current loading state.  If the
      * assets are already loaded, this method will do nothing.
      *
-     * @param manager Reference to global asset manager.
      * @author: Professor White
      */
     public void loadContent() {
@@ -232,9 +233,9 @@ public class GameEngine implements Screen {
          countdown = -1;
 
         // Reload the json each time
-        String currentLevelPath = "jsons/" + saveJson.getString("current");
-        levelJson = jsonReader.parse(Gdx.files.internal("jsons/level.json"));
-        level.populate(levelJson);
+        String currentLevelPath = "jsons/" + saveJson.get("levels").get(0).getString("path"); // Currently just gets first level
+        levelJson = jsonReader.parse(Gdx.files.internal(currentLevelPath));
+        level.populate(levelJson, globalJson);
         level.setLevelState(LevelController.LevelState.IN_PROGRESS);
         level.getWorld().setContactListener(level);
     }
@@ -246,7 +247,7 @@ public class GameEngine implements Screen {
      * to switch to a new game mode.  If not, the update proceeds
      * normally.
      *
-     * @param delta Number of seconds since last animation frame
+     * @param dt Number of seconds since last animation frame
      *
      * @return whether to process the update loop
      */
@@ -349,7 +350,7 @@ public class GameEngine implements Screen {
      *
      * The method draws all objects in the order that they were added.
      *
-     * @param canvas The drawing context
+     * @param delta  Number of seconds since last animation frame
      */
     public void draw(float delta) {
         canvas.clear();

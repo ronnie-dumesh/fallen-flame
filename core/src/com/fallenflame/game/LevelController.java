@@ -272,7 +272,7 @@ public class LevelController implements ContactListener {
      *
      * @param levelJson	the JSON tree defining the level
      */
-    public void populate(JsonValue levelJson) {
+    public void populate(JsonValue levelJson, JsonValue globalJson) {
         populated = true;
 
         float[] pSize = levelJson.get("physicsSize").asFloatArray();
@@ -292,28 +292,30 @@ public class LevelController implements ContactListener {
 
         // Create player
         player = new PlayerModel();
-        player.initialize(levelJson.get("player"));
+        player.initialize(globalJson.get("player"), levelJson.get("playerpos").asFloatArray());
         player.setDrawScale(scale);
         player.activatePhysics(world);
         assert inBounds(player);
         // Create Exit
         exit = new ExitModel();
-        exit.initialize(levelJson.get("exit"));
+        exit.initialize(globalJson.get("exit"), levelJson.get("exitpos").asFloatArray());
         exit.setDrawScale(scale);
         exit.activatePhysics(world);
         assert inBounds(exit);
         for(JsonValue wallJSON : levelJson.get("walls")) {
             WallModel wall = new WallModel();
-            wall.initialize(wallJSON);
+            wall.initialize(globalJson.get("wall"), wallJSON);
             wall.setDrawScale(scale);
             wall.activatePhysics(world);
             walls.add(wall);
             assert inBounds(wall);
         }
         int enemyID = 0;
+        JsonValue globalEnemies = globalJson.get("enemies");
         for(JsonValue enemyJSON : levelJson.get("enemies")) {
             EnemyModel enemy = new EnemyModel();
-            enemy.initialize(enemyJSON);
+            enemy.initialize(globalEnemies.get(enemyJSON.get("enemytype").asString()),
+                    enemyJSON.get("enemypos").asFloatArray());
             enemy.setDrawScale(scale);
             enemy.activatePhysics(world);
             enemies.add(enemy);

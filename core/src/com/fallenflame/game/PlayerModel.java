@@ -19,15 +19,13 @@ public class PlayerModel extends CharacterModel {
     protected float lightRadiusNotSprint;
     protected float lightRadiusSprint;
 
-
     /**
      * Initializes the character via the given JSON value
      *
      * @param json	the JSON subtree defining the player
      */
-    public void initialize(JsonValue json) {
-        super.initialize(json);
-
+    public void initialize(JsonValue json, float[] pos) {
+        super.initialize(json, pos);
         flareCount = json.get("flarecount").asInt();
         forceWalk = getForce();
         lightRadiusSprint = json.get("sprintlightrad").asInt();
