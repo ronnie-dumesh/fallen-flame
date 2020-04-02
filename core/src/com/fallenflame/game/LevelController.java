@@ -402,14 +402,14 @@ public class LevelController implements ContactListener {
 
             // Get Enemy Actions
             Iterator<AIController> ctrlI = AIControllers.iterator();
-            LinkedList<AIController.Action> actions = new LinkedList();
+            LinkedList<EnemyModel.Action> actions = new LinkedList();
             while(ctrlI.hasNext()){
                 AIController ctrl = ctrlI.next();
                 actions.add(ctrl.getAction());
             }
             // Execute Enemy Actions (and update levelModel)
             Iterator<EnemyModel> enemyI = enemies.iterator();
-            Iterator<AIController.Action> actionI = actions.iterator();
+            Iterator<EnemyModel.Action> actionI = actions.iterator();
             while(enemyI.hasNext()){
                 EnemyModel enemy = enemyI.next();
                 enemy.executeAction(actionI.next());
