@@ -18,17 +18,6 @@ public class AIController {
         INVESTIGATE,
     }
 
-    /**
-     * Enumeration to encode actions
-     */
-    public enum Action {
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN,
-        NO_ACTION
-    }
-
     // Constants
     /** The radius from which an enemy could have considered to have finished its investigation
      * of a flare or of a player's last-known location*/
@@ -44,7 +33,7 @@ public class AIController {
     /** The player*/
     private PlayerModel player;
     /** The enemy's next move */
-    private Action action;
+    private EnemyModel.Action action;
     /** The number of ticks since we started this controller */
     private long ticks;
     /** A randomID to stagger the amount of processing of each enemy per frame */
@@ -65,7 +54,7 @@ public class AIController {
         this.level = level;
         this.player = player;
         // this.flares = flares;
-        action = Action.NO_ACTION;
+        action = EnemyModel.Action.NO_ACTION;
         state = FSMState.IDLE;
         // action = Action.NO_ACTION;
         ticks = 0;
@@ -79,7 +68,7 @@ public class AIController {
      *
      * @return the action selected by this InputController
      */
-    public Action getAction() {
+    public EnemyModel.Action getAction() {
         ticks++;
 
         if ((randomID + ticks) % 5 == 0) {
@@ -164,7 +153,7 @@ public class AIController {
      */
     private void chooseAction() {
         if(state == FSMState.IDLE)
-            action = Action.NO_ACTION;
+            action = EnemyModel.Action.NO_ACTION;
         else
             action = getMoveAlongPathToGoalTile();
     }
@@ -174,7 +163,7 @@ public class AIController {
      *
      * @return a movement direction that moves towards a goal tile or NO_ACTION.
      */
-    private Action getMoveAlongPathToGoalTile() {
+    private EnemyModel.Action getMoveAlongPathToGoalTile() {
         int startX = level.screenToTile(enemy.getX());
         int startY = level.screenToTile(enemy.getY());
 
@@ -184,13 +173,13 @@ public class AIController {
         // Initialize queue with movement options
         Queue<TileIndex> queue = new LinkedList<TileIndex>();
         if(level.isSafe(startX+1, startY)){
-            queue.add(new TileIndex(startX+1, startY, Action.RIGHT));}
+            queue.add(new TileIndex(startX+1, startY, EnemyModel.Action.RIGHT));}
         if(level.isSafe(startX, startY+1))
-            queue.add(new TileIndex(startX, startY+1, Action.UP));
+            queue.add(new TileIndex(startX, startY+1, EnemyModel.Action.UP));
         if(level.isSafe(startX-1, startY))
-            queue.add(new TileIndex(startX-1, startY, Action.LEFT));
+            queue.add(new TileIndex(startX-1, startY, EnemyModel.Action.LEFT));
         if(level.isSafe(startX, startY-1))
-            queue.add(new TileIndex(startX, startY-1, Action.DOWN));
+            queue.add(new TileIndex(startX, startY-1, EnemyModel.Action.DOWN));
 
 
         while(queue.peek() != null){
@@ -216,18 +205,18 @@ public class AIController {
                 queue.add(new TileIndex(curr.x, curr.y-1, curr.a));
         }
         //System.out.println("Goal not acquired");
-        return Action.NO_ACTION;
+        return EnemyModel.Action.NO_ACTION;
     }
 
     /** Tile Index Object for queue in path finder
      * 	Holds an action attribute that indicates best starting action to get to the current x,y tile index
      */
     private class TileIndex {
-        int x; int y; Action a;
+        int x; int y; EnemyModel.Action a;
         public TileIndex(int x, int y) {
             this.x = x; this.y = y;
         }
-        public TileIndex(int x, int y, Action a) {
+        public TileIndex(int x, int y, EnemyModel.Action a) {
             this.x = x; this.y = y; this.a = a;
         }
     }

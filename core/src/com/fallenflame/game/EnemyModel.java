@@ -8,6 +8,18 @@ public class EnemyModel extends CharacterModel {
     protected Vector2 investigatePosition;
 
     /**
+     * Enum to encode actions
+     */
+    public enum Action {
+        NO_ACTION,
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN
+    }
+    
+
+    /**
      * Gets enemy's active status
      * @return whether this enemy is activated
      */
@@ -78,7 +90,7 @@ public class EnemyModel extends CharacterModel {
      * @param action for enemy to execute. can be left, right, up, down movement or no action
      * @return true if enemy has moved
      */
-    public boolean executeAction(AIController.Action action) {
+    public boolean executeAction(Action action) {
         Vector2 tempAngle = new Vector2(); // x: -1 = left, 1 = right, 0 = still; y: -1 = down, 1 = up, 0 = still
         switch(action){
             case NO_ACTION:
@@ -110,6 +122,6 @@ public class EnemyModel extends CharacterModel {
             setAngle(angle);
         }
         applyForce();
-        return action != AIController.Action.NO_ACTION; // Return false if no action.
+        return action != Action.NO_ACTION; // Return false if no action.
     }
 }
