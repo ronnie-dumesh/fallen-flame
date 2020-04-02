@@ -31,8 +31,8 @@ public class AITypeAController extends AIController {
     private FSMState state;
     /** The player*/
     private PlayerModel player;
-    /** The enemy's next move */
-    private EnemyModel.Action action;
+    /** The enemy being controlled by this AIController */
+    private EnemyTypeAModel enemy;
 
     /**
      * Creates an AIController for the enemy with the given id.
@@ -47,6 +47,8 @@ public class AITypeAController extends AIController {
                         List<FlareModel> flares) {
         super(id, level, enemies);
         this.player = player;
+        assert(enemy.getClass() == EnemyTypeAModel.class);
+        this.enemy = (EnemyTypeAModel)super.enemy;
         // this.flares = flares;
         state = FSMState.IDLE;
         // action = Action.NO_ACTION;

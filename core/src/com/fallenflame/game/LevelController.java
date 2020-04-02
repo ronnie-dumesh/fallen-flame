@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.*;
 import com.fallenflame.game.enemies.AIController;
 import com.fallenflame.game.enemies.AITypeAController;
 import com.fallenflame.game.enemies.EnemyModel;
+import com.fallenflame.game.enemies.EnemyTypeAModel;
 import com.fallenflame.game.physics.obstacle.Obstacle;
 
 import java.util.*;
@@ -317,18 +318,27 @@ public class LevelController implements ContactListener {
         int enemyID = 0;
         JsonValue globalEnemies = globalJson.get("enemies");
         for(JsonValue enemyJSON : levelJson.get("enemies")) {
-            EnemyModel enemy = new EnemyModel();
             String enemyType = enemyJSON.get("enemytype").asString();
+            // Initialize Enemy Model
+            EnemyModel enemy;
+            if(enemyType.equals("typeA")) {
+                enemy = new EnemyTypeAModel();
+            } else{
+                Gdx.app.error("LevelController", "Enemy type without model", new IllegalArgumentException());
+                return;
+            }
             enemy.initialize(globalEnemies.get(enemyType), enemyJSON.get("enemypos").asFloatArray());
             enemy.setDrawScale(scale);
             enemy.activatePhysics(world);
             enemies.add(enemy);
+            // Initialize AIController
             if(enemyType.equals("typeA")) {
                 AIControllers.add(new AITypeAController(enemyID, levelModel, enemies, player, flares));
             } else{
                 Gdx.app.error("LevelController", "Enemy type without AIController", new IllegalArgumentException());
-                assert(false);
+                return;
             }
+
             enemyID++;
             assert inBounds(enemy);
         }
