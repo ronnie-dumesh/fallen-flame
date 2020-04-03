@@ -46,6 +46,8 @@
   },
   "flare" : {
     "radius":      	  0.1,
+    "lighradius":     3.5,
+    "flareduration":  6000,
     "bodytype":    	  "dynamic",
     "density":        1.0,
     "friction":       0.0,
