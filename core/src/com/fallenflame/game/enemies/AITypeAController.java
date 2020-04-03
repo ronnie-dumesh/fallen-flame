@@ -33,6 +33,8 @@ public class AITypeAController extends AIController {
     private PlayerModel player;
     /** The enemy being controlled by this AIController */
     private EnemyTypeAModel enemy;
+    /** The flares in the world */
+    private List<FlareModel> flares;
 
     /**
      * Creates an AIController for the enemy with the given id.
@@ -49,9 +51,8 @@ public class AITypeAController extends AIController {
         this.player = player;
         assert(enemy.getClass() == EnemyTypeAModel.class);
         this.enemy = (EnemyTypeAModel)super.enemy;
-        // this.flares = flares;
+        this.flares = flares;
         state = FSMState.IDLE;
-        // action = Action.NO_ACTION;
     }
 
     /**
@@ -61,9 +62,20 @@ public class AITypeAController extends AIController {
         switch(state) {
             case IDLE:
                 enemy.setActivated(false);
+                // Check for player in range
                 if(withinChase()){
                     state = FSMState.CHASE;
                     break;
+                }
+                // Check for flares in range
+                for(FlareModel f : flares){
+                    // If flare found, chase flare
+                    if(withinFlareRange(f)){
+                        state = FSMState.INVESTIGATE;
+                        enemy.setInvestigatePosition(new Vector2(f.getX(), f.getY()));
+                        enemy.setInvestigateFlare(f);
+                        break;
+                    }
                 }
                 break;
 
@@ -77,14 +89,24 @@ public class AITypeAController extends AIController {
                 break;
 
             case INVESTIGATE:
+                enemy.setActivated(true);
                 assert enemy.getInvestigatePosition() != null;
+                // Check for player in range
                 if(withinChase()){
                     state = FSMState.CHASE;
-                    enemy.setInvestigatePosition(null);
+                    enemy.clearInvestigateFlare();
+                    break;
                 }
-
-                else if(investigateReached()){
+                // Check if investigating flare
+                if(enemy.isInvestigatingFlare()){
+                    // Update investigation position for moving flare
+                    enemy.setInvestigatePosition(enemy.getInvestigateFlare().getX(), enemy.getInvestigateFlare().getY());
+                }
+                // If we rached investigation position and we were chasing player or we were chasing a flare that
+                // has stopped moving, then we can clear and move on
+                if(investigateReached() && (!enemy.isInvestigatingFlare() || (enemy.isInvestigatingFlare() && enemy.getInvestigateFlare().isStuck()))){
                     enemy.setInvestigatePosition(null);
+                    enemy.clearInvestigateFlare();
                     enemy.setActivated(false);
                     state = FSMState.IDLE;
                 }
@@ -144,5 +166,11 @@ public class AITypeAController extends AIController {
     private boolean withinChase(){
         double distance = cartesianDistance(enemy.getX(),player.getX(),enemy.getY(),player.getY());
         return distance <= player.getLightRadius();
+    }
+
+    /** Returns whether an enemy is in range to chase a player */
+    private boolean withinFlareRange(FlareModel f){
+        double distance = cartesianDistance(enemy.getX(),f.getX(),enemy.getY(),f.getY());
+        return distance <= f.getLightRadius();
     }
 }
