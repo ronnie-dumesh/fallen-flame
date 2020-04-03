@@ -324,7 +324,7 @@ public class LevelController implements ContactListener {
             AIControllers.add(controller);
             assert inBounds(enemy);
         }
-        flareJSON = levelJson.get("flare");
+        flareJSON = globalJson.get("flare");
 
         // Initialize levelModel
         levelModel.initialize(bounds, walls, enemies);
