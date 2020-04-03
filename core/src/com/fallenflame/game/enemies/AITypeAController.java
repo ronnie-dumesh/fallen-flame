@@ -102,9 +102,10 @@ public class AITypeAController extends AIController {
                     // Update investigation position for moving flare
                     enemy.setInvestigatePosition(enemy.getInvestigateFlare().getX(), enemy.getInvestigateFlare().getY());
                 }
-                // If we rached investigation position and we were chasing player or we were chasing a flare that
-                // has stopped moving, then we can clear and move on
-                if(investigateReached() && (!enemy.isInvestigatingFlare() || (enemy.isInvestigatingFlare() && enemy.getInvestigateFlare().isStuck()))){
+                // If we reached investigation position AND we were chasing player OR we were chasing a flare that
+                // has stopped moving OR we are chasing a flare that has burned out then we can clear and move on
+                if(investigateReached() && (!enemy.isInvestigatingFlare() || enemy.getInvestigateFlare().isStuck()
+                                || enemy.getInvestigateFlare().timeToBurnout() <= 0)){
                     enemy.setInvestigatePosition(null);
                     enemy.clearInvestigateFlare();
                     enemy.setActivated(false);
@@ -129,29 +130,17 @@ public class AITypeAController extends AIController {
 
             case CHASE:
                 level.setGoal(level.screenToTile(player.getX()), level.screenToTile(player.getY()));
-                //System.out.println("Goal chase: " + level.screenToTile(player.getX()) + ", " + level.screenToTile(player.getY()));
                 break;
 
             case INVESTIGATE:
                 level.setGoal(level.screenToTile(enemy.getInvestigatePositionX()),
                         level.screenToTile(enemy.getInvestigatePositionY()));
-                //System.out.println("Goal inv: " + level.screenToTile(enemy.getInvestigatePositionX()) + "," + level.screenToTile(enemy.getInvestigatePositionY()));
                 break;
 
             default:
                 assert false;
         }
     }
-
-//    /**
-//     * Determines action based on enemy state and goal tiles and saves action to `action` variable
-//     */
-//    protected void chooseAction() {
-//        if(state == FSMState.IDLE)
-//            action = EnemyModel.Action.NO_ACTION;
-//        else
-//            action = getMoveAlongPathToGoalTile();
-//    }
 
     /** Determines whether the player has reached the coordinates they are investigating */
     private boolean investigateReached(){

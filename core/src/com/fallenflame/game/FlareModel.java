@@ -26,13 +26,13 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
     private int startFrame;
 
     /** How long a flare can last, in milliseconds. */
-    private static final int FLARE_DURATION = 6000;
+    private int flareDuration;
 
     /** Time when it was fired **/
     private long startTime;
 
     /** Light Radius */
-    private static float LIGHT_RADIUS = 2; // TODO: may not want to be static later
+    private float lightRadius;
 
     /** Whether or not flare has stuck to wall */
     private boolean isStuck;
@@ -43,7 +43,7 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
      * @return the light radius of this flare.
      */
     public float getLightRadius() {
-        return LIGHT_RADIUS;
+        return lightRadius;
     }
 
     /**
@@ -164,6 +164,8 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
         setName(json.name());
         float radius = json.get("radius").asFloat();
         setRadius(radius);
+        lightRadius = json.get("lighradius").asFloat();
+        flareDuration = json.get("flareduration").asInt();
         isStuck = false;
 
         // TODO #2: Technically, we should do error checking here.
@@ -249,7 +251,7 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
      * @return time left
      */
     public int timeToBurnout() {
-        int timeLeft = FLARE_DURATION - (int) (System.currentTimeMillis() - startTime);
+        int timeLeft = flareDuration - (int) (System.currentTimeMillis() - startTime);
         return Math.max(timeLeft, 0);
     }
 
