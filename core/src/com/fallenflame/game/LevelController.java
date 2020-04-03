@@ -1,10 +1,15 @@
 package com.fallenflame.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
+import com.fallenflame.game.enemies.AIController;
+import com.fallenflame.game.enemies.AITypeAController;
+import com.fallenflame.game.enemies.EnemyModel;
+import com.fallenflame.game.enemies.EnemyTypeAModel;
 import com.fallenflame.game.physics.obstacle.Obstacle;
 
 import java.util.*;
@@ -313,15 +318,28 @@ public class LevelController implements ContactListener {
         int enemyID = 0;
         JsonValue globalEnemies = globalJson.get("enemies");
         for(JsonValue enemyJSON : levelJson.get("enemies")) {
-            EnemyModel enemy = new EnemyModel();
-            enemy.initialize(globalEnemies.get(enemyJSON.get("enemytype").asString()),
-                    enemyJSON.get("enemypos").asFloatArray());
+            String enemyType = enemyJSON.get("enemytype").asString();
+            // Initialize Enemy Model
+            EnemyModel enemy;
+            if(enemyType.equals("typeA")) {
+                enemy = new EnemyTypeAModel();
+            } else{
+                Gdx.app.error("LevelController", "Enemy type without model", new IllegalArgumentException());
+                return;
+            }
+            enemy.initialize(globalEnemies.get(enemyType), enemyJSON.get("enemypos").asFloatArray());
             enemy.setDrawScale(scale);
             enemy.activatePhysics(world);
             enemies.add(enemy);
-            AIController controller = new AIController(enemyID, levelModel, enemies, player, flares);
+            // Initialize AIController
+            if(enemyType.equals("typeA")) {
+                AIControllers.add(new AITypeAController(enemyID, levelModel, enemies, player, flares));
+            } else{
+                Gdx.app.error("LevelController", "Enemy type without AIController", new IllegalArgumentException());
+                return;
+            }
+
             enemyID++;
-            AIControllers.add(controller);
             assert inBounds(enemy);
         }
         flareJSON = globalJson.get("flare");
@@ -404,14 +422,14 @@ public class LevelController implements ContactListener {
 
             // Get Enemy Actions
             Iterator<AIController> ctrlI = AIControllers.iterator();
-            LinkedList<EnemyModel.Action> actions = new LinkedList();
+            LinkedList<Integer> ctrlCodes = new LinkedList();
             while(ctrlI.hasNext()){
                 AIController ctrl = ctrlI.next();
-                actions.add(ctrl.getAction());
+                ctrlCodes.add(ctrl.getAction());
             }
             // Execute Enemy Actions (and update levelModel)
             Iterator<EnemyModel> enemyI = enemies.iterator();
-            Iterator<EnemyModel.Action> actionI = actions.iterator();
+            Iterator<Integer> actionI = ctrlCodes.iterator();
             while(enemyI.hasNext()){
                 EnemyModel enemy = enemyI.next();
                 enemy.executeAction(actionI.next());

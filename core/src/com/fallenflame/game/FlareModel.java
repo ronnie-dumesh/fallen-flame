@@ -34,6 +34,9 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
     /** Light Radius */
     private float lightRadius;
 
+    /** Whether or not flare has stuck to wall */
+    private boolean isStuck;
+
     /**
      * Returns the light radius of this flare.
      *
@@ -132,6 +135,12 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
     }
 
     /**
+     * Get if flare is stuck to wall
+     * @return true if flare is stuck to wall
+     */
+    public boolean isStuck() { return isStuck; }
+
+    /**
      * Creates a new dude with input position and json settings
      *
      * The main purpose of this constructor is to set the initial capsule orientation.
@@ -157,6 +166,7 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
         setRadius(radius);
         lightRadius = json.get("lighradius").asFloat();
         flareDuration = json.get("flareduration").asInt();
+        isStuck = false;
 
         // TODO #2: Technically, we should do error checking here.
         // A JSON field might accidentally be missing
@@ -217,6 +227,7 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
      */
     public void stopMovement() {
         body.setLinearVelocity(new Vector2(0,0));
+        isStuck = true;
     }
 
     /**

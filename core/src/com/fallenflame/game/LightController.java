@@ -8,10 +8,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
+import com.fallenflame.game.enemies.EnemyModel;
 import com.fallenflame.game.physics.lights.PointSource;
 import com.fallenflame.game.physics.obstacle.Obstacle;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;

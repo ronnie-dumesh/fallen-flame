@@ -1,39 +1,16 @@
-package com.fallenflame.game;
+package com.fallenflame.game.enemies;
 
 import com.badlogic.gdx.math.Vector2;
+import com.fallenflame.game.CharacterModel;
+import com.fallenflame.game.FlareModel;
 
-public class EnemyModel extends CharacterModel {
-    protected boolean activated = false;
+public class EnemyTypeAModel extends EnemyModel {
 
+    /** Position to investigate. Player last known location or flare */
     protected Vector2 investigatePosition;
 
-    /**
-     * Enum to encode actions
-     */
-    public enum Action {
-        NO_ACTION,
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN
-    }
-    
-
-    /**
-     * Gets enemy's active status
-     * @return whether this enemy is activated
-     */
-    public boolean getActivated() {
-        return this.activated;
-    }
-
-    /**
-     * Sets enemy's active status
-     * @param activated
-     */
-    public void setActivated(boolean activated) {
-        this.activated = activated;
-    }
+    /** Flare to investigate (null if investigating player last known location) */
+    protected FlareModel investigateFlare;
 
     /**
      * @return the Vector2 representing the position the enemy seeks to investigate
@@ -61,6 +38,31 @@ public class EnemyModel extends CharacterModel {
     }
 
     /**
+     * Set flare enemy is investigating
+     * @param f flare to investigate
+     */
+    public void setInvestigateFlare(FlareModel f) {
+        investigateFlare = f;
+    }
+
+    /**
+     * Get flare enemy is investigating
+     * @return flare to investigate
+     */
+    public FlareModel getInvestigateFlare() { return investigateFlare; }
+
+    /**
+     * Whether enemy is investigating flare
+     * @return true if enemy is investigating flare
+     */
+    public boolean isInvestigatingFlare() { return investigateFlare != null; }
+
+    /**
+     * Clear enemy flare investigating
+     */
+    public void clearInvestigateFlare() { investigateFlare = null; }
+
+    /**
      * Set enemy's investigation position
      * @param v Vector representing enemy's investigation position
      */
@@ -78,39 +80,27 @@ public class EnemyModel extends CharacterModel {
     }
 
     /**
-     * Gets light radius for enemy
-     * @return light radius
-     */
-    public float getLightRadius() {
-        return getActivated() ? 1 : 0;
-    }
-
-    /**
      * Executes enemy action
-     * @param action for enemy to execute. can be left, right, up, down movement or no action
+     * @param ctrlCode action for enemy to execute. can be left, right, up, down movement or no action
      * @return true if enemy has moved
      */
-    public boolean executeAction(Action action) {
+    public boolean executeAction(int ctrlCode) {
+        // Determine how we are moving.
+        boolean movingLeft  = (ctrlCode & CONTROL_MOVE_LEFT) != 0;
+        boolean movingRight = (ctrlCode & CONTROL_MOVE_RIGHT) != 0;
+        boolean movingUp    = (ctrlCode & CONTROL_MOVE_UP) != 0;
+        boolean movingDown  = (ctrlCode & CONTROL_MOVE_DOWN) != 0;
         Vector2 tempAngle = new Vector2(); // x: -1 = left, 1 = right, 0 = still; y: -1 = down, 1 = up, 0 = still
-        switch(action){
-            case NO_ACTION:
-                break; // Do not return false immediately, because then the previous movement will not be cleared.
-            case LEFT:
-                tempAngle.set(-1,0);
-                break;
-            case RIGHT:
-                tempAngle.set(1,0);
-                break;
-            case UP:
-                tempAngle.set(0,1);
-                break;
-            case DOWN:
-                tempAngle.set(0,-1);
-                break;
-            default:
-                System.out.println("invalid enemy action");
-                assert false;
+        if(movingLeft) {
+            tempAngle.set(-1, 0);
+        } else if(movingRight) {
+            tempAngle.set(1,0);
+        } else if(movingUp) {
+            tempAngle.set(0,1);
+        } else if(movingDown) {
+            tempAngle.set(0,-1);
         }
+
         tempAngle.scl(getForce());
         setMovement(tempAngle.x, tempAngle.y);
         // Only set angle if our temp angle is not 0. If temp angle is 0 then it means no movement, in which case leave
@@ -122,6 +112,6 @@ public class EnemyModel extends CharacterModel {
             setAngle(angle);
         }
         applyForce();
-        return action != Action.NO_ACTION; // Return false if no action.
+        return ctrlCode != CONTROL_NO_ACTION; // Return false if no action.
     }
 }
