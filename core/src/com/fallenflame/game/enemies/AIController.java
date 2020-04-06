@@ -100,7 +100,14 @@ public abstract class AIController {
             queue.add(new TileIndex(startX-1, startY, EnemyModel.CONTROL_MOVE_LEFT));
         if(level.isSafe(startX, startY-1))
             queue.add(new TileIndex(startX, startY-1, EnemyModel.CONTROL_MOVE_DOWN));
-
+        if(level.isSafe(startX-1, startY-1))
+            queue.add(new TileIndex(startX-1, startY-1, EnemyModel.CONTROL_MOVE_DOWN_LEFT));
+        if(level.isSafe(startX+1, startY-1))
+            queue.add(new TileIndex(startX+1, startY-1, EnemyModel.CONTROL_MOVE_DOWN_RIGHT));
+        if(level.isSafe(startX-1, startY+1))
+            queue.add(new TileIndex(startX-1, startY+1, EnemyModel.CONTROL_MOVE_UP_LEFT));
+        if(level.isSafe(startX+1, startY+1))
+            queue.add(new TileIndex(startX+1, startY+1, EnemyModel.CONTROL_MOVE_UP_RIGHT));
 
         while(queue.peek() != null){
             TileIndex curr = queue.poll();
@@ -123,6 +130,15 @@ public abstract class AIController {
                 queue.add(new TileIndex(curr.x-1, curr.y, curr.ctrlCode));
             if(level.isSafe(curr.x, curr.y-1))
                 queue.add(new TileIndex(curr.x, curr.y-1, curr.ctrlCode));
+
+            if(level.isSafe(curr.x-1, curr.y-1))
+                queue.add(new TileIndex(curr.x-1, curr.y-1, curr.ctrlCode));
+            if(level.isSafe(curr.x+1, curr.y-1))
+                queue.add(new TileIndex(curr.x+1, curr.y-1, curr.ctrlCode));
+            if(level.isSafe(curr.x-1, curr.y+1))
+                queue.add(new TileIndex(curr.x-1, curr.y+1, curr.ctrlCode));
+            if(level.isSafe(curr.x+1, curr.y+1))
+                queue.add(new TileIndex(curr.x+1, curr.y+1, curr.ctrlCode));
         }
         //System.out.println("Goal not acquired");
         return EnemyModel.CONTROL_NO_ACTION;

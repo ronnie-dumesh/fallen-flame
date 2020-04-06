@@ -61,7 +61,7 @@ public class AITypeAController extends AIController {
     protected void changeStateIfApplicable() {
         switch(state) {
             case IDLE:
-                enemy.setActivated(false);
+                enemy.makeCalm();
                 // Check for player in range
                 if(withinChase()){
                     state = FSMState.CHASE;
@@ -80,7 +80,7 @@ public class AITypeAController extends AIController {
                 break;
 
             case CHASE:
-                enemy.setActivated(true);
+                enemy.makeAggressive();
 
                 if(!withinChase()){
                     state = FSMState.INVESTIGATE;
@@ -89,7 +89,7 @@ public class AITypeAController extends AIController {
                 break;
 
             case INVESTIGATE:
-                enemy.setActivated(true);
+                enemy.makeAlert();
                 assert enemy.getInvestigatePosition() != null;
                 // Check for player in range
                 if(withinChase()){
@@ -108,7 +108,6 @@ public class AITypeAController extends AIController {
                                 || enemy.getInvestigateFlare().timeToBurnout() <= 0)){
                     enemy.setInvestigatePosition(null);
                     enemy.clearInvestigateFlare();
-                    enemy.setActivated(false);
                     state = FSMState.IDLE;
                 }
                 break;

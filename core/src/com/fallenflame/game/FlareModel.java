@@ -10,7 +10,8 @@ import com.fallenflame.game.physics.obstacle.WheelObstacle;
 import com.fallenflame.game.util.*;
 import com.badlogic.gdx.graphics.*;
 
-public class FlareModel extends WheelObstacle implements ILightRadius {
+
+public class FlareModel extends WheelObstacle implements ILight {
     // Physics constants
     /** The force with which flare is originally thrown */
     private float initialForce;
@@ -37,6 +38,9 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
     /** Whether or not flare has stuck to wall */
     private boolean isStuck;
 
+    /**The color to tint the flare */
+    private Color tint;
+
     /**
      * Returns the light radius of this flare.
      *
@@ -45,6 +49,11 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
     public float getLightRadius() {
         return lightRadius;
     }
+
+    /**
+     * @return the color of the Flare's tint
+     */
+    public Color getLightColor() {return tint;}
 
     /**
      * Returns the directional movement of this flare.
@@ -191,6 +200,9 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
 //        int opacity = json.get("debugopacity").asInt();
 //        debugColor.mul(opacity/255.0f);
 //        setDebugColor(debugColor);
+
+        float[] tintValues = json.get("tint").asFloatArray();//RGBA
+        tint = new Color(tintValues[0], tintValues[1], tintValues[2], tintValues[3]);
 
         // Get the texture from the AssetManager singleton
         String key = json.get("texture").asString();

@@ -22,11 +22,11 @@
     	},
         "goal": { 
          	"file":		"textures/helicopter.png",
-         	"wrap":		false,
+         	"wrap":		false
          },
 		"fire":   {
 			"file": 	"textures/fire.png",
-			"wrap": 	true,
+			"wrap": 	true
 			"strip":	{
 				"size":		4,
 				"rows":		1,
@@ -36,7 +36,7 @@
 		},
 		"earth": {
 			"file": 	"textures/earthtile.png",
-			"wrap": 	true,
+			"wrap": 	true
 		}
   	},
   	"fonts": {
@@ -47,6 +47,6 @@
 		"debug": {
 			"file": 	"fonts/RetroGame.ttf",
 			"size":		20
-		},
-  	},
+		}
+  	}
 }

@@ -15,7 +15,9 @@
     "minlightradius":   2,
     "texture":     	"player",
     "debugcolor":  	"white",
-    "debugopacity":	192
+    "debugopacity":	192,
+    "tint": [1.0, 1.0, 1.0, 1.0],
+    "tintOpacity": 192
   },
   "enemies": {
     "typeA":  {
@@ -31,7 +33,13 @@
       "walklimit": 4,
       "texture": "enemy",
       "debugcolor": "white",
-      "debugopacity": 192
+      "debugopacity": 192,
+      "stateTints": {
+          "calm": [1.0, 1.0, 1.0, 1.0],
+          "alert": [0.0, 1.0, 0.0, 1.0],
+          "aggressive": [1.0, 0.0, 0.0, 1.0]
+        },
+      "tintOpacity": 192
     }
   },
   "exit": {
@@ -55,6 +63,7 @@
     "texture":        "fire",
     "initialforce":   3.0,
     "damping": 		 0.0,
+    "tint": [1.0, 1.0, 1.0, 1.0],
     "startframe":       0
   },
   "wall": {

@@ -90,7 +90,12 @@ public class EnemyTypeAModel extends EnemyModel {
         boolean movingRight = (ctrlCode & CONTROL_MOVE_RIGHT) != 0;
         boolean movingUp    = (ctrlCode & CONTROL_MOVE_UP) != 0;
         boolean movingDown  = (ctrlCode & CONTROL_MOVE_DOWN) != 0;
-        Vector2 tempAngle = new Vector2(); // x: -1 = left, 1 = right, 0 = still; y: -1 = down, 1 = up, 0 = still
+        boolean movingDownLeft = (ctrlCode & CONTROL_MOVE_DOWN_LEFT) != 0;
+        boolean movingDownRight = (ctrlCode & CONTROL_MOVE_DOWN_RIGHT) != 0;
+        boolean movingUpLeft = (ctrlCode & CONTROL_MOVE_UP_LEFT) != 0;
+        boolean movingUpRight = (ctrlCode & CONTROL_MOVE_UP_RIGHT) != 0;
+
+        Vector2 tempAngle = new Vector2(); // x: - = left, + = right, 0 = still; y: - = down, + = up, 0 = still
         if(movingLeft) {
             tempAngle.set(-1, 0);
         } else if(movingRight) {
@@ -99,6 +104,14 @@ public class EnemyTypeAModel extends EnemyModel {
             tempAngle.set(0,1);
         } else if(movingDown) {
             tempAngle.set(0,-1);
+        } else if(movingDownLeft) {
+            tempAngle.set(-0.707f, -0.707f);
+        } else if(movingDownRight) {
+            tempAngle.set(0.707f, -0.707f);
+        } else if(movingUpLeft) {
+            tempAngle.set(-0.707f, .707f);
+        } else if(movingUpRight) {
+            tempAngle.set(0.707f, 0.707f);
         }
 
         tempAngle.scl(getForce());

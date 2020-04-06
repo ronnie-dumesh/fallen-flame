@@ -161,7 +161,7 @@ public class LightController {
         return p;
     }
 
-    protected <T extends Obstacle & ILightRadius>
+    protected <T extends Obstacle & ILight>
     void updateLightsForList(Collection<T> list, Map<T, PointSource> lightMap) {
         // First step: Remove lights of things that are no longer in the list.
         Set<Map.Entry<T, PointSource>> entrySet = lightMap.entrySet();
@@ -178,11 +178,13 @@ public class LightController {
         // Second step: Update light radii for lights already there.
         for (Map.Entry<T, PointSource> entry : entrySet) {
             entry.getValue().setDistance(entry.getKey().getLightRadius());
+            entry.getValue().setColor(entry.getKey().getLightColor());
         }
 
         // Last step: Create lights for new things in the list.
         list.stream().filter(i -> !lightMap.containsKey(i)).forEach(i -> {
             PointSource f = createPointLight(i.getLightRadius());
+            f.setColor(i.getLightColor());
             attachLightTo(f, i);
             lightMap.put(i, f);
         });
@@ -215,7 +217,7 @@ public class LightController {
 
         // Update enemy lights.
         updateLightsForList(
-                enemies.stream().filter(EnemyModel::getActivated).collect(Collectors.toList()),
+                enemies.stream().filter(EnemyModel::isActivated).collect(Collectors.toList()),
                 enemyLights);
 
         rayhandler.update();
