@@ -45,12 +45,6 @@ public class InputController {
     /** Whether the reset button was pressed. */
     private boolean resetPressed;
     private boolean resetPrevious;
-    /** Whether the button to advanced worlds was pressed. */
-    private boolean nextPressed;
-    private boolean nextPrevious;
-    /** Whether the button to step back worlds was pressed. */
-    private boolean prevPressed;
-    private boolean prevPrevious;
     /** Whether the debug toggle was pressed. */
     private boolean debugPressed;
     private boolean debugPrevious;
@@ -66,6 +60,9 @@ public class InputController {
     /** Whether the sprint button was pressed. */
     private boolean sprintPressed;
     private boolean sprintPrevious;
+    /** Whether the sneak button was pressed. */
+    private boolean sneakPressed;
+    private boolean sneakPrevious;
 
 
     /** How much did we move horizontally? */
@@ -122,24 +119,6 @@ public class InputController {
     }
 
     /**
-     * Returns true if the player wants to go to the next level.
-     *
-     * @return true if the player wants to go to the next level.
-     */
-    public boolean didForward() {
-        return nextPressed && !nextPrevious;
-    }
-
-    /**
-     * Returns true if the player wants to go to the previous level.
-     *
-     * @return true if the player wants to go to the previous level.
-     */
-    public boolean didBack() {
-        return prevPressed && !prevPrevious;
-    }
-
-    /**
      * Returns true if the player wants to go toggle the debug mode.
      *
      * @return true if the player wants to go toggle the debug mode.
@@ -192,6 +171,20 @@ public class InputController {
     public boolean didEndSprint() { return !sprintPressed && sprintPrevious; }
 
     /**
+     * Returns true if the sneak button was pressed after just being not pressed.
+     *
+     * @return true if the sneak button was pressed after just being not pressed.
+     */
+    public boolean didStartSneak() { return sneakPressed && !sneakPrevious; }
+
+    /**
+     * Returns true if the sneak button was not pressed after just being pressed.
+     *
+     * @return true if the sneak button was not pressed after just being pressed.
+     */
+    public boolean didEndSneak() { return !sneakPressed && sneakPrevious; }
+
+    /**
      * Creates a new input controller
      *
      * The input controller attempts to connect to the X-Box controller at device 0,
@@ -212,10 +205,9 @@ public class InputController {
         debugPrevious  = debugPressed;
         debug2Previous = debug2Pressed;
         exitPrevious = exitPressed;
-        nextPrevious = nextPressed;
-        prevPrevious = prevPressed;
         flarePrevious = flarePressed;
         sprintPrevious = sprintPressed;
+        sneakPrevious = sneakPressed;
 
         // Check to see if a GamePad is connected
         if (xbox.isConnected()) {
@@ -227,6 +219,8 @@ public class InputController {
     }
 
     /**
+     * TODO: if we actually want to support controller, we need to review these controls (especially how to aim flares)
+     *
      * Reads input from an X-Box controller connected to this computer.
      *
      * The method provides both the input bounds and the drawing scale.  It needs
@@ -237,12 +231,11 @@ public class InputController {
     private void readGamepad() {
         resetPressed = xbox.getStart();
         exitPressed  = xbox.getBack();
-        nextPressed  = xbox.getRB();
-        prevPressed  = xbox.getLB();
         debugPressed  = xbox.getY();
         debug2Pressed = xbox.getX();
         flarePressed = xbox.getB();
         sprintPressed = xbox.getA();
+        sneakPressed = xbox.getRB();
         // Increase animation frame, but only if trying to move
         horizontal = xbox.getLeftX();
         vertical   = xbox.getLeftY();
@@ -261,24 +254,23 @@ public class InputController {
     private void readKeyboard(boolean secondary) {
         // Give priority to gamepad results
         resetPressed = (secondary && resetPressed) || (Gdx.input.isKeyPressed(Input.Keys.R));
-        debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.D));
+        debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.G));
         debug2Pressed = (secondary && debug2Pressed) || (Gdx.input.isKeyPressed(Input.Keys.E));
-        prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
-        nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
         exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
-        flarePressed  = (secondary && flarePressed) || (Gdx.input.isKeyPressed(Input.Keys.F));
-        sprintPressed = (secondary && sprintPressed) || (Gdx.input.isKeyPressed(Input.Keys.S));
+        flarePressed  = (secondary && flarePressed) || (Gdx.input.isButtonPressed(Input.Buttons.LEFT));
+        sprintPressed = (secondary && sprintPressed) || (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT));
+        sneakPressed = (secondary && sneakPressed) || (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT));
 
         // Directional controls
         horizontal = (secondary ? horizontal : 0.0f);
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             horizontal += 1.0f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             horizontal -= 1.0f;
         }
 
-        // TODO: REMOVE CODE BELOW WHEN MOUSE WHEEL IS FIXED.
+        // TODO: REMOVE CODE BELOW WHEN MOUSE WHEEL IS FIXED --> We should still include this as a functional alternative if possible
         //#region mouse wheel alternative
         if(Gdx.input.isKeyPressed(Input.Keys.PERIOD)){
             lightRadius += 1.0f;
@@ -289,10 +281,10 @@ public class InputController {
         //#endregion
 
         vertical = (secondary ? vertical : 0.0f);
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             vertical += 1.0f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             vertical -= 1.0f;
         }
     }
