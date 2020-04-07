@@ -5,11 +5,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.fallenflame.game.physics.obstacle.WheelObstacle;
 import com.fallenflame.game.util.FilmStrip;
 import com.fallenflame.game.util.JsonAssetManager;
 
-public abstract class CharacterModel extends WheelObstacle implements ILightRadius {
+
+public abstract class CharacterModel extends WheelObstacle implements ILight {
     // Physics constants
     /** The factor to multiply by the input */
     private float force;
@@ -27,9 +29,6 @@ public abstract class CharacterModel extends WheelObstacle implements ILightRadi
     private int walkCool;
     /** The standard number of frames to wait until we can walk again */
     private int walkLimit;
-
-    /** Number of flares the player can have on the screen at once */
-    private int flareCount;
 
     /** FilmStrip pointer to the texture region */
     protected FilmStrip filmstrip;
@@ -67,7 +66,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILightRadi
      * This is the result of input times character force.
      *
      * @param dx the horizontal movement of this character.
-     * @param dy the horizontal movement of this character.
+     * @param dy the vertical movement of this character.
      */
     public void setMovement(float dx, float dy) {
         movement.set(dx,dy);
@@ -172,28 +171,16 @@ public abstract class CharacterModel extends WheelObstacle implements ILightRadi
     }
 
     /**
-     * Returns the number of flares the player can have on the screen at once
-     *
-     * @return the number of flares the player can have on the screen at once
-     */
-    public int getFlareCount() {
-        return flareCount;
-    }
-
-    /**
-     * Sets the number of flares the player can have on the screen at once
-     *
-     * @param value	the number of flares the player can have on the screen at once
-     */
-    public void setFlareCount(int value) {
-        flareCount = value;
-    }
-
-    /**
      * Gets light radius for character
      * @return light radius
      */
     public abstract float getLightRadius();
+
+    /**
+     * Gets light color for color
+     * @return light color
+     */
+    public abstract Color getLightColor();
 
     /**
      * Creates a new character with degenerate settings
@@ -208,15 +195,13 @@ public abstract class CharacterModel extends WheelObstacle implements ILightRadi
     /**
      * Initializes the character via the given JSON value
      *
-     * The JSON value has been parsed and is part of a bigger level file.  However,
-     * this JSON value is limited to the player subtree
+     * The JSON value has been parsed and is part of a bigger level file.
      *
      * @param json	the JSON subtree defining the player
      */
-    public void initialize(JsonValue json){
+    public void initialize(JsonValue json, float[] pos){
         setName(json.name());
-        float[] pos  = json.get("pos").asFloatArray();
-        float radius = 0.4f;//json.get("radius").asFloat();
+        float radius = json.get("radius").asFloat();
         setPosition(pos[0],pos[1]);
         setRadius(radius);
 

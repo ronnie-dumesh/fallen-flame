@@ -8,13 +8,14 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
+import com.fallenflame.game.enemies.EnemyModel;
 import com.fallenflame.game.physics.lights.PointSource;
 import com.fallenflame.game.physics.obstacle.Obstacle;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * {@code LightController} manages and renders the light effect of the game.
@@ -69,6 +70,8 @@ public class LightController {
      */
     protected RayHandler rayhandler;
 
+    protected boolean debug;
+
     /**
      * Initialise this controller.
      *
@@ -86,7 +89,7 @@ public class LightController {
         RayHandler.useDiffuseLight(true);
         rayhandler = new RayHandler(world, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         rayhandler.setCombinedMatrix(raycamera);
-        rayhandler.setAmbientLight(.5f, .5f, .5f, 0);
+        rayhandler.setAmbientLight(0, 0, 0, 0);
         rayhandler.setBlur(true);
         rayhandler.setBlurNum(3);
 
@@ -101,6 +104,14 @@ public class LightController {
         // Create empty maps for flare and enemy lights.
         this.flareLights = new HashMap<>();
         this.enemyLights = new HashMap<>();
+    }
+
+    public boolean getDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean value) {
+        debug = value;
     }
 
     /**
@@ -150,7 +161,7 @@ public class LightController {
         return p;
     }
 
-    protected <T extends Obstacle & ILightRadius>
+    protected <T extends Obstacle & ILight>
     void updateLightsForList(Collection<T> list, Map<T, PointSource> lightMap) {
         // First step: Remove lights of things that are no longer in the list.
         Set<Map.Entry<T, PointSource>> entrySet = lightMap.entrySet();
@@ -167,11 +178,13 @@ public class LightController {
         // Second step: Update light radii for lights already there.
         for (Map.Entry<T, PointSource> entry : entrySet) {
             entry.getValue().setDistance(entry.getKey().getLightRadius());
+            entry.getValue().setColor(entry.getKey().getLightColor());
         }
 
         // Last step: Create lights for new things in the list.
         list.stream().filter(i -> !lightMap.containsKey(i)).forEach(i -> {
             PointSource f = createPointLight(i.getLightRadius());
+            f.setColor(i.getLightColor());
             attachLightTo(f, i);
             lightMap.put(i, f);
         });
@@ -184,6 +197,13 @@ public class LightController {
      * @param enemies A collection of enemies.
      */
     public void updateLights(Collection<FlareModel> flares, Collection<EnemyModel> enemies) {
+        // Update debug.
+        if (debug) {
+            rayhandler.setAmbientLight(.5f, .5f, .5f, 0);
+        } else {
+            rayhandler.setAmbientLight(0, 0, 0, 0);
+        }
+
         // Update raycamera.
         raycamera.position.set(player.getX(), player.getY(), 0);
         raycamera.update();
@@ -196,7 +216,9 @@ public class LightController {
         updateLightsForList(flares, flareLights);
 
         // Update enemy lights.
-        updateLightsForList(enemies, enemyLights);
+        updateLightsForList(
+                enemies.stream().filter(EnemyModel::isActivated).collect(Collectors.toList()),
+                enemyLights);
 
         rayhandler.update();
     }

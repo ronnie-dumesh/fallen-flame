@@ -12,10 +12,10 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
  * Additionally, it splits the features well, and makes it easier to make a distinction between event-driven inputs
  * that LoadingMode needs versus event-driven events that the main game needs*/
 
-public class LightInputProcessor implements InputProcessor {
+public class EventInputProcessor implements InputProcessor {
    private GameEngine gameEngine;
 
-   public LightInputProcessor(GameEngine g){
+   public EventInputProcessor(GameEngine g){
        gameEngine = g;
    }
    /**Below are functions that are required to be implemented by InputProcessor. All return false if unused to indicate

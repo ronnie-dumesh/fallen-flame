@@ -919,12 +919,27 @@ public class GameCanvas {
      * @param affine the global transform apply to the camera
      */
     public void beginDebug(Affine2 affine) {
+        _beginDebug(affine);
+
+    }
+
+    public void beginDebugFilled(Affine2 affine) {
+        _beginDebugFilledBlend();
+        _beginDebug(affine);
+        debugRender.begin(ShapeRenderer.ShapeType.Filled);
+    }
+
+    private void _beginDebugFilledBlend() {
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    private void _beginDebug(Affine2 affine) {
         camera.update();
         global.setAsAffine(affine);
         global.mulLeft(camera.combined);
         debugRender.setProjectionMatrix(global);
 
-        debugRender.begin(ShapeRenderer.ShapeType.Line);
         active = DrawPass.DEBUG;
     }
 
@@ -937,12 +952,22 @@ public class GameCanvas {
      * @param sy the amount to scale the y-axis
      */
     public void beginDebug(float sx, float sy) {
+        _beginDebug(sx, sy);
+        debugRender.begin(ShapeRenderer.ShapeType.Line);
+    }
+
+    public void beginDebugFilled(float sx, float sy) {
+        _beginDebugFilledBlend();
+        _beginDebug(sx, sy);
+        debugRender.begin(ShapeRenderer.ShapeType.Filled);
+    }
+
+    private void _beginDebug(float sx, float sy) {
         global.idt();
         global.scl(sx,sy,1.0f);
         global.mulLeft(camera.combined);
         debugRender.setProjectionMatrix(global);
 
-        debugRender.begin(ShapeRenderer.ShapeType.Line);
         active = DrawPass.DEBUG;
     }
 
@@ -952,9 +977,19 @@ public class GameCanvas {
      * Nothing is flushed to the graphics card until the method end() is called.
      */
     public void beginDebug() {
+        _beginDebug();
+        debugRender.begin(ShapeRenderer.ShapeType.Line);
+    }
+
+    public void beginDebugFilled() {
+        _beginDebugFilledBlend();
+        _beginDebug();
+        debugRender.begin(ShapeRenderer.ShapeType.Filled);
+    }
+
+    private void _beginDebug() {
         debugRender.setProjectionMatrix(camera.combined);
 
-        debugRender.begin(ShapeRenderer.ShapeType.Line);
         active = DrawPass.DEBUG;
     }
 
@@ -963,6 +998,7 @@ public class GameCanvas {
      */
     public void endDebug() {
         debugRender.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
         active = DrawPass.INACTIVE;
     }
 
@@ -1124,6 +1160,33 @@ public class GameCanvas {
         float h = shape.getRadius()*sy;
         debugRender.setColor(color);
         debugRender.ellipse(x0-w, y0-h, 2*w, 2*h, 12);
+    }
+
+    private static final Color GRID_DEBUG_LINE = Color.WHITE.cpy().mul(1, 1, 1, .1f);
+    private static final float GRID_DEBUG_FILLED_ALPHA = .2f;
+    private static final Color GRID_DEBUG_SAFE_COLOR = Color.GREEN;
+    private static final Color GRID_DEBUG_UNSAFE_COLOR = Color.RED;
+
+    public void drawGrid(float x, float y, LevelModel.Tile info, Vector2 drawScale, float size) {
+        if (active != DrawPass.DEBUG) {
+            Gdx.app.error("GameCanvas", "Cannot draw without active beginDebug()", new IllegalStateException());
+            return;
+        }
+
+        Color c = info.safe ? GRID_DEBUG_SAFE_COLOR : GRID_DEBUG_UNSAFE_COLOR;
+
+        float dx = drawScale.x, dy = drawScale.y;
+        float x0 = x * size * dx, y0 = y * size * dy, x1 = (x + 1) * size * dx, y1 = (y + 1) * size * dy;
+        float w = dx * size, h = dy * size;
+
+        debugRender.setColor(GRID_DEBUG_LINE);
+        debugRender.rect(x0, y0, 1, h);
+        debugRender.rect(x0, y0, h, 1);
+        debugRender.rect(x0, y1, w, 1);
+        debugRender.rect(x1, y0, 1, h);
+
+        debugRender.setColor(c.cpy().mul(1, 1, 1, GRID_DEBUG_FILLED_ALPHA));
+        debugRender.rect(x0, y0, w, h);
     }
 
     /**

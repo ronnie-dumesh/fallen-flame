@@ -10,7 +10,8 @@ import com.fallenflame.game.physics.obstacle.WheelObstacle;
 import com.fallenflame.game.util.*;
 import com.badlogic.gdx.graphics.*;
 
-public class FlareModel extends WheelObstacle implements ILightRadius {
+
+public class FlareModel extends WheelObstacle implements ILight {
     // Physics constants
     /** The force with which flare is originally thrown */
     private float initialForce;
@@ -26,13 +27,19 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
     private int startFrame;
 
     /** How long a flare can last, in milliseconds. */
-    private static final int FLARE_DURATION = 6000;
+    private int flareDuration;
 
     /** Time when it was fired **/
     private long startTime;
 
     /** Light Radius */
-    private static float LIGHT_RADIUS = 2; // TODO: may not want to be static later
+    private float lightRadius;
+
+    /** Whether or not flare has stuck to wall */
+    private boolean isStuck;
+
+    /**The color to tint the flare */
+    private Color tint;
 
     /**
      * Returns the light radius of this flare.
@@ -40,8 +47,13 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
      * @return the light radius of this flare.
      */
     public float getLightRadius() {
-        return LIGHT_RADIUS;
+        return lightRadius;
     }
+
+    /**
+     * @return the color of the Flare's tint
+     */
+    public Color getLightColor() {return tint;}
 
     /**
      * Returns the directional movement of this flare.
@@ -132,6 +144,12 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
     }
 
     /**
+     * Get if flare is stuck to wall
+     * @return true if flare is stuck to wall
+     */
+    public boolean isStuck() { return isStuck; }
+
+    /**
      * Creates a new dude with input position and json settings
      *
      * The main purpose of this constructor is to set the initial capsule orientation.
@@ -155,6 +173,9 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
         setName(json.name());
         float radius = json.get("radius").asFloat();
         setRadius(radius);
+        lightRadius = json.get("lighradius").asFloat();
+        flareDuration = json.get("flareduration").asInt();
+        isStuck = false;
 
         // TODO #2: Technically, we should do error checking here.
         // A JSON field might accidentally be missing
@@ -179,6 +200,9 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
 //        int opacity = json.get("debugopacity").asInt();
 //        debugColor.mul(opacity/255.0f);
 //        setDebugColor(debugColor);
+
+        float[] tintValues = json.get("tint").asFloatArray();//RGBA
+        tint = new Color(tintValues[0], tintValues[1], tintValues[2], tintValues[3]);
 
         // Get the texture from the AssetManager singleton
         String key = json.get("texture").asString();
@@ -215,6 +239,7 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
      */
     public void stopMovement() {
         body.setLinearVelocity(new Vector2(0,0));
+        isStuck = true;
     }
 
     /**
@@ -238,7 +263,7 @@ public class FlareModel extends WheelObstacle implements ILightRadius {
      * @return time left
      */
     public int timeToBurnout() {
-        int timeLeft = FLARE_DURATION - (int) (System.currentTimeMillis() - startTime);
+        int timeLeft = flareDuration - (int) (System.currentTimeMillis() - startTime);
         return Math.max(timeLeft, 0);
     }
 

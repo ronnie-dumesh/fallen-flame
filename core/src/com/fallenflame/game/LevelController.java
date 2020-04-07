@@ -1,10 +1,15 @@
 package com.fallenflame.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
+import com.fallenflame.game.enemies.AIController;
+import com.fallenflame.game.enemies.AITypeAController;
+import com.fallenflame.game.enemies.EnemyModel;
+import com.fallenflame.game.enemies.EnemyTypeAModel;
 import com.fallenflame.game.physics.obstacle.Obstacle;
 
 import java.util.*;
@@ -36,8 +41,10 @@ public class LevelController implements ContactListener {
     /** Flare JSONValue */
     private JsonValue flareJSON;
 
-    /** Whether or not the level is in debug more (showing off physics) */
-    private boolean debug;
+    /** Whether or not the level is in debug mode (showing off physics) */
+    private int debug;
+    /** Whether or not the level is in debug 2 mode (unlit area only half dark) */
+    private boolean debug2;
 
     // World Definitions
     /** The Box2D world */
@@ -157,7 +164,16 @@ public class LevelController implements ContactListener {
      *
      * @return whether this level is currently in debug node
      */
-    public boolean getDebug() { return debug; }
+    public int getDebug() { return debug; }
+
+    /**
+     * Returns whether this level is currently in debug node
+     *
+     * If the level is in debug 2 mode, then unlit area will be half-dark
+     *
+     * @return whether this level is currently in debug node
+     */
+    public boolean getDebug2() { return debug2; }
 
     /**
      * Sets whether this level is currently in debug node
@@ -167,7 +183,16 @@ public class LevelController implements ContactListener {
      *
      * @param value	whether this level is currently in debug node
      */
-    public void setDebug(boolean value) { debug = value; }
+    public void setDebug(int value) { debug = value % 3; }
+
+    /**
+     * Sets whether this level is currently in debug 2 node
+     *
+     * If the level is in debug 2 mode, then unlit area will be half-dark
+     *
+     * @param value	whether this level is currently in debug node
+     */
+    public void setDebug2(boolean value) { debug2 = value; }
 
     /**
      * Returns the maximum FPS supported by this level
@@ -232,7 +257,8 @@ public class LevelController implements ContactListener {
         world  = null;
         bounds = new Rectangle(0,0,1,1);
         scale = new Vector2(1,1);
-        debug  = false;
+        debug  = 0;
+        debug2 = false;
         levelState = LevelState.IN_PROGRESS;
         // Controllers
         lightController = new LightController();
@@ -251,7 +277,7 @@ public class LevelController implements ContactListener {
      *
      * @param levelJson	the JSON tree defining the level
      */
-    public void populate(JsonValue levelJson) {
+    public void populate(JsonValue levelJson, JsonValue globalJson) {
         populated = true;
 
         float[] pSize = levelJson.get("physicsSize").asFloatArray();
@@ -271,40 +297,55 @@ public class LevelController implements ContactListener {
 
         // Create player
         player = new PlayerModel();
-        player.initialize(levelJson.get("player"));
+        player.initialize(globalJson.get("player"), levelJson.get("playerpos").asFloatArray());
         player.setDrawScale(scale);
         player.activatePhysics(world);
         assert inBounds(player);
         // Create Exit
         exit = new ExitModel();
-        exit.initialize(levelJson.get("exit"));
+        exit.initialize(globalJson.get("exit"), levelJson.get("exitpos").asFloatArray());
         exit.setDrawScale(scale);
         exit.activatePhysics(world);
         assert inBounds(exit);
         for(JsonValue wallJSON : levelJson.get("walls")) {
             WallModel wall = new WallModel();
-            wall.initialize(wallJSON);
+            wall.initialize(globalJson.get("wall"), wallJSON);
             wall.setDrawScale(scale);
             wall.activatePhysics(world);
             walls.add(wall);
             assert inBounds(wall);
         }
         int enemyID = 0;
+        JsonValue globalEnemies = globalJson.get("enemies");
         for(JsonValue enemyJSON : levelJson.get("enemies")) {
-            EnemyModel enemy = new EnemyModel();
-            enemy.initialize(enemyJSON);
+            String enemyType = enemyJSON.get("enemytype").asString();
+            // Initialize Enemy Model
+            EnemyModel enemy;
+            if(enemyType.equals("typeA")) {
+                enemy = new EnemyTypeAModel();
+            } else{
+                Gdx.app.error("LevelController", "Enemy type without model", new IllegalArgumentException());
+                return;
+            }
+            enemy.initialize(globalEnemies.get(enemyType), enemyJSON.get("enemypos").asFloatArray());
             enemy.setDrawScale(scale);
             enemy.activatePhysics(world);
             enemies.add(enemy);
-            AIController controller = new AIController(enemyID, levelModel, enemies, player, flares);
+            // Initialize AIController
+            if(enemyType.equals("typeA")) {
+                AIControllers.add(new AITypeAController(enemyID, levelModel, enemies, player, flares));
+            } else{
+                Gdx.app.error("LevelController", "Enemy type without AIController", new IllegalArgumentException());
+                return;
+            }
+
             enemyID++;
-            AIControllers.add(controller);
             assert inBounds(enemy);
         }
-        flareJSON = levelJson.get("flare");
+        flareJSON = globalJson.get("flare");
 
         // Initialize levelModel
-        levelModel.initialize(bounds, player, walls, enemies);
+        levelModel.initialize(bounds, walls, enemies);
 
         lightController.initialize(player, levelJson.get("lighting"), world, bounds);
     }
@@ -374,27 +415,25 @@ public class LevelController implements ContactListener {
     public void update(float dt) {
         if(fixedStep(dt)){
             // Update player (and update levelModel) and exit
-            levelModel.removePlayer(player);
             player.update(dt);
             assert inBounds(player);
-            levelModel.placePlayer(player);
+
+            // TODO: handle enemy placement in levelmodel
 
             // Get Enemy Actions
             Iterator<AIController> ctrlI = AIControllers.iterator();
-            LinkedList<AIController.Action> actions = new LinkedList();
+            LinkedList<Integer> ctrlCodes = new LinkedList();
             while(ctrlI.hasNext()){
                 AIController ctrl = ctrlI.next();
-                actions.add(ctrl.getAction());
+                ctrlCodes.add(ctrl.getAction());
             }
             // Execute Enemy Actions (and update levelModel)
             Iterator<EnemyModel> enemyI = enemies.iterator();
-            Iterator<AIController.Action> actionI = actions.iterator();
+            Iterator<Integer> actionI = ctrlCodes.iterator();
             while(enemyI.hasNext()){
                 EnemyModel enemy = enemyI.next();
-                levelModel.removeEnemy(enemy);
                 enemy.executeAction(actionI.next());
                 assert inBounds(enemy);
-                levelModel.placeEnemy(enemy);
             }
 
             // Update flares
@@ -465,6 +504,41 @@ public class LevelController implements ContactListener {
     }
 
     /**
+     * Change the player's movement to sprint
+     * Store current light radius in lightRadiusSaved and change light radius to lightRadiusSprint
+     * (Called by GameEngine)
+     */
+    public void makeSprint(){
+        player.setLightRadiusSaved(player.getLightRadius());
+        player.setLightRadius(player.getLightRadiusSprint());
+        player.setWalking(false);
+        player.setForce(player.getForceSprint());
+    }
+
+    /**
+     * Change the player's movement to walk
+     * Set to walk and restore light radius to what it was before sprinting, which is in lightRadiusSaved
+     * (Called by GameEngine)
+     */
+    public void makeWalk(){
+        player.setLightRadius(player.getLightRadiusSaved());
+        player.setWalking(true);
+        player.setForce(player.getForceWalk());
+    }
+
+    /**
+     * Change the player's movement to sneak
+     * Store current light radius in lightRadiusSaved and change light radius to lightRadiusSneak
+     * (Called by GameEngine)
+     */
+    public void makeSneak(){
+        player.setLightRadiusSaved(player.getLightRadius());
+        player.setLightRadiusSneak();
+        player.setWalking(false);
+        player.setForce(player.getForceSneak());
+    }
+
+    /**
      * Moves the player. (Called by GameEngine)
      * @param angle angle player is facing
      * @param tempAngle movement angle of player (to be scaled by player force)
@@ -472,7 +546,7 @@ public class LevelController implements ContactListener {
     public void movePlayer(float angle, Vector2 tempAngle) {
         tempAngle.scl(player.getForce());
         player.setMovement(tempAngle.x, tempAngle.y);
-        player.setAngle(angle);
+        if (!tempAngle.isZero()) player.setAngle(angle);
         player.applyForce();
     }
 
@@ -481,7 +555,8 @@ public class LevelController implements ContactListener {
      * @param lightRadius radius of light around player
      */
     public void lightFromPlayer(float lightRadius) {
-        player.incrementLightRadius(lightRadius);
+        if(player.isWalking())
+            player.incrementLightRadius(lightRadius);
     }
 
     /**
@@ -511,10 +586,11 @@ public class LevelController implements ContactListener {
         }
         canvas.end();
 
+        lightController.setDebug(debug2);
         lightController.draw();
 
         // Draw debugging on top of everything.
-        if (debug) {
+        if (debug == 1) {
             canvas.beginDebug();
             player.drawDebug(canvas);
             exit.drawDebug(canvas);
@@ -536,6 +612,10 @@ public class LevelController implements ContactListener {
             canvas.drawText(Float.toString(fps), displayFont, 0, canvas.getHeight()/2);
             canvas.end();
             ticks++;
+        } else if (debug == 2) {
+            canvas.beginDebugFilled();
+            levelModel.drawDebug(canvas, scale);
+            canvas.endDebug();
         }
     }
 
