@@ -14,7 +14,14 @@
     "sprintlightrad":  10,
     "sneaklightrad":    1,
     "minlightradius":   2,
-    "texture":     	"player",
+    "texture":     	{
+      "left": "player-left",
+      "right": "player-right",
+      "up": "player-up",
+      "down": "player-down",
+      "walk-left": "player-walk-left",
+      "walk-right": "player-walk-right"
+    },
     "debugcolor":  	"white",
     "debugopacity":	192,
     "tint": [1.0, 1.0, 1.0, 1.0],
@@ -32,7 +39,14 @@
       "maxspeed": 5.0,
       "startframe": 0,
       "walklimit": 4,
-      "texture": "enemy",
+      "texture":     	{
+        "left": "enemy",
+        "right": "enemy",
+        "up": "enemy",
+        "down": "enemy",
+        "walk-left": "enemy",
+        "walk-right": "enemy"
+      },
       "debugcolor": "white",
       "debugopacity": 192,
       "stateTints": {

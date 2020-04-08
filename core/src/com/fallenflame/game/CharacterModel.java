@@ -10,6 +10,8 @@ import com.fallenflame.game.physics.obstacle.WheelObstacle;
 import com.fallenflame.game.util.FilmStrip;
 import com.fallenflame.game.util.JsonAssetManager;
 
+import javax.xml.soap.Text;
+
 
 public abstract class CharacterModel extends WheelObstacle implements ILight {
     // Physics constants
@@ -32,6 +34,14 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
 
     /** FilmStrip pointer to the texture region */
     protected FilmStrip filmstrip;
+
+    protected FilmStrip filmstripWalkRight;
+    protected FilmStrip filmstripWalkLeft;
+    protected TextureRegion textureUp;
+    protected TextureRegion textureDown;
+    protected TextureRegion textureLeft;
+    protected TextureRegion textureRight;
+
     /** The current animation frame of the avatar */
     private int startFrame;
 
@@ -199,10 +209,10 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
      *
      * @param json	the JSON subtree defining the player
      */
-    public void initialize(JsonValue json, float[] pos){
+    public void initialize(JsonValue json, float[] pos) {
         setName(json.name());
         float radius = json.get("radius").asFloat();
-        setPosition(pos[0],pos[1]);
+        setPosition(pos[0], pos[1]);
         setRadius(radius);
 
         // Technically, we should do error checking here.
@@ -230,15 +240,51 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
 //        debugColor.mul(opacity/255.0f);
 //        setDebugColor(debugColor);
 
-        // Now get the texture from the AssetManager singleton
-        String key = json.get("texture").asString();
+        //Now get the texture from the AssetManager singleton
+        textureHelper(json);
+    }
+
+    /**
+     * Intializes the CharacterModel texture using the JSON file
+     *
+     * The JSON value has been parsed and is part of a bigger level file.
+     *
+     * @param json	the JSON subtree defining the player has a "texture" key
+     *              that has the fields "walk-right", "walk-left", "left",
+     *              "right", "up", "down"
+     */
+    private void textureHelper(JsonValue json){
+       // JsonValue textureJson = json.get("texture");
+
+        String key = json.get("texture").get("walk-right").asString();
         TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
         try {
-            filmstrip = (FilmStrip)texture;
+            filmstrip = (FilmStrip) texture;
         } catch (Exception e) {
             filmstrip = null;
         }
-        setTexture(texture);
+
+//        key = textureJson.get("walk-left").asString();
+//        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+//        try {
+//            filmstripWalkLeft = (FilmStrip) texture;
+//        } catch (Exception e) {
+//            filmstripWalkLeft = null;
+//        }
+//
+//        key = textureJson.get("up").asString();
+//        textureUp = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+//
+//        key = textureJson.get("down").asString();
+//        textureDown = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+//
+//        key = textureJson.get("left").asString();
+//        textureLeft = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+//
+//        key = textureJson.get("right").asString();
+//        textureRight = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+
+        setTexture(filmstrip);
     }
 
     /**
@@ -273,6 +319,13 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
+        //getAngle has up as 0 radians, down as pi radians, pi/2 is left, -pi/2 is right.
+//        double angle = getAngle();
+//        if(angle < 0){
+//            angle = angle + 2 * Math.PI;
+//        }
+//
+//        System.out.println(angle);
         // Animate if necessary
         if (animate && walkCool == 0) {
             if (filmstrip != null) {

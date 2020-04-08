@@ -10,13 +10,39 @@
 				"first":	0
 			}
     	},
-    	"player": {
-    		"file": 	"textures/player-walking.png",
+		"player-left": {
+			"file": "textures/player-left.png",
+			"wrap": false
+		},
+		"player-right": {
+			"file": "textures/player-right.png",
+			"wrap": false
+		},
+		"player-up": {
+			"file": "textures/player-up.png",
+			"wrap": false
+		},
+		"player-down": {
+			"file": "textures/player-down.png",
+			"wrap": false
+		},
+		"player-walk-left": {
+			"file": 	"textures/player-walk-left.png",
+			"wrap":  	false,
+			"strip":	{
+				"size":		26,
+				"rows":		1,
+				"cols":		26,
+				"first":	0
+			}
+		},
+    	"player-walk-right": {
+    		"file": 	"textures/player-walk-right.png",
     		"wrap":  	false,
     		"strip":	{
-    			"size":		4,
+    			"size":		26,
     			"rows":		1,
-    			"cols":		4,
+    			"cols":		26,
     			"first":	0
     		}
     	},
@@ -26,7 +52,7 @@
          },
 		"fire":   {
 			"file": 	"textures/fire.png",
-			"wrap": 	true
+			"wrap": 	true,
 			"strip":	{
 				"size":		4,
 				"rows":		1,
