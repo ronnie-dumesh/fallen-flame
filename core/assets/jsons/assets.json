@@ -11,22 +11,6 @@
 			}
     	},
 		"player-left": {
-			"file": "textures/player-left.png",
-			"wrap": false
-		},
-		"player-right": {
-			"file": "textures/player-right.png",
-			"wrap": false
-		},
-		"player-up": {
-			"file": "textures/player-up.png",
-			"wrap": false
-		},
-		"player-down": {
-			"file": "textures/player-down.png",
-			"wrap": false
-		},
-		"player-walk-left": {
 			"file": 	"textures/player-walk-left.png",
 			"wrap":  	false,
 			"strip":	{
@@ -36,7 +20,7 @@
 				"first":	0
 			}
 		},
-    	"player-walk-right": {
+    	"player-right": {
     		"file": 	"textures/player-walk-right.png",
     		"wrap":  	false,
     		"strip":	{
@@ -60,8 +44,8 @@
 				"first":	0
 			}
 		},
-		"earth": {
-			"file": 	"textures/earthtile.png",
+		"wall": {
+			"file": 	"textures/double-brick.png",
 			"wrap": 	true
 		}
   	},

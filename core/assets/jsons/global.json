@@ -17,10 +17,8 @@
     "texture":     	{
       "left": "player-left",
       "right": "player-right",
-      "up": "player-up",
-      "down": "player-down",
-      "walk-left": "player-walk-left",
-      "walk-right": "player-walk-right"
+      "up": "player-left",
+      "down": "player-right"
     },
     "debugcolor":  	"white",
     "debugopacity":	192,
@@ -87,7 +85,7 @@
     "density":        0.0,
     "friction":       0.4,
     "restitution":    0.1,
-    "texture":      "earth",
+    "texture":      "wall",
     "debugcolor":   "yellow",
     "debugopacity":  200
   }

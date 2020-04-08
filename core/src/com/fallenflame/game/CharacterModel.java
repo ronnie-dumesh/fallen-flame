@@ -37,10 +37,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
 
     protected FilmStrip filmstripWalkRight;
     protected FilmStrip filmstripWalkLeft;
-    protected TextureRegion textureUp;
-    protected TextureRegion textureDown;
-    protected TextureRegion textureLeft;
-    protected TextureRegion textureRight;
+    //TODO: implement up, down, diagonal filmstrips
 
     /** The current animation frame of the avatar */
     private int startFrame;
@@ -254,36 +251,26 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
      *              "right", "up", "down"
      */
     private void textureHelper(JsonValue json){
-       // JsonValue textureJson = json.get("texture");
+        JsonValue textureJson = json.get("texture");
 
-        String key = json.get("texture").get("walk-right").asString();
+        String key = textureJson.get("right").asString();
         TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
         try {
-            filmstrip = (FilmStrip) texture;
+            filmstripWalkRight = (FilmStrip) texture;
         } catch (Exception e) {
-            filmstrip = null;
+            filmstripWalkRight = null;
         }
 
-//        key = textureJson.get("walk-left").asString();
-//        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-//        try {
-//            filmstripWalkLeft = (FilmStrip) texture;
-//        } catch (Exception e) {
-//            filmstripWalkLeft = null;
-//        }
-//
-//        key = textureJson.get("up").asString();
-//        textureUp = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-//
-//        key = textureJson.get("down").asString();
-//        textureDown = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-//
-//        key = textureJson.get("left").asString();
-//        textureLeft = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-//
-//        key = textureJson.get("right").asString();
-//        textureRight = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        key = textureJson.get("left").asString();
+        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        try {
+            filmstripWalkLeft = (FilmStrip) texture;
+        } catch (Exception e) {
+            filmstripWalkLeft = null;
+        }
 
+        //TODO: implement up, down, diagonal filmstrips
+        filmstrip = filmstripWalkRight;
         setTexture(filmstrip);
     }
 
@@ -320,12 +307,42 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
      */
     public void update(float dt) {
         //getAngle has up as 0 radians, down as pi radians, pi/2 is left, -pi/2 is right.
-//        double angle = getAngle();
-//        if(angle < 0){
-//            angle = angle + 2 * Math.PI;
+        double angle = getAngle();
+        double pi = Math.PI;
+        double pi16 = pi / 16;
+        if(angle < 0){
+            angle = angle + 2 * pi;
+        }
+
+        //TODO: implement up, down, diagonal texture DO NOT DELTE
+//        if(angle > (15 * pi16) || angle < (1 * pi16)) {
+//            //up
+//        } else if(angle < 3 * pi16) {
+//            //up and left
+//        } else if(angle < 5 * pi16) {
+//           //left
+//        } else if(angle < 7 * pi16) {
+//            //down and left
+//        } else if(angle < 9 * pi16){
+//            //down
+//        } else if(angle < 11 * pi16){
+//            //down and right
+//        } else if(angle < 13 * pi16){
+//            //right
+//        } else if(angle < 15 * pi16){
+//            //up and right
+//        } else { //default
+//            //up
 //        }
-//
-//        System.out.println(angle);
+
+        if(angle > pi){
+            filmstrip = filmstripWalkRight;
+        } else {
+            filmstrip = filmstripWalkLeft;
+        }
+
+        setTexture(filmstrip);
+
         // Animate if necessary
         if (animate && walkCool == 0) {
             if (filmstrip != null) {
@@ -352,7 +369,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
      */
     public void draw(GameCanvas canvas) {
         if (texture != null) {
-            canvas.draw(texture, Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),1.0f,1.0f);
+            canvas.draw(texture, Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,0 ,1.0f,1.0f);
         }
     }
 }
