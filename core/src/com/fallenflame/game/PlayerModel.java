@@ -1,7 +1,9 @@
 package com.fallenflame.game;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.JsonValue;
+import com.fallenflame.game.util.JsonAssetManager;
 
 /**
  * Player avatar for the plaform game.
@@ -26,6 +28,12 @@ public class PlayerModel extends CharacterModel {
     /**Tint of player light */
     protected Color tint;
 
+    /**Player walk sound */
+    protected Sound walkSound;
+
+    /**Player is making walk sound */
+    protected boolean playingSound;
+
     /**
      * Initializes the character via the given JSON value
      *
@@ -43,6 +51,9 @@ public class PlayerModel extends CharacterModel {
 
         float[] tintValues = json.get("tint").asFloatArray();//RGBA
         tint = new Color(tintValues[0], tintValues[1], tintValues[2], tintValues[3]);
+
+        String walkSoundKey = json.get("walksound").asString();
+        walkSound = JsonAssetManager.getInstance().getEntry(walkSoundKey, Sound.class);
     }
 
     /**
@@ -120,6 +131,15 @@ public class PlayerModel extends CharacterModel {
     }
 
     /**
+     * Returns the walk sound
+     *
+     * @return the walk sound
+     */
+    public Sound getWalkSound() {
+        return walkSound;
+    }
+
+    /**
      * Gets player light radius when not sprinting or sneaking
      * @return light radius
      */
@@ -156,5 +176,9 @@ public class PlayerModel extends CharacterModel {
     public boolean isWalking() { return walking; }
 
     public void incrementLightRadius(float i) { setLightRadius(lightRadius + i); }
+
+    public boolean isPlayingSound() {return playingSound;}
+
+    public void setPlayingSound(boolean status) {playingSound = status;}
 
 }

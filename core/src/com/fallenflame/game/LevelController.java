@@ -328,6 +328,7 @@ public class LevelController implements ContactListener {
                 return;
             }
             enemy.initialize(globalEnemies.get(enemyType), enemyJSON.get("enemypos").asFloatArray());
+            enemy.setConstantSoundID(enemy.getConstantSound().loop(0, .5f, 0));
             enemy.setDrawScale(scale);
             enemy.activatePhysics(world);
             enemies.add(enemy);
@@ -368,6 +369,7 @@ public class LevelController implements ContactListener {
             walls.clear();
         }
         for(EnemyModel enemy : enemies) {
+            enemy.getConstantSound().stop();
             enemy.deactivatePhysics(world);
             enemy.dispose();
             enemies.clear();
@@ -433,6 +435,19 @@ public class LevelController implements ContactListener {
             while(enemyI.hasNext()){
                 EnemyModel enemy = enemyI.next();
                 enemy.executeAction(actionI.next());
+                float pan = (enemy.getX() - player.getX()) * .4f;
+                if (enemy.isActivated() && (enemy.getMoveSoundID() == -1)) {
+                    //start sound
+                    enemy.setMoveSoundID(enemy.getMoveSound().loop(.3f, 1, pan));
+                } else if (!enemy.isActivated()) {
+                    //end sound
+                    enemy.getMoveSound().stop();
+                    enemy.setMoveSoundID(-1);
+                } else {
+                    //modify sound
+                    enemy.getMoveSound().setPan(enemy.getMoveSoundID(), pan, (float) Math.max(0,(1 - enemy.getDistanceBetween(player) * .15)));
+                }
+                enemy.getConstantSound().setPan(enemy.getConstantSoundID(), pan, (float) Math.max(0,(.3 - enemy.getDistanceBetween(player) * .05)));
                 assert inBounds(enemy);
             }
 
@@ -442,6 +457,7 @@ public class LevelController implements ContactListener {
                 FlareModel flare = i.next();
                 if(!(Float.compare(flare.timeToBurnout(), 0.0f) > 0)){
                     flare.deactivatePhysics(world);
+                    flare.getBurnoutSound().play();
                     flare.dispose();
                     i.remove();
                 }
@@ -498,6 +514,7 @@ public class LevelController implements ContactListener {
             float angleRad = posDif.angleRad(new Vector2(1, 0));
             Vector2 force = (new Vector2(flare.getInitialForce(), 0)).rotateRad(angleRad);
             flare.applyInitialForce(angleRad, force);
+            flare.getShotSound().play();
             flares.add(flare);
             assert inBounds(flare);
         }
