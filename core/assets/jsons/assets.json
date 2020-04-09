@@ -44,9 +44,17 @@
 				"first":	0
 			}
 		},
-		"wall": {
-			"file": 	"textures/double-brick.png",
-			"wrap": 	true
+		"single-wall": {
+			"file": "textures/single-brick.png",
+			"wrap": true
+		},
+		"double-wall": {
+			"file":    "textures/double-brick.png",
+			"wrap": true
+		},
+		"floor": {
+			"file": "textures/floor-tile.png",
+			"wrap": true
 		}
   	},
   	"fonts": {

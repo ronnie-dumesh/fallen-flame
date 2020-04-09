@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.fallenflame.game.physics.obstacle.WheelObstacle;
 import com.fallenflame.game.util.FilmStrip;
 import com.fallenflame.game.util.JsonAssetManager;
@@ -33,11 +32,12 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     private int walkLimit;
 
     /** FilmStrip pointer to the texture region */
-    protected FilmStrip filmstrip;
+    //protected FilmStrip filmstrip;
 
     protected FilmStrip filmstripWalkRight;
     protected FilmStrip filmstripWalkLeft;
-    //TODO: implement up, down, diagonal filmstrips
+    protected FilmStrip filmstripWalkUp;
+    protected FilmStrip filmstripWalkDown;
 
     /** The current animation frame of the avatar */
     private int startFrame;
@@ -269,9 +269,25 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
             filmstripWalkLeft = null;
         }
 
-        //TODO: implement up, down, diagonal filmstrips
-        filmstrip = filmstripWalkRight;
-        setTexture(filmstrip);
+//        key = textureJson.get("up").asString();
+//        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+//        try {
+//            filmstripWalkUp = (FilmStrip) texture;
+//        } catch (Exception e) {
+//            filmstripWalkUp = null;
+//        }
+//
+//        key = textureJson.get("down").asString();
+//        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+//        try {
+//            filmstripWalkDown = (FilmStrip) texture;
+//        } catch (Exception e) {
+//            filmstripWalkDown = null;
+//        }
+
+        //pick default direction
+        FilmStrip filmStrip = filmstripWalkRight;
+        setTexture(filmStrip);
     }
 
     /**
@@ -313,32 +329,24 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
         if(angle < 0){
             angle = angle + 2 * pi;
         }
-
-        //TODO: implement up, down, diagonal texture DO NOT DELTE
-//        if(angle > (15 * pi16) || angle < (1 * pi16)) {
-//            //up
-//        } else if(angle < 3 * pi16) {
-//            //up and left
-//        } else if(angle < 5 * pi16) {
-//           //left
-//        } else if(angle < 7 * pi16) {
-//            //down and left
-//        } else if(angle < 9 * pi16){
-//            //down
-//        } else if(angle < 11 * pi16){
-//            //down and right
-//        } else if(angle < 13 * pi16){
-//            //right
-//        } else if(angle < 15 * pi16){
-//            //up and right
-//        } else { //default
-//            //up
+//
+//        if(angle > 15 * pi16 || angle < 1 * pi16) {
+//            filmstrip = filmstripWalkUp;
+//        } else if(angle > 1 * pi16 || angle < 7 * pi16) {
+//            filmstrip = filmstripWalkLeft;
+//        } else if(angle > 7 * pi16 || angle < 9 * pi16) {
+//            filmstrip = filmstripWalkDown;
+//        } else { // 9 *  pi16 < angle < 15 * pi16
+//            filmstrip = filmstripWalkRight;
 //        }
 
-        if(angle > pi){
-            filmstrip = filmstripWalkRight;
-        } else {
+
+        FilmStrip filmstrip;
+
+        if(angle < Math.PI){
             filmstrip = filmstripWalkLeft;
+        } else {
+            filmstrip = filmstripWalkRight;
         }
 
         setTexture(filmstrip);

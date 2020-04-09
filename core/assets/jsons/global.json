@@ -17,8 +17,8 @@
     "texture":     	{
       "left": "player-left",
       "right": "player-right",
-      "up": "player-left",
-      "down": "player-right"
+      "up": "player-up",
+      "down": "player-down"
     },
     "debugcolor":  	"white",
     "debugopacity":	192,
@@ -79,13 +79,23 @@
     "tint": [1.0, 1.0, 1.0, 1.0],
     "startframe":       0
   },
-  "wall": {
+  "vertical-wall": {
     "pad":       	[ 0.1f, 0.1f],
     "bodytype":     "static",
     "density":        0.0,
     "friction":       0.4,
     "restitution":    0.1,
-    "texture":      "wall",
+    "texture":      "single-wall",
+    "debugcolor":   "yellow",
+    "debugopacity":  200
+  },
+  "horizontal-wall": {
+    "pad":       	[ 0.1f, 0.1f],
+    "bodytype":     "static",
+    "density":        0.0,
+    "friction":       0.4,
+    "restitution":    0.1,
+    "texture":      "double-wall",
     "debugcolor":   "yellow",
     "debugopacity":  200
   }

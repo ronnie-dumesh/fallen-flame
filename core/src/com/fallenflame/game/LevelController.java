@@ -309,7 +309,13 @@ public class LevelController implements ContactListener {
         assert inBounds(exit);
         for(JsonValue wallJSON : levelJson.get("walls")) {
             WallModel wall = new WallModel();
-            wall.initialize(globalJson.get("wall"), wallJSON);
+
+            if(wallJSON.get("texture").asString().equals("horizontal-wall")) {
+                wall.initialize(globalJson.get("horizontal-wall"), wallJSON);
+            } else {
+                wall.initialize(globalJson.get("vertical-wall"), wallJSON);
+            }
+
             wall.setDrawScale(scale);
             wall.activatePhysics(world);
             walls.add(wall);
