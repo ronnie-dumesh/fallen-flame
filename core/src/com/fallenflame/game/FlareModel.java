@@ -1,5 +1,6 @@
 package com.fallenflame.game;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -40,6 +41,12 @@ public class FlareModel extends WheelObstacle implements ILight {
 
     /**The color to tint the flare */
     private Color tint;
+
+    /**The sound a flare makes when shot */
+    private Sound shotSound;
+
+    /**The sound a flare makes when it burns out */
+    private Sound burnoutSound;
 
     /**
      * Returns the light radius of this flare.
@@ -144,6 +151,24 @@ public class FlareModel extends WheelObstacle implements ILight {
     }
 
     /**
+     * Returns the flare shot sound
+     *
+     * @return the flare shot sound
+     */
+    public Sound getShotSound() {
+        return shotSound;
+    }
+
+    /**
+     * Returns the flare burnout sound
+     *
+     * @return the flare burnout sound
+     */
+    public Sound getBurnoutSound() {
+        return burnoutSound;
+    }
+
+    /**
      * Get if flare is stuck to wall
      * @return true if flare is stuck to wall
      */
@@ -175,6 +200,7 @@ public class FlareModel extends WheelObstacle implements ILight {
         setRadius(radius);
         lightRadius = json.get("lighradius").asFloat();
         flareDuration = json.get("flareduration").asInt();
+
         isStuck = false;
 
         // TODO #2: Technically, we should do error checking here.
@@ -214,7 +240,11 @@ public class FlareModel extends WheelObstacle implements ILight {
         }
         setTexture(texture);
 
+        String shotSoundKey = json.get("shotSound").asString();
+        shotSound = JsonAssetManager.getInstance().getEntry(shotSoundKey, Sound.class);
 
+        String burnoutSoundKey = json.get("burnoutSound").asString();
+        burnoutSound = JsonAssetManager.getInstance().getEntry(burnoutSoundKey, Sound.class);
     }
 
     /**

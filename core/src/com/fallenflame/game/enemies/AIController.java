@@ -72,11 +72,6 @@ public abstract class AIController {
      * This method implements pathfinding through the use of goal tiles.
      */
     protected abstract void markGoalTiles();
-//
-//    /**
-//     * Determines action based on enemy state and goal tiles and saves action to `action` variable
-//     */
-//    protected abstract void chooseAction();
 
     /**
      * Get enemy movement toward goal

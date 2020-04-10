@@ -1,6 +1,8 @@
 package com.fallenflame.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -12,9 +14,13 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.fallenflame.game.util.JsonAssetManager;
 import com.fallenflame.game.util.ScreenListener;
 
-public class GameEngine implements Screen {
-    /**Enum to determine if we are loading or not
-     * @author: Professor Whie*/
+/**
+ * This class' purpose is explained in detail in the Architecture specifciation.
+ * Credit to @author: Professor White for code used in this class
+ */
+
+public class GameEngine implements Screen, InputProcessor {
+    /**Enum to determine if we are loading or not */
     protected enum AssetState {
         /** No assets loaded */
         EMPTY,
@@ -30,63 +36,74 @@ public class GameEngine implements Screen {
     /** How long the game should countdown */
     public static final int COUNTDOWN_TIME = 80;
 
- /**@author: Professor White */
     private JsonReader jsonReader;
-    /**@author: Professor White */
     /** The JSON asset directory */
     private JsonValue assetJson;
     /** The JSON save directory. This will be used to determine what level to */
     private JsonValue saveJson;
-    /**@author: Professor White */
     /** The JSON defining the level model */
     private JsonValue levelJson;
     /** Global JSON defining objects */
     private JsonValue globalJson;
-
-    /**@author: Professor White */
     /**What actually keeps track of the assetState. Initially set to empty, as no resources will be in at that point*/
     private AssetState currentAssetState = AssetState.EMPTY;
-
     /** The font for giving messages to the player */
     protected BitmapFont displayFont;
-
     /** The font for giving messages when in debug mode */
     protected BitmapFont debugFont;
 
-    /**@author: Professor White */
     /**Main game canvas*/
     protected GameCanvas canvas;
-    /**@author: Professor White */
     /** Listener that will update the player mode */
     private ScreenListener listener;
-
     /** Reference to the level controller */
     protected LevelController level;
 
     /**Boolean to keep track if the player won the level*/
     private boolean isSuccess;
-
     /** Boolean to prevent countdown from becoming infinite */
     private boolean prevSuccess;
-
     /**Boolean to keep track if the player died*/
     private boolean isFailed;
-
     /**Boolean to keep track if the player had died */
     private boolean prevFailed;
-
     /**Boolean to keep track if the player paused the game*/
     private boolean isPaused;
-
     /**Boolean to keep track if the screen is active*/
     private boolean isScreenActive;
-
-    /**Rectangle canvasBounds to keep track of the current canvas size for drawing purposes
-     * @author: Professor White in ShipDemo*/
+    /**Rectangle canvasBounds to keep track of the current canvas size for drawing purposes */
     private Rectangle canvasBounds;
-
     /** Countdown active for winning or losing */
     private int countdown;
+
+    /** User Input Management Fields */
+    /** Whether the reset button was pressed. */
+    private boolean resetPressed;
+    private boolean resetPrevious;
+    /** Whether the debug toggle was pressed. */
+    private boolean debugPressed;
+    private boolean debugPrevious;
+    /** Whether the debug2 toggle was pressed. */
+    private boolean debug2Pressed;
+    private boolean debug2Previous;
+    /** Whether the exit button was pressed. */
+    private boolean exitPressed;
+    private boolean exitPrevious;
+    /** Whether the flare button was pressed. */
+    private boolean flarePressed;
+    private boolean flarePrevious;
+    /** Whether the sprint button was pressed. */
+    private boolean sprintPressed;
+    private boolean sprintPrevious;
+    /** Whether the sneak button was pressed. */
+    private boolean sneakPressed;
+    private boolean sneakPrevious;
+    /** How much did we move horizontally? */
+    private float horizontal;
+    /** How much did we move vertically? */
+    private float vertical;
+
+
     /**
      * Preloads the assets for this controller.
      *
@@ -252,25 +269,21 @@ public class GameEngine implements Screen {
      * @return whether to process the update loop
      */
     public boolean preUpdate(float dt) {
-        InputController input = InputController.getInstance();
-        input.readInput();
+        readInput();
         if (listener == null) {
             return true;
         }
 
-        if (input.didDebug()) {
+        if (debugPressed && !debugPrevious) {
             level.setDebug(level.getDebug() + 1);
         }
-
-        if (input.didDebug2()) {
+        if (debug2Pressed && !debug2Previous) {
             level.setDebug2(!level.getDebug2());
         }
-
-        if (input.didReset()) {
+        if (resetPressed && !resetPrevious) {
             reset();
         }
-
-        if (input.didExit()) {
+        if (exitPressed && !exitPrevious) {
             listener.exitScreen(this, EXIT_QUIT);
             return false;
         }
@@ -291,31 +304,36 @@ public class GameEngine implements Screen {
      * @param delta Number of seconds since last animation frame
      */
     public void update(float delta) {
-        InputController input = InputController.getInstance();
-
-        if (input.didFlare()) {
-            level.createFlare(input.getMousePosition());
+        if (flarePressed && !flarePrevious) {
+            level.createFlare(getMousePosition());
         }
         // Rotate the avatar to face the direction of movement
-        tempAngle.set(input.getHorizontal(),input.getVertical());
+        tempAngle.set(horizontal,vertical);
         tempAngle.setLength(1); // Fix diagonal too-fast issue.
         float angle = 0;
         if (tempAngle.len2() > 0.0f) {
+            if (!level.getPlayer().isPlayingSound()) {
+                level.getPlayer().getWalkSound().loop(.3f);
+                level.getPlayer().setPlayingSound(true);
+            }
             angle = tempAngle.angle();
             // Convert to radians with up as 0
             angle = (float)Math.PI*(angle-90.0f)/180.0f;
+        } else {
+            level.getPlayer().getWalkSound().stop();
+            level.getPlayer().setPlayingSound(false);
         }
-        if (input.didStartSprint()) {
+        if (sprintPressed && !sprintPrevious) {
             // If player just started sprinting
             level.makeSprint();
-        } else if (input.didEndSprint()) {
+        } else if (!sprintPressed && sprintPrevious) {
             // If player just stopped sprinting
             level.makeWalk();
         }
-        if (input.didStartSneak()) {
+        if (sneakPressed && !sneakPrevious) {
             // If player just started sneaking
             level.makeSneak();
-        } else if (input.didEndSneak()) {
+        } else if (!sneakPressed && sneakPrevious) {
             // If player just stopped sneaking
             level.makeWalk();
         }
@@ -328,13 +346,6 @@ public class GameEngine implements Screen {
         }
         prevSuccess = isSuccess;
         prevFailed = isFailed;
-    }
-
-    /**Increments the player's light radius
-     * @param amount, which represents the amount to increment the light radius*/
-
-    public void lightFromPlayer(float amount){
-        level.lightFromPlayer(amount);
     }
 
     /**
@@ -445,5 +456,152 @@ public class GameEngine implements Screen {
         this.listener = listener;
     }
 
+    /************************ POLLING INPUT HANDLING ************************/
+
+    /**
+     * Get mouse position
+     * @return Vector2 mouse position
+     */
+    public Vector2 getMousePosition(){
+        return new Vector2(Gdx.input.getX(), Gdx.input.getY());
+    }
+
+    /**
+     * Reads the input for the player and converts the result into game logic.
+     */
+    public void readInput() {
+        // Copy state from last animation frame
+        // Helps us ignore buttons that are held down
+        resetPrevious  = resetPressed;
+        debugPrevious  = debugPressed;
+        debug2Previous = debug2Pressed;
+        exitPrevious = exitPressed;
+        flarePrevious = flarePressed;
+        sprintPrevious = sprintPressed;
+        sneakPrevious = sneakPressed;
+
+        readKeyboard();
+    }
+
+    /**
+     * Reads input from the keyboard.
+     *
+     * This controller reads from the keyboard regardless of whether or not an X-Box
+     * controller is connected.  However, if a controller is connected, this method
+     * gives priority to the X-Box controller.
+     *
+     */
+    private void readKeyboard() {
+        // Give priority to gamepad results
+        resetPressed = (Gdx.input.isKeyPressed(Input.Keys.R));
+        debugPressed = (Gdx.input.isKeyPressed(Input.Keys.G));
+        debug2Pressed = (Gdx.input.isKeyPressed(Input.Keys.E));
+        exitPressed  = (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
+        flarePressed  = (Gdx.input.isButtonPressed(Input.Buttons.LEFT));
+        sprintPressed = (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT));
+        sneakPressed = (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT));
+
+        // Directional controls
+        horizontal = 0.0f;
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            horizontal += 1.0f;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            horizontal -= 1.0f;
+        }
+        vertical = 0.0f;
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            vertical += 1.0f;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            vertical -= 1.0f;
+        }
+
+        //#region mouse wheel alternative
+        if(Gdx.input.isKeyPressed(Input.Keys.PERIOD)){
+            level.lightFromPlayer(0.5f);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.COMMA)){
+            level.lightFromPlayer(-0.5f);
+        }
+        //#endregion
+    }
+
+    /************************ EVENT-BASED INPUT HANDLING ************************/
+
+    /**Below are functions that are required to be implemented by InputProcessor. All return false if unused to indicate
+     * that the event was not handled by this inputProcessor. The functions that return false in this file return true
+     * in the LoadingMode inputProcessor to ensure that the even is handled (either LoadingMode does something
+     * or just returns true). This has to be used because mouse scrolling can only be done with InputProcessor.
+     * Gdx.Input does not have any functions to handle mouse scrolling and this should not take too much time,
+     * even with the events*/
+
+    /**What happens when a key is pressed
+     * @param keycode representing what key was pressed
+     * @return boolean saying if the event was handled*/
+    public boolean keyDown (int keycode) {
+        return false;
+    }
+
+    /**What happens when a key is released
+     * @param keycode representing what key was released
+     * @return boolean saying if the event was handled*/
+    public boolean keyUp (int keycode) {
+        return false;
+    }
+
+
+    /**What happens when a character is typed
+     * @param character representing what character was typed
+     * @return boolean saying if the event was handled*/
+    public boolean keyTyped (char character) {
+        return false;
+    }
+
+
+    /**What happens when a screen is touched (for phone) or mouse
+     * @param pointer, button representing what where and what was touched
+     * @return boolean saying if the event was handled*/
+    public boolean touchDown (int x, int y, int pointer, int button) {
+        return false;
+    }
+
+    /**What happens when a screen is released (for phone) or mouse
+     * @param pointer, button representing what where and what was released
+     * @return boolean saying if the event was handled*/
+    public boolean touchUp (int x, int y, int pointer, int button) {
+        return false;
+    }
+
+    /**What happens when a screen is dragged with a finger (for phone) or mouse
+     * @param pointer, button representing what where and what was dragged
+     * @return boolean saying if the event was handled*/
+    public boolean touchDragged (int x, int y, int pointer) {
+        return false;
+    }
+
+    /**What happens when the mouse is moved
+     * @param x, y representing where the mouse moved
+     * @return boolean saying if the event was handled*/
+    public boolean mouseMoved (int x, int y) {
+        return false;
+    }
+
+    /**What happens when the mouse is scrolling. Should take O(1).
+     * @param amount representing if the wheel scrolled down (1) or up (-1). Can only be those two values.
+     * @return boolean saying if the event was handled*/
+    public boolean scrolled (int amount) {
+        if(!isScreenActive()){
+            return true;
+        }
+        if(amount == 1){
+            level.lightFromPlayer(-1.0f);
+        }
+        if(amount == -1){
+            level.lightFromPlayer(1.0f);
+        }
+
+        return true;
+    }
 
 }
