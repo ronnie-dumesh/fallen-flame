@@ -296,7 +296,6 @@ public class LevelController implements ContactListener {
         maxTimePerFrame = timeStep*maxSteps;
 
         // Create player
-        //TODO: add hitbox of player and enemies at their feet
         player = new PlayerModel();
         player.initialize(globalJson.get("player"), levelJson.get("playerpos").asFloatArray());
         player.setDrawScale(scale);

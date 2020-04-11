@@ -24,8 +24,8 @@
     "debugopacity":	192,
     "tint": [1.0, 1.0, 1.0, 1.0],
     "textureoffset" : {
-      "x": 0,
-      "y": -30
+      "x": -0,
+      "y": -0.65
     }
   },
   "enemies": {

@@ -135,7 +135,10 @@ public class LightController {
      * @param o The obstacle.
      */
     protected void attachLightTo(PointSource l, Obstacle o) {
-        l.attachToBody(o.getBody(), l.getX(), l.getY(), l.getDirection());
+        float xOffset = l.getX();
+        float yOffset = l.getY();
+        l.attachToBody(o.getBody(), xOffset, yOffset, l.getDirection());
+        //l.attachToBody(o.getBody(), l.getX(), l.getY());
         l.setActive(true);
     }
 
