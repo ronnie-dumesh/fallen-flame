@@ -135,10 +135,7 @@ public class LightController {
      * @param o The obstacle.
      */
     protected void attachLightTo(PointSource l, Obstacle o) {
-        float xOffset = l.getX();
-        float yOffset = l.getY();
-        l.attachToBody(o.getBody(), xOffset, yOffset, l.getDirection());
-        //l.attachToBody(o.getBody(), l.getX(), l.getY());
+        l.attachToBody(o.getBody(), l.getX(), l.getY(), l.getDirection());
         l.setActive(true);
     }
 
@@ -214,6 +211,18 @@ public class LightController {
 
         // Update player light.
         playerLight.setDistance(player.getLightRadius());
+        //TODO: possible solution for fixing light offset?
+       // System.out.println(playerLight.getPosition());
+        //playerLight.setPosition(player.getX() + 300f, player.getY() + 300f);
+        //Changes being made when checking using get position?
+        //System.out.println(playerLight.getPosition());
+
+        //float xOffset = l.getX() + 0.65f *  (float) Math.abs(Math.sin(o.getAngle()));
+//        System.out.println(o.getAngle());
+//        System.out.println(l.getY());
+//        float yOffset = l.getY() + 0.65f * (float) Math.abs(Math.cos(o.getAngle()));
+//        System.out.println(yOffset);
+//        System.out.println("");
 
         // Update flare lights.
         updateLightsForList(flares, flareLights);
