@@ -269,21 +269,21 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
             filmstripWalkLeft = null;
         }
 
-//        key = textureJson.get("up").asString();
-//        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-//        try {
-//            filmstripWalkUp = (FilmStrip) texture;
-//        } catch (Exception e) {
-//            filmstripWalkUp = null;
-//        }
-//
-//        key = textureJson.get("down").asString();
-//        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-//        try {
-//            filmstripWalkDown = (FilmStrip) texture;
-//        } catch (Exception e) {
-//            filmstripWalkDown = null;
-//        }
+        key = textureJson.get("up").asString();
+        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        try {
+            filmstripWalkUp = (FilmStrip) texture;
+        } catch (Exception e) {
+            filmstripWalkUp = null;
+        }
+
+        key = textureJson.get("down").asString();
+        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        try {
+            filmstripWalkDown = (FilmStrip) texture;
+        } catch (Exception e) {
+            filmstripWalkDown = null;
+        }
 
         //pick default direction
         FilmStrip filmStrip = filmstripWalkRight;
@@ -324,27 +324,18 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     public void update(float dt) {
         //getAngle has up as 0 radians, down as pi radians, pi/2 is left, -pi/2 is right.
         double angle = getAngle();
-        double pi = Math.PI;
-        double pi16 = pi / 16;
-        if(angle < 0){
-            angle = angle + 2 * pi;
-        }
-//
-//        if(angle > 15 * pi16 || angle < 1 * pi16) {
-//            filmstrip = filmstripWalkUp;
-//        } else if(angle > 1 * pi16 || angle < 7 * pi16) {
-//            filmstrip = filmstripWalkLeft;
-//        } else if(angle > 7 * pi16 || angle < 9 * pi16) {
-//            filmstrip = filmstripWalkDown;
-//        } else { // 9 *  pi16 < angle < 15 * pi16
-//            filmstrip = filmstripWalkRight;
-//        }
+        if(angle < 0) angle = angle + 2 * Math.PI;
+        int angle100 = (int) (angle * 100);
 
 
         FilmStrip filmstrip;
 
-        if(angle < Math.PI){
-            filmstrip = filmstripWalkLeft;
+        if(angle100 == 0){
+            filmstrip = filmstripWalkUp;
+        } else if (angle100 > 0 && angle100 < 314){
+            filmstrip =filmstripWalkLeft;
+        } else if (angle100 == 314){
+            filmstrip = filmstripWalkDown;
         } else {
             filmstrip = filmstripWalkRight;
         }
