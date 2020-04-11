@@ -54,7 +54,7 @@ public abstract class EnemyModel extends CharacterModel {
 
         for(ActivationStates state : ActivationStates.values()){
             String stateName = state.name().toLowerCase();
-            float[] tintValues = json.get("stateTints").get(stateName).asFloatArray();//RGBA
+            float[] tintValues = json.get("statetints").get(stateName).asFloatArray();//RGBA
             Color tint = new Color(tintValues[0], tintValues[1], tintValues[2], tintValues[3]);
             stateTints.put(state, tint);
         }

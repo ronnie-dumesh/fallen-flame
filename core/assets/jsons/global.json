@@ -23,7 +23,10 @@
     "debugcolor":  	"white",
     "debugopacity":	192,
     "tint": [1.0, 1.0, 1.0, 1.0],
-    "tintOpacity": 192
+    "textureoffset" : {
+      "x": 0,
+      "y": -30
+    }
   },
   "enemies": {
     "typeA":  {
@@ -47,12 +50,15 @@
       },
       "debugcolor": "white",
       "debugopacity": 192,
-      "stateTints": {
+      "statetints": {
           "calm": [1.0, 1.0, 1.0, 1.0],
           "alert": [0.0, 1.0, 0.0, 1.0],
           "aggressive": [1.0, 0.0, 0.0, 1.0]
         },
-      "tintOpacity": 192
+      "textureoffset" : {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   "exit": {

@@ -31,13 +31,14 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     /** The standard number of frames to wait until we can walk again */
     private int walkLimit;
 
-    /** FilmStrip pointer to the texture region */
-    //protected FilmStrip filmstrip;
-
+    /** FilmStrip pointers to the texture regions */
     protected FilmStrip filmstripWalkRight;
     protected FilmStrip filmstripWalkLeft;
     protected FilmStrip filmstripWalkUp;
     protected FilmStrip filmstripWalkDown;
+
+    /** Offset of textures from Physics Body */
+    protected Vector2 textureOffset = new Vector2();
 
     /** The current animation frame of the avatar */
     private int startFrame;
@@ -178,6 +179,25 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     }
 
     /**
+     * @return the offset of the texture from the physics body
+     * as a Vector 2
+     */
+    public Vector2 getTextureOffset() {
+        return new Vector2(textureOffset);
+    }
+
+    /**
+     * Sets the offset of the texture from the physics body
+     * as a Vector 2
+     *
+     * @param x the offset of the texture on the x-axis
+     * @param y the offset of the texture on the y-axis
+     */
+    public void setTextureOffset(float x , float y){
+        textureOffset = new Vector2(x, y);
+    }
+
+    /**
      * Gets light radius for character
      * @return light radius
      */
@@ -223,6 +243,8 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
         setMaxSpeed(json.get("maxspeed").asFloat());
         setStartFrame(json.get("startframe").asInt());
         setWalkLimit(json.get("walklimit").asInt());
+        setTextureOffset(json.get("textureoffset").get("x").asFloat(),
+                        json.get("textureoffset").get("y").asFloat());
 
         // Reflection is best way to convert name to color
 //        Color debugColor;
@@ -286,9 +308,10 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
         }
 
         //pick default direction
-        FilmStrip filmStrip = filmstripWalkRight;
-        setTexture(filmStrip);
+        FilmStrip filmstrip = filmstripWalkRight;
+        setTexture(filmstrip, textureOffset.x, textureOffset.y);
     }
+
 
     /**
      * Applies the force to the body of this character
@@ -340,7 +363,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
             filmstrip = filmstripWalkRight;
         }
 
-        setTexture(filmstrip);
+        setTexture(filmstrip, textureOffset.x, textureOffset.y);
 
         // Animate if necessary
         if (animate && walkCool == 0) {
