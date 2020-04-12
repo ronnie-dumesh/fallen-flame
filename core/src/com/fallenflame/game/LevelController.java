@@ -16,6 +16,7 @@ import java.util.*;
 
 /** Credit to Walker White for some code reused from B2LightsDemo */
 public class LevelController implements ContactListener {
+    //  MAY NEED THESE:
     /** Number of velocity iterations for the constrain solvers */
     public static final int WORLD_VELOC = 6;
     /** Number of position iterations for the constrain solvers */
@@ -25,15 +26,17 @@ public class LevelController implements ContactListener {
     /** Base volume for enemy movement sounds */
     public static final float ENEMY_MOV_BASE_VOL = .4f;
     /** Volume scaling for enemy movement sounds.
-     * Must be in range [0,1]. Higher numbers will lead to faster volume drop-off. */
-    public static final float ENEMY_MOVE_VOL_SCL = .3f;
+     * Must be >0. Lower numbers will lead to faster volume drop-off.
+     * Value of 1 means drop-off rate is exactly equivalent to 1/distance */
+    public static final float ENEMY_MOVE_VOL_SCL = 3f;
     /** Pitch for enemy movement sounds */
     public static final float ENEMY_MOV_PITCH = 1f;
     /** Base volume for enemy constant sounds */
-    public static final float ENEMY_CONS_BASE_VOL = .2f;
+    public static final float ENEMY_CONS_BASE_VOL = 1.7f;
     /** Volume scaling for enemy constant sounds.
-     * Must be in range [0,1]. Higher numbers will lead to faster volume drop-off. */
-    public static final float ENEMY_CONS_VOL_SCL = .3f;
+     * Must be >0. Lower numbers will lead to faster volume drop-off.
+     * Value of 1 means drop-off rate is exactly equivalent to 1/distance */
+    public static final float ENEMY_CONS_VOL_SCL = 1f;
     /** Pitch for enemy constant sounds */
     public static final float ENEMY_CONS_PITCH = .5f;
     /** Volume scaling for panning
@@ -464,9 +467,9 @@ public class LevelController implements ContactListener {
                     enemy.setMoveSoundID(-1);
                 } else {
                     //modify sound
-                    enemy.getMoveSound().setPan(enemy.getMoveSoundID(), pan, ENEMY_MOV_BASE_VOL * ((1/enemy.getDistanceBetween(player)) * ENEMY_MOVE_VOL_SCL));
+                    enemy.getMoveSound().setPan(enemy.getMoveSoundID(), pan, ENEMY_MOV_BASE_VOL * ((1/enemy.getDistanceBetween(player) * ENEMY_MOVE_VOL_SCL)));
                 }
-                enemy.getConstantSound().setPan(enemy.getConstantSoundID(), pan, ENEMY_CONS_BASE_VOL * ((1/enemy.getDistanceBetween(player)) * ENEMY_CONS_VOL_SCL));
+                enemy.getConstantSound().setPan(enemy.getConstantSoundID(), pan, ENEMY_CONS_BASE_VOL * ((1/enemy.getDistanceBetween(player) * ENEMY_CONS_VOL_SCL)));
                 assert inBounds(enemy);
             }
 

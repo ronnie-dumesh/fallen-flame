@@ -50,26 +50,20 @@
 		}
   	},
 	"sounds": {
-		"bump": {
-			"file": "sounds/Bump.mp3"
+		"flareout": {
+			"file": "sounds/flareout.mp3"
 		},
-		"fall": {
-			"file": "sounds/Fall.mp3"
-		},
-		"fire": {
-			"file": "sounds/Fire.mp3"
-		},
-		"gameover": {
-			"file": "sounds/GameOver.mp3"
+		"flareshot": {
+			"file": "sounds/flareshot.mp3"
 		},
 		"walk": {
 			"file": "sounds/Walk.mp3"
 		},
-		"bark": {
+		"enemystep": {
 			"file": "sounds/bark.mp3"
 		},
-		"tonemono": {
-			"file": "sounds/ToneMono.mp3"
+		"enemyconstant": {
+			"file": "sounds/enemyconstant.mp3"
 		}
 	}
 }
