@@ -9,9 +9,6 @@ import com.fallenflame.game.physics.obstacle.WheelObstacle;
 import com.fallenflame.game.util.FilmStrip;
 import com.fallenflame.game.util.JsonAssetManager;
 
-import javax.xml.soap.Text;
-
-
 public abstract class CharacterModel extends WheelObstacle implements ILight {
     // Physics constants
     /** The factor to multiply by the input */
