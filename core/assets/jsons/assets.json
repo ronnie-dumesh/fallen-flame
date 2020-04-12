@@ -86,5 +86,28 @@
 			"file": 	"fonts/RetroGame.ttf",
 			"size":		20
 		}
-  	}
+  	},
+	"sounds": {
+		"bump": {
+			"file": "sounds/Bump.mp3"
+		},
+		"fall": {
+			"file": "sounds/Fall.mp3"
+		},
+		"fire": {
+			"file": "sounds/Fire.mp3"
+		},
+		"gameover": {
+			"file": "sounds/GameOver.mp3"
+		},
+		"walk": {
+			"file": "sounds/Walk.mp3"
+		},
+		"bark": {
+			"file": "sounds/bark.mp3"
+		},
+		"tonemono": {
+			"file": "sounds/ToneMono.mp3"
+		}
+	}
 }

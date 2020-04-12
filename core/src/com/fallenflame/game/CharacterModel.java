@@ -198,6 +198,47 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     }
 
     /**
+     * @param m and n are CharacterModel objects
+     * @return the absolute distance from CharacterModel m to CharacterModel n
+     */
+    public float getDistanceBetween(CharacterModel n) {
+        float dx = this.getX() - n.getX();
+        float dy = this.getY() - n.getY();
+        float dist = (float) Math.pow((Math.pow(dx , 2) + Math.pow(dy, 2)), 0.5);
+        return dist;
+    }
+
+    /**
+     * getAngleBetween(m, n) returns the angle at which CharacterModel n
+     * is at relative to the origin CharacterModel m. The method
+     * returns the angle in radians in the range [0, 2pi) as if
+     * viewed on a unit circle. If n is directly right of m, the angle
+     * is 0
+     *
+     * @param m and n are CharacterModel objects
+     * @return angle from CharacterModel m to CharacterModel n in radians
+     */
+    public float getAngleBetween(CharacterModel n){
+        float adj = n.getX() - this.getX();
+        float opp = n.getY() - this.getY();
+        float hyp = getDistanceBetween(n);
+
+        double ratio, angle;
+
+        //n is located in Quadrant I or II
+        if(opp > 0) {
+            ratio = (double) adj / hyp;
+            angle = Math.acos(ratio);
+
+        } else { //Quadrant III or IV
+            ratio = (double) -1 * adj / hyp;
+            angle = Math.acos(ratio) + Math.PI;
+        }
+
+        return (float) angle;
+    }
+
+    /**
      * Gets light radius for character
      * @return light radius
      */

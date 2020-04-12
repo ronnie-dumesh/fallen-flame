@@ -20,6 +20,7 @@
       "up": "player-up",
       "down": "player-down"
     },
+    "walksound":    "walk",
     "debugcolor":  	"white",
     "debugopacity":	192,
     "tint": [1.0, 1.0, 1.0, 1.0],
@@ -48,6 +49,8 @@
         "walk-left": "enemy",
         "walk-right": "enemy"
       },
+      "movesound": "bark",
+      "constantsound": "tonemono",
       "debugcolor": "white",
       "debugopacity": 192,
       "statetints": {
@@ -80,6 +83,8 @@
     "friction":       0.0,
     "restitution":    0.0,
     "texture":        "fire",
+    "shotsound":      "fire",
+    "burnoutsound":   "fall",
     "initialforce":   3.0,
     "damping": 		 0.0,
     "tint": [1.0, 1.0, 1.0, 1.0],
