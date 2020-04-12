@@ -351,7 +351,7 @@ public class LevelController implements ContactListener {
         flareJSON = globalJson.get("flare");
 
         // Initialize levelModel
-        levelModel.initialize(bounds, walls, enemies);
+        levelModel.initialize(bounds, walls, enemies, levelJson.get("background"), globalJson.get("background"));
 
         lightController.initialize(player, levelJson.get("lighting"), world, bounds);
     }
@@ -581,6 +581,7 @@ public class LevelController implements ContactListener {
         canvas.begin();
         //TODO: draw background here
         //canvas.draw(,0,0)
+        levelModel.draw(canvas);
         player.draw(canvas);
         exit.draw(canvas);
         for(WallModel wall : walls) {

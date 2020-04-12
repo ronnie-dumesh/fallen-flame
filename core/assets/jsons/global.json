@@ -104,5 +104,8 @@
     "texture":      "double-wall",
     "debugcolor":   "yellow",
     "debugopacity":  200
+  },
+  "background": {
+    "texture":      "floor-tile"
   }
 }

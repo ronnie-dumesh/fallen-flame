@@ -72,7 +72,7 @@
 			"file":    "textures/double-brick.png",
 			"wrap": true
 		},
-		"floor": {
+		"floor-tile": {
 			"file": "textures/floor-tile.png",
 			"wrap": true
 		}
