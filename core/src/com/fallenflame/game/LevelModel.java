@@ -56,8 +56,7 @@ public class LevelModel {
     public LevelModel() {
     }
 
-    public void initialize(Rectangle bounds, List<WallModel> walls, List<EnemyModel> enemies,
-                           JsonValue globalJson, JsonValue levelJson) {
+    public void initialize(Rectangle bounds, List<WallModel> walls, List<EnemyModel> enemies) {
         width = bounds.getWidth();
         height = bounds.getHeight();
 
@@ -73,18 +72,8 @@ public class LevelModel {
         for (WallModel w : walls) {
             setBoxObstacleInGrid(w, false);
         }
-
-        String key = globalJson.get("texture").asString();
-        if (levelJson.has("texture"))
-            levelJson.get("texture").asString(); // Get specific texture if available
-        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
     }
 
-    public void draw(GameCanvas canvas) {
-        if (texture != null) {
-            canvas.draw(texture, Color.WHITE, 0,0, (float) canvas.getWidth(), (float) canvas.getHeight());
-        }
-    }
 
     /**
      * @return the width of the screen

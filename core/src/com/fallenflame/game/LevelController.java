@@ -3,6 +3,7 @@ package com.fallenflame.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
@@ -11,6 +12,7 @@ import com.fallenflame.game.enemies.AITypeAController;
 import com.fallenflame.game.enemies.EnemyModel;
 import com.fallenflame.game.enemies.EnemyTypeAModel;
 import com.fallenflame.game.physics.obstacle.Obstacle;
+import com.fallenflame.game.util.JsonAssetManager;
 
 import java.util.*;
 
@@ -53,6 +55,8 @@ public class LevelController implements ContactListener {
     protected Rectangle bounds;
     /** The world scale */
     protected Vector2 scale;
+    /** The world background */
+    protected TextureRegion background;
 
     // Controllers
     /** Light Controller */
@@ -288,6 +292,11 @@ public class LevelController implements ContactListener {
         scale.x = gSize[0]/pSize[0];
         scale.y = gSize[1]/pSize[1];
 
+        String key = globalJson.get("background").get("texture").asString();
+        if (levelJson.get("background").has("texture"))
+            levelJson.get("background").get("texture").asString(); // Get specific texture if available
+        background = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+
         // Compute the FPS
         int[] fps = levelJson.get("fpsRange").asIntArray();
         maxFPS = fps[1]; minFPS = fps[0];
@@ -352,7 +361,7 @@ public class LevelController implements ContactListener {
         flareJSON = globalJson.get("flare");
 
         // Initialize levelModel
-        levelModel.initialize(bounds, walls, enemies, levelJson.get("background"), globalJson.get("background"));
+        levelModel.initialize(bounds, walls, enemies);
 
         lightController.initialize(player, levelJson.get("lighting"), world, bounds);
     }
@@ -594,11 +603,13 @@ public class LevelController implements ContactListener {
         canvas.clear();
         canvas.setCameraPosition(player.getPosition().x * scale.x, player.getPosition().y * scale.y);
 
-        // Draw all objects
         canvas.begin();
-        //TODO: draw background here
-        //canvas.draw(,0,0)
-        levelModel.draw(canvas);
+        //draw background
+        if (background != null) {
+            canvas.draw(background, Color.WHITE, 0,0, (float) canvas.getWidth(), (float) canvas.getHeight());
+        }
+
+        // Draw all objects
         exit.draw(canvas);
         for(WallModel wall : walls) {
             wall.draw(canvas);

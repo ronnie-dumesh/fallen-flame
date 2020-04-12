@@ -64,11 +64,11 @@
 				"first":	0
 			}
 		},
-		"single-wall": {
+		"vertical-wall": {
 			"file": "textures/single-brick.png",
 			"wrap": true
 		},
-		"double-wall": {
+		"horizontal-wall": {
 			"file":    "textures/double-brick.png",
 			"wrap": true
 		},
