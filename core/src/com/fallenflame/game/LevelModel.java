@@ -78,11 +78,12 @@ public class LevelModel {
         if (levelJson.has("texture"))
             levelJson.get("texture").asString(); // Get specific texture if available
         texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+
     }
 
     public void draw(GameCanvas canvas) {
         if (texture != null) {
-            canvas.draw(texture, 0,0 );
+            canvas.draw(texture, Color.WHITE, 0,0, (float) canvas.getWidth(), (float) canvas.getHeight());
         }
     }
 
