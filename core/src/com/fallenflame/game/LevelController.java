@@ -606,11 +606,11 @@ public class LevelController implements ContactListener {
             for(WallModel wall : walls) {
                 wall.drawDebug(canvas);
             }
-            for(EnemyModel enemy : enemies) {
-                enemy.drawDebug(canvas);
-            }
             for(FlareModel flare : flares) {
                 flare.drawDebug(canvas);
+            }
+            for(EnemyModel enemy : enemies) {
+                enemy.drawDebug(canvas);
             }
             canvas.endDebug();
             if(ticks % 10 == 0){
