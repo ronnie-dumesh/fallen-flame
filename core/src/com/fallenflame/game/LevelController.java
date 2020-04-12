@@ -18,11 +18,30 @@ import java.util.*;
 
 /** Credit to Walker White for some code reused from B2LightsDemo */
 public class LevelController implements ContactListener {
-    //  MAY NEED THESE:
     /** Number of velocity iterations for the constrain solvers */
     public static final int WORLD_VELOC = 6;
     /** Number of position iterations for the constrain solvers */
     public static final int WORLD_POSIT = 2;
+
+    // Sound constants
+    /** Base volume for enemy movement sounds */
+    public static final float ENEMY_MOV_BASE_VOL = .4f;
+    /** Volume scaling for enemy movement sounds.
+     * Must be in range [0,1]. Higher numbers will lead to faster volume drop-off. */
+    public static final float ENEMY_MOVE_VOL_SCL = .3f;
+    /** Pitch for enemy movement sounds */
+    public static final float ENEMY_MOV_PITCH = 1f;
+    /** Base volume for enemy constant sounds */
+    public static final float ENEMY_CONS_BASE_VOL = .2f;
+    /** Volume scaling for enemy constant sounds.
+     * Must be in range [0,1]. Higher numbers will lead to faster volume drop-off. */
+    public static final float ENEMY_CONS_VOL_SCL = .3f;
+    /** Pitch for enemy constant sounds */
+    public static final float ENEMY_CONS_PITCH = .5f;
+    /** Volume scaling for panning
+     * Must be in range [0,1]. 1 is maximum panning, 0 is no panning. */
+    public static final float PAN_SCL = .4f;
+
 
     /** Whether or not the level has been populated */
     private boolean populated;
@@ -343,7 +362,7 @@ public class LevelController implements ContactListener {
                 return;
             }
             enemy.initialize(globalEnemies.get(enemyType), enemyJSON.get("enemypos").asFloatArray());
-            enemy.setConstantSoundID(enemy.getConstantSound().loop(0, .5f, 0));
+            enemy.setConstantSoundID(enemy.getConstantSound().loop(0, ENEMY_CONS_PITCH, 0));
             enemy.setDrawScale(scale);
             enemy.activatePhysics(world);
             enemies.add(enemy);
@@ -450,19 +469,19 @@ public class LevelController implements ContactListener {
             while(enemyI.hasNext()){
                 EnemyModel enemy = enemyI.next();
                 enemy.executeAction(actionI.next());
-                float pan = (enemy.getX() - player.getX()) * .4f;
+                float pan = (enemy.getX() - player.getX()) * PAN_SCL;
                 if (enemy.isActivated() && (enemy.getMoveSoundID() == -1)) {
                     //start sound
-                    enemy.setMoveSoundID(enemy.getMoveSound().loop(.3f, 1, pan));
+                    enemy.setMoveSoundID(enemy.getMoveSound().loop(ENEMY_MOV_BASE_VOL, ENEMY_MOV_PITCH, pan));
                 } else if (!enemy.isActivated()) {
                     //end sound
                     enemy.getMoveSound().stop();
                     enemy.setMoveSoundID(-1);
                 } else {
                     //modify sound
-                    enemy.getMoveSound().setPan(enemy.getMoveSoundID(), pan, (float) Math.max(0,(1 - enemy.getDistanceBetween(player) * .15)));
+                    enemy.getMoveSound().setPan(enemy.getMoveSoundID(), pan, ENEMY_MOV_BASE_VOL * ((1/enemy.getDistanceBetween(player)) * ENEMY_MOVE_VOL_SCL));
                 }
-                enemy.getConstantSound().setPan(enemy.getConstantSoundID(), pan, (float) Math.max(0,(.3 - enemy.getDistanceBetween(player) * .05)));
+                enemy.getConstantSound().setPan(enemy.getConstantSoundID(), pan, ENEMY_CONS_BASE_VOL * ((1/enemy.getDistanceBetween(player)) * ENEMY_CONS_VOL_SCL));
                 assert inBounds(enemy);
             }
 
