@@ -582,7 +582,6 @@ public class LevelController implements ContactListener {
         //TODO: draw background here
         //canvas.draw(,0,0)
         levelModel.draw(canvas);
-        player.draw(canvas);
         exit.draw(canvas);
         for(WallModel wall : walls) {
             wall.draw(canvas);
@@ -593,6 +592,7 @@ public class LevelController implements ContactListener {
         for(FlareModel flare : flares) {
             flare.draw(canvas);
         }
+        player.draw(canvas);
         canvas.end();
 
         lightController.setDebug(debug2);
