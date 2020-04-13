@@ -55,6 +55,9 @@ public class GameCanvas {
     /** Camera for the underlying SpriteBatch */
     private OrthographicCamera camera;
 
+    /** Second camera, where it does not move at all. */
+    private OrthographicCamera fixedCamera;
+
     /** Value to cache window width (if we are currently full screen) */
     int width;
     /** Value to cache window height (if we are currently full screen) */
@@ -84,6 +87,9 @@ public class GameCanvas {
         // Set the projection matrix (for proper scaling)
         camera = new OrthographicCamera(getWidth(),getHeight());
         camera.setToOrtho(false);
+
+        fixedCamera = new OrthographicCamera(getWidth(),getHeight());
+        fixedCamera.setToOrtho(false);
 
         spriteBatch.setProjectionMatrix(camera.combined);
         debugRender.setProjectionMatrix(camera.combined);
@@ -362,6 +368,18 @@ public class GameCanvas {
     public void begin() {
         camera.update();
         spriteBatch.setProjectionMatrix(camera.combined);
+        spriteBatch.begin();
+        active = DrawPass.STANDARD;
+    }
+
+    /**
+     * Start a standard drawing sequence without camera.
+     *
+     * Nothing is flushed to the graphics card until the method end() is called.
+     */
+    public void beginWithoutCamera() {
+        fixedCamera.update();
+        spriteBatch.setProjectionMatrix(fixedCamera.combined);
         spriteBatch.begin();
         active = DrawPass.STANDARD;
     }

@@ -1,10 +1,16 @@
 {
   "levels": [
     {
-      "name":       "Level 1",
+      "name":       "Easy",
       "unlocked":   true,
       "completed":  true,
-      "path":       "levels/level.json"
+      "path":       "levels/easy.json"
+    },
+    {
+      "name":       "Medium",
+      "unlocked":   true,
+      "completed":  true,
+      "path":       "levels/medium.json"
     }
   ]
 }

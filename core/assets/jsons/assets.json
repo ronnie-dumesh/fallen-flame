@@ -10,6 +10,16 @@
 				"first": 0
 			}
 		},
+		"enemyb": {
+			"file": "textures/enemyb-walking.png",
+			"wrap": false,
+			"strip": {
+				"size": 4,
+				"rows": 1,
+				"cols": 4,
+				"first": 0
+			}
+		},
 		"player-left": {
 			"file": "textures/player-walk-left.png",
 			"wrap": false,

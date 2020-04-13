@@ -75,10 +75,10 @@
       "startframe": 0,
       "walklimit": 4,
       "texture":     	{
-        "left": "enemy",
-        "right": "enemy",
-        "up": "enemy",
-        "down": "enemy"
+        "left": "enemyb",
+        "right": "enemyb",
+        "up": "enemyb",
+        "down": "enemyb"
       },
       "movesound": "enemystep",
       "constantsound": "enemyconstant",
