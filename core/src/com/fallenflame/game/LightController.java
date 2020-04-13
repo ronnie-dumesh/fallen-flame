@@ -56,6 +56,11 @@ public class LightController {
     protected Map<FlareModel, PointSource> flareLights;
 
     /**
+     * A map of fireball lights for all the fireballs.
+     */
+    protected Map<FireballModel, PointSource> fireballLights;
+
+    /**
      * A map of lights for all the enemies.
      */
     protected Map<EnemyModel, PointSource> enemyLights;
@@ -101,8 +106,9 @@ public class LightController {
         playerLight = createPointLight(player.getLightRadius());
         attachLightTo(playerLight, player);
 
-        // Create empty maps for flare and enemy lights.
+        // Create empty maps for flare, fireball and enemy lights.
         this.flareLights = new HashMap<>();
+        this.fireballLights = new HashMap<>();
         this.enemyLights = new HashMap<>();
     }
 
@@ -124,6 +130,8 @@ public class LightController {
         this.playerLight = null;
         this.flareLights.clear();
         this.flareLights = null;
+        this.fireballLights.clear();
+        this.fireballLights = null;
         this.enemyLights.clear();
         this.enemyLights = null;
     }
@@ -196,7 +204,7 @@ public class LightController {
      * @param flares A collection of flares.
      * @param enemies A collection of enemies.
      */
-    public void updateLights(Collection<FlareModel> flares, Collection<EnemyModel> enemies) {
+    public void updateLights(Collection<FlareModel> flares, Collection<EnemyModel> enemies, Collection<FireballModel> fireballs) {
         // Update debug.
         if (debug) {
             rayhandler.setAmbientLight(.5f, .5f, .5f, 0);
@@ -215,6 +223,7 @@ public class LightController {
 
         // Update flare lights.
         updateLightsForList(flares, flareLights);
+        updateLightsForList(fireballs, fireballLights);
 
         // Update enemy lights.
         updateLightsForList(
@@ -222,18 +231,6 @@ public class LightController {
                 enemyLights);
 
         rayhandler.update();
-    }
-
-    /**
-     * Update all lights, call this before {@code draw()}.
-     *
-     * @deprecated Do not use this signature, instead use {@link #updateLights(Collection, Collection)}.
-     * @param player Player instance.
-     * @param flares List of flares.
-     * @param enemies List of enemies.
-     */
-    public void updateLights(PlayerModel player, List<FlareModel> flares, List<EnemyModel> enemies) {
-        updateLights(flares, enemies);
     }
 
     /**

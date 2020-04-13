@@ -1,35 +1,35 @@
 {
-    "textures": {
-    	"enemy": {
-    		"file":		"textures/enemy-walking.png",
-    		"wrap":		false,
-			"strip":	{
-				"size":		4,
-				"rows":		1,
-				"cols":		4,
-				"first":	0
-			}
-    	},
-		"player-left": {
-			"file": 	"textures/player-walk-left.png",
-			"wrap":  	false,
-			"strip":	{
-				"size":		26,
-				"rows":		1,
-				"cols":		26,
-				"first":	0
+	"textures": {
+		"enemy": {
+			"file": "textures/enemy-walking.png",
+			"wrap": false,
+			"strip": {
+				"size": 4,
+				"rows": 1,
+				"cols": 4,
+				"first": 0
 			}
 		},
-    	"player-right": {
-    		"file": 	"textures/player-walk-right.png",
-    		"wrap":  	false,
-    		"strip":	{
-    			"size":		26,
-    			"rows":		1,
-    			"cols":		26,
-    			"first":	0
-    		}
-    	},
+		"player-left": {
+			"file": "textures/player-walk-left.png",
+			"wrap": false,
+			"strip": {
+				"size": 26,
+				"rows": 1,
+				"cols": 26,
+				"first": 0
+			}
+		},
+		"player-right": {
+			"file": "textures/player-walk-right.png",
+			"wrap": false,
+			"strip": {
+				"size": 26,
+				"rows": 1,
+				"cols": 26,
+				"first": 0
+			}
+		},
 		"player-up": {
 			"file": "textures/player-walk-up.png",
 			"wrap": false,
@@ -50,18 +50,18 @@
 				"first": 0
 			}
 		},
-        "goal": { 
-         	"file":		"textures/helicopter.png",
-         	"wrap":		false
-         },
-		"fire":   {
-			"file": 	"textures/fire.png",
-			"wrap": 	true,
-			"strip":	{
-				"size":		4,
-				"rows":		1,
-				"cols":		4,
-				"first":	0
+		"goal": {
+			"file": "textures/helicopter.png",
+			"wrap": false
+		},
+		"fire": {
+			"file": "textures/fire.png",
+			"wrap": true,
+			"strip": {
+				"size": 4,
+				"rows": 1,
+				"cols": 4,
+				"first": 0
 			}
 		},
 		"wall-side": {
@@ -69,24 +69,32 @@
 			"wrap": true
 		},
 		"wall-top": {
-			"file":    "textures/double-wall-top-view.png",
+			"file": "textures/double-wall-top-view.png",
 			"wrap": true
 		},
 		"floor-tile": {
 			"file": "textures/floor-tile.png",
 			"wrap": true
+		},
+		"earth": {
+			"file": "textures/earthtile.png",
+			"wrap": true
+		},
+		"fireball": {
+			"file": "textures/fireball.png",
+			"wrap": false
 		}
-  	},
-  	"fonts": {
-  		"display": {
-  			"file": 	"fonts/MarkerFelt.ttf",
-  			"size": 	64
-  		},
+	},
+	"fonts": {
+		"display": {
+			"file": "fonts/MarkerFelt.ttf",
+			"size": 64
+		},
 		"debug": {
-			"file": 	"fonts/RetroGame.ttf",
-			"size":		20
+			"file": "fonts/RetroGame.ttf",
+			"size": 20
 		}
-  	},
+	},
 	"sounds": {
 		"flareout": {
 			"file": "sounds/flareout.mp3"

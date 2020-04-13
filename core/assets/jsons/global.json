@@ -59,7 +59,41 @@
       "textureoffset" : {
         "x": 0,
         "y": 0
-      }
+      },
+      "tintOpacity": 192
+    },
+    "typeB":  {
+      "cooldown": 20,
+      "radius": 0.4,
+      "bodytype": "dynamic",
+      "density": 1.0,
+      "friction": 0.0,
+      "restitution": 0.0,
+      "force": 80.0,
+      "damping": 10.0,
+      "maxspeed": 5.0,
+      "startframe": 0,
+      "walklimit": 4,
+      "texture":     	{
+        "left": "enemy",
+        "right": "enemy",
+        "up": "enemy",
+        "down": "enemy"
+      },
+      "movesound": "enemystep",
+      "constantsound": "enemyconstant",
+      "debugcolor": "white",
+      "debugopacity": 192,
+      "stateTints": {
+        "calm": [1.0, 1.0, 1.0, 1.0],
+        "alert": [0.0, 1.0, 0.0, 1.0],
+        "aggressive": [1.0, 0.0, 0.0, 1.0]
+      },
+      "textureoffset" : {
+        "x": 0,
+        "y": 0
+      },
+      "tintOpacity": 192
     }
   },
   "exit": {
@@ -84,6 +118,19 @@
     "shotsound":      "flareshot",
     "burnoutsound":   "flareout",
     "initialforce":   3.0,
+    "damping": 		 0.0,
+    "tint": [1.0, 1.0, 1.0, 1.0],
+    "startframe":       0
+  },
+  "fireball" : {
+    "radius":      	  0.1,
+    "lighradius":     2,
+    "bodytype":    	  "dynamic",
+    "density":        1.0,
+    "friction":       0.0,
+    "restitution":    0.0,
+    "texture":        "fireball",
+    "initialforce":   9.0,
     "damping": 		 0.0,
     "tint": [1.0, 1.0, 1.0, 1.0],
     "startframe":       0
