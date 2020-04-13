@@ -338,10 +338,10 @@ public class LevelController implements ContactListener {
         for(JsonValue wallJSON : levelJson.get("walls")) {
             WallModel wall = new WallModel();
 
-            if(wallJSON.get("texture").asString().equals("horizontal-wall")) {
-                wall.initialize(globalJson.get("horizontal-wall"), wallJSON);
+            if(wallJSON.get("texture").asString().equals("wall-side")) {
+                wall.initialize(globalJson.get("wall-side"), wallJSON);
             } else {
-                wall.initialize(globalJson.get("vertical-wall"), wallJSON);
+                wall.initialize(globalJson.get("wall-top"), wallJSON);
             }
 
             wall.setDrawScale(scale);

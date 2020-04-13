@@ -88,23 +88,23 @@
     "tint": [1.0, 1.0, 1.0, 1.0],
     "startframe":       0
   },
-  "vertical-wall": {
+  "wall-side": {
     "pad":       	[ 0.1f, 0.1f],
     "bodytype":     "static",
     "density":        0.0,
     "friction":       0.4,
     "restitution":    0.1,
-    "texture":      "vertical-wall",
+    "texture":      "wall-side",
     "debugcolor":   "yellow",
     "debugopacity":  200
   },
-  "horizontal-wall": {
+  "wall-top": {
     "pad":       	[ 0.1f, 0.1f],
     "bodytype":     "static",
     "density":        0.0,
     "friction":       0.4,
     "restitution":    0.1,
-    "texture":      "horizontal-wall",
+    "texture":      "wall-top",
     "debugcolor":   "yellow",
     "debugopacity":  200
   },

@@ -64,12 +64,12 @@
 				"first":	0
 			}
 		},
-		"vertical-wall": {
-			"file": "textures/single-brick.png",
+		"wall-side": {
+			"file": "textures/double-wall-side-view.png",
 			"wrap": true
 		},
-		"horizontal-wall": {
-			"file":    "textures/double-brick.png",
+		"wall-top": {
+			"file":    "textures/double-wall-top-view.png",
 			"wrap": true
 		},
 		"floor-tile": {
