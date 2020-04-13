@@ -1,79 +1,54 @@
 package com.fallenflame.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.JsonValue;
 import com.fallenflame.game.enemies.EnemyModel;
 import com.fallenflame.game.physics.obstacle.BoxObstacle;
 import com.fallenflame.game.physics.obstacle.WheelObstacle;
-import com.fallenflame.game.util.FilmStrip;
-import com.fallenflame.game.util.JsonAssetManager;
 
 import java.util.*;
 
 public class LevelModel {
 
     public static class Tile {
-        /**
-         * Is this a goal tiles
-         */
+        /** Is this a goal tiles */
         public boolean goal = false;
-        /**
-         * Has this tile been visited by pathfinding?
-         */
+        /** Has this tile been visited by pathfinding? */
         public boolean visited = false;
-        /**
-         * Is this tile safe
-         */
+        /** Is this tile safe */
         public boolean safe = true;
     }
 
 
-    /**
-     * 2D tile representation of board where TRUE indicates tile is available for movement
-     */
+    /** 2D tile representation of board where TRUE indicates tile is available for movement*/
     private Tile[][] tileGrid;
-    /**
-     * Constant tile size (tiles are square so this is x and y)
-     */
+    /** Constant tile size (tiles are square so this is x and y) */
     private static final float TILE_SIZE = .4f;
-    /**
-     * Width of screen
-     */
+    /** Width of screen */
     private float width;
-    /**
-     * Height of screen
-     */
+    /** Height of screen */
     private float height;
-    /**
-     * The background texture region of the world
-     */
-    protected TextureRegion texture;
 
 
-    public LevelModel() {
-    }
+    public LevelModel(){ }
 
     public void initialize(Rectangle bounds, List<WallModel> walls, List<EnemyModel> enemies) {
         width = bounds.getWidth();
         height = bounds.getHeight();
 
         tileGrid = new Tile[(int) Math.ceil(width / TILE_SIZE)][(int) Math.ceil(height / TILE_SIZE)];
-        for (int x = 0; x < tileGrid.length; x++) {
-            for (int y = 0; y < tileGrid[0].length; y++) {
+        for(int x = 0; x < tileGrid.length; x++){
+            for(int y = 0; y < tileGrid[0].length; y++){
                 tileGrid[x][y] = new Tile();
                 tileGrid[x][y].safe = true;
             }
         }
         // Set grid to false where obstacle exists
         // TODO: place enemies?
-        for (WallModel w : walls) {
+        for(WallModel w : walls) {
             setBoxObstacleInGrid(w, false);
         }
     }
-
 
     /**
      * @return the width of the screen
