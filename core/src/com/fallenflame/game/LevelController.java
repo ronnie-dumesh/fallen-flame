@@ -2,9 +2,9 @@ package com.fallenflame.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
 import com.fallenflame.game.enemies.*;
@@ -12,7 +12,9 @@ import com.fallenflame.game.physics.obstacle.Obstacle;
 import sun.awt.image.ImageWatched;
 import com.fallenflame.game.util.JsonAssetManager;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /** Credit to Walker White for some code reused from B2LightsDemo */
 public class LevelController implements ContactListener {
@@ -84,9 +86,10 @@ public class LevelController implements ContactListener {
 
     // Controllers
     /** Light Controller */
-    private LightController lightController;
+    private final LightController lightController;
     /** AI Controllers */
-    private List<AIController> AIControllers;
+    private final List<AIController> AIControllers;
+    private final FogController fogController;
 
     /** Enum to specify level state */
     public enum LevelState {
@@ -291,6 +294,7 @@ public class LevelController implements ContactListener {
         // Controllers
         lightController = new LightController();
         AIControllers = new LinkedList<>();
+        fogController = new FogController();
         // Models
         walls = new LinkedList<>();
         enemies = new LinkedList<>();
@@ -299,6 +303,7 @@ public class LevelController implements ContactListener {
         levelModel = new LevelModel();
         // Not yet populated
         populated = false;
+
     }
 
     /**
@@ -306,7 +311,7 @@ public class LevelController implements ContactListener {
      *
      * @param levelJson	the JSON tree defining the level
      */
-    public void populate(JsonValue levelJson, JsonValue globalJson) {
+    public void populate(JsonValue levelJson, JsonValue globalJson, ParticleEffect fogTemplate) {
         populated = true;
 
         float[] pSize = levelJson.get("physicsSize").asFloatArray();
@@ -397,10 +402,11 @@ public class LevelController implements ContactListener {
         flareJSON = globalJson.get("flare");
         fireballJSON = globalJson.get("fireball");
 
-        // Initialize levelModel
+        // Initialize levelModel, lightController, and fogController
         levelModel.initialize(bounds, walls, enemies);
 
         lightController.initialize(player, levelJson.get("lighting"), world, bounds);
+        fogController.initialize(fogTemplate, levelModel, player);
     }
 
     /**
@@ -473,7 +479,7 @@ public class LevelController implements ContactListener {
      */
     public void update(float dt) {
         if(fixedStep(dt)){
-            // Update player (and update levelModel) and exit
+            // Update player and exit
             player.update(dt);
             assert inBounds(player);
 
@@ -486,7 +492,7 @@ public class LevelController implements ContactListener {
                 AIController ctrl = ctrlI.next();
                 ctrlCodes.add(ctrl.getAction());
             }
-            // Execute Enemy Actions (and update levelModel)
+            // Execute Enemy Actions
             Iterator<EnemyModel> enemyI = enemies.iterator();
             Iterator<Integer> actionI = ctrlCodes.iterator();
             while(enemyI.hasNext()){
@@ -543,8 +549,14 @@ public class LevelController implements ContactListener {
                 }
             }
 
+            // Update level model.
+            levelModel.update(player, enemies);
+
             // Update lights
             lightController.updateLights(flares, enemies, fireballs);
+
+            // Update fog.
+            fogController.updateFog(scale);
         }
     }
 
@@ -707,6 +719,7 @@ public class LevelController implements ContactListener {
 
         lightController.setDebug(debug2);
         lightController.draw();
+        fogController.draw(canvas, delta);
 
         // Draw debugging on top of everything.
         if (debug == 1) {
@@ -811,3 +824,4 @@ public class LevelController implements ContactListener {
     public void preSolve(Contact contact, Manifold oldManifold) {}
 
 }
+

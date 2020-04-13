@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
  * instead of using {@code GameCanvas}.
  */
 public class LightController {
+    /** Ambient light level */
+    public static final float AMBIENT_LIGHT = 0.2f;
+
     /**
      * Logger for outputting info.
      */
@@ -94,7 +97,7 @@ public class LightController {
         RayHandler.useDiffuseLight(true);
         rayhandler = new RayHandler(world, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         rayhandler.setCombinedMatrix(raycamera);
-        rayhandler.setAmbientLight(0, 0, 0, 0);
+        rayhandler.setAmbientLight(0, 0, 0, AMBIENT_LIGHT);
         rayhandler.setBlur(true);
         rayhandler.setBlurNum(3);
 

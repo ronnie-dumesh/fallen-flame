@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
@@ -61,7 +63,6 @@ public class GameEngine implements Screen, InputProcessor {
     private ScreenListener listener;
     /** Reference to the level controller */
     protected LevelController level;
-
     /**Boolean to keep track if the player won the level*/
     private boolean isSuccess;
     /** Boolean to prevent countdown from becoming infinite */
@@ -78,6 +79,11 @@ public class GameEngine implements Screen, InputProcessor {
     private Rectangle canvasBounds;
     /** Countdown active for winning or losing */
     private int countdown;
+
+    //Fog-related parameters
+    /**ParticleEffect that will be used as a template for the ParticleEffectPool. This is in GameEngine because it needs
+     * to load in the .p file, and file loading is done here*/
+    private ParticleEffect fogTemplate;
 
     /** User Input Management Fields */
     /** Whether the reset button was pressed. */
@@ -106,7 +112,6 @@ public class GameEngine implements Screen, InputProcessor {
     /** How much did we move vertically? */
     private float vertical;
 
-
     /**
      * Preloads the assets for this controller.
      *
@@ -128,6 +133,8 @@ public class GameEngine implements Screen, InputProcessor {
         assetJson = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
         saveJson = jsonReader.parse(Gdx.files.internal("jsons/save.json"));
         globalJson = jsonReader.parse(Gdx.files.internal("jsons/global.json"));
+        fogTemplate = new ParticleEffect();
+        fogTemplate.load(Gdx.files.internal("effects/fog.p"), Gdx.files.internal("textures"));
 
         JsonAssetManager.getInstance().loadDirectory(assetJson);
     }
@@ -232,6 +239,7 @@ public class GameEngine implements Screen, InputProcessor {
      */
     public void dispose() {
         level.dispose();
+        fogTemplate.dispose();
         level  = null;
         canvas = null;
     }
@@ -255,7 +263,7 @@ public class GameEngine implements Screen, InputProcessor {
         // Reload the json each time
         String currentLevelPath = "jsons/" + saveJson.get("levels").get(0).getString("path"); // Currently just gets first level
         levelJson = jsonReader.parse(Gdx.files.internal(currentLevelPath));
-        level.populate(levelJson, globalJson);
+        level.populate(levelJson, globalJson, fogTemplate);
         level.setLevelState(LevelController.LevelState.IN_PROGRESS);
         level.getWorld().setContactListener(level);
     }

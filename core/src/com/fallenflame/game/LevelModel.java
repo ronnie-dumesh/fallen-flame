@@ -2,6 +2,7 @@ package com.fallenflame.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.utils.Array;
 import com.fallenflame.game.enemies.EnemyModel;
 import com.fallenflame.game.physics.obstacle.BoxObstacle;
 import com.fallenflame.game.physics.obstacle.WheelObstacle;
@@ -15,15 +16,24 @@ public class LevelModel {
         public boolean goal = false;
         /** Has this tile been visited by pathfinding? */
         public boolean visited = false;
-        /** Is this tile safe */
-        public boolean safe = true;
+        /** Has wall? */
+        public boolean wall = false;
+        /** Has enemy? */
+        public boolean enemy = false;
+        /** Has player? */
+        public boolean player = false;
+
+    }
+
+    private enum TileOccupiedBy {
+        WALL, ENEMY, PLAYER
     }
 
 
     /** 2D tile representation of board where TRUE indicates tile is available for movement*/
     private Tile[][] tileGrid;
     /** Constant tile size (tiles are square so this is x and y) */
-    private static final float TILE_SIZE = .4f;
+    public static final float TILE_SIZE = .4f;
     /** Width of screen */
     private float width;
     /** Height of screen */
@@ -40,13 +50,12 @@ public class LevelModel {
         for(int x = 0; x < tileGrid.length; x++){
             for(int y = 0; y < tileGrid[0].length; y++){
                 tileGrid[x][y] = new Tile();
-                tileGrid[x][y].safe = true;
             }
         }
         // Set grid to false where obstacle exists
         // TODO: place enemies?
         for(WallModel w : walls) {
-            setBoxObstacleInGrid(w, false);
+            setBoxObstacleInGrid(w, true, TileOccupiedBy.WALL);
         }
     }
 
@@ -64,38 +73,53 @@ public class LevelModel {
      * Sets tiles previously covered by player as available
      * @param player
      */
-    public void removePlayer(PlayerModel player) { setWheelObstacleInGrid(player, true); }
+    public void removePlayer(PlayerModel player) { setWheelObstacleInGrid(player, false, TileOccupiedBy.PLAYER); }
 
     /**
      * Sets tiles currently covered by player as unavailable
      * @param player
      */
-    public void placePlayer(PlayerModel player) { setWheelObstacleInGrid(player, false); }
+    public void placePlayer(PlayerModel player) { setWheelObstacleInGrid(player, true, TileOccupiedBy.PLAYER); }
 
     /**
      * Sets tiles previously covered by enemy as available
      * @param enemy
      */
-    public void removeEnemy(EnemyModel enemy) { setWheelObstacleInGrid(enemy, true); }
+    public void removeEnemy(EnemyModel enemy) { setWheelObstacleInGrid(enemy, false, TileOccupiedBy.ENEMY); }
 
     /**
      * Sets tiles currently covered by enemy as unavailable
      * @param enemy
      */
-    public void placeEnemy(EnemyModel enemy) { setWheelObstacleInGrid(enemy, false); }
+    public void placeEnemy(EnemyModel enemy) { setWheelObstacleInGrid(enemy, true, TileOccupiedBy.ENEMY); }
+
+    private void markObstacleTypeInGrid(int x, int y, boolean b, TileOccupiedBy o) {
+        switch (o) {
+            case WALL:
+                tileGrid[x][y].wall = b;
+                break;
+            case ENEMY:
+                tileGrid[x][y].enemy = b;
+                break;
+            case PLAYER:
+                tileGrid[x][y].player = b;
+                break;
+        }
+    }
 
     /**
      * Set tiles currently covered by WheelObstacle obs to boolean b
      * @param obs Wheel obstacle
      * @param b Boolean value
+     * @param o Type of obstacle
      */
-    public void setWheelObstacleInGrid(WheelObstacle obs, boolean b) {
+    public void setWheelObstacleInGrid(WheelObstacle obs, boolean b, TileOccupiedBy o) {
         for(int x = screenToTile(obs.getX() - obs.getRadius());
             x <= screenToTile(obs.getX() + obs.getRadius()); x++) {
             for(int y = screenToTile(obs.getY() - obs.getRadius());
                 y <= screenToTile(obs.getY() + obs.getRadius()); y++) {
                 if (!inBounds(x, y)) continue;
-                tileGrid[x][y].safe = b;
+                markObstacleTypeInGrid(x, y, b, o);
             }
         }
     }
@@ -104,14 +128,15 @@ public class LevelModel {
      * Set tiles currently covered by BoxObstacle obs to boolean b
      * @param obs Wheel obstacle
      * @param b Boolean value
+     * @param o Type of obstacle
      */
-    public void setBoxObstacleInGrid(BoxObstacle obs, boolean b) {
+    public void setBoxObstacleInGrid(BoxObstacle obs, boolean b, TileOccupiedBy o) {
         for(int x = screenToTile(obs.getX() - obs.getWidth()/2);
             x <= screenToTile(obs.getX() + obs.getWidth()/2); x++) {
             for(int y = screenToTile(obs.getY() - obs.getHeight()/2);
                 y <= screenToTile(obs.getY() + obs.getHeight()/2); y++) {
                 if (!inBounds(x, y)) continue;
-                tileGrid[x][y].safe = b;
+                markObstacleTypeInGrid(x, y, b, o);
             }
         }
     }
@@ -170,10 +195,20 @@ public class LevelModel {
      * @return isSafe boolean
      */
     public boolean isSafe(int x, int y) {
-        //TODO: should return inBounds(x, y) and whether Tile.safe is true.
-        //TODO: Tile.safe is false when it's an obstacle on it and true otherwise.
-        return (inBounds(x,y) && tileGrid[x][y].safe) || tileGrid[x][y].goal;
+        return (inBounds(x,y) && !(tileGrid[x][y].wall)) || tileGrid[x][y].goal;
     } //TODO: temporary change
+
+    /** Whether wall is on a tile. */
+    public boolean hasWall(int x, int y) { return tileGrid[x][y].wall; }
+
+    /** Whether player is on a tile. */
+    public boolean hasPlayer(int x, int y) { return tileGrid[x][y].player; }
+
+    /** Whether enemy is on a tile. */
+    public boolean hasEnemy(int x, int y) { return tileGrid[x][y].enemy; }
+
+    /** Tile grid size. */
+    public int[] tileGridSize() { return new int[]{tileGrid.length, tileGrid[0].length}; }
 
     /**
      * Returns true if the tile has been visited.
@@ -261,10 +296,23 @@ public class LevelModel {
         }
     }
 
+    public void update(PlayerModel p, Collection<EnemyModel> em) {
+        for (int x = 0; x < tileGrid.length; x++) {
+            for (int y = 0; y < tileGrid[0].length; y++) {
+               tileGrid[x][y].enemy = false;
+               tileGrid[x][y].player = false;
+            }
+        }
+        placePlayer(p);
+        for (EnemyModel e : em) {
+            placeEnemy(e);
+        }
+    }
+
     public void drawDebug(GameCanvas canvas, Vector2 drawScale) {
         for (int x = 0; x < tileGrid.length; x++) {
             for (int y = 0; y < tileGrid[0].length; y++) {
-                canvas.drawGrid(x, y, tileGrid[x][y], drawScale, TILE_SIZE);
+                canvas.drawGrid(x, y, isSafe(x, y), drawScale, TILE_SIZE);
             }
         }
     }
