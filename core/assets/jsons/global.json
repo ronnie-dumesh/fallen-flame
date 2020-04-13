@@ -14,12 +14,20 @@
     "sprintlightrad":  10,
     "sneaklightrad":    1,
     "minlightradius":   2,
-    "texture":     	"player",
+    "texture":     	{
+      "left": "player-left",
+      "right": "player-right",
+      "up": "player-up",
+      "down": "player-down"
+    },
     "walksound":    "walk",
     "debugcolor":  	"white",
     "debugopacity":	192,
     "tint": [1.0, 1.0, 1.0, 1.0],
-    "tintOpacity": 192
+    "textureoffset" : {
+      "x": -0,
+      "y": -0.65
+    }
   },
   "enemies": {
     "typeA":  {
@@ -33,16 +41,58 @@
       "maxspeed": 5.0,
       "startframe": 0,
       "walklimit": 4,
-      "texture": "enemy",
-      "movesound": "bark",
-      "constantsound": "tonemono",
+      "texture":     	{
+        "left": "enemy",
+        "right": "enemy",
+        "up": "enemy",
+        "down": "enemy"
+      },
+      "movesound": "enemystep",
+      "constantsound": "enemyconstant",
       "debugcolor": "white",
       "debugopacity": 192,
-      "stateTints": {
+      "statetints": {
           "calm": [1.0, 1.0, 1.0, 1.0],
           "alert": [0.0, 1.0, 0.0, 1.0],
           "aggressive": [1.0, 0.0, 0.0, 1.0]
         },
+      "textureoffset" : {
+        "x": 0,
+        "y": 0
+      },
+      "tintOpacity": 192
+    },
+    "typeB":  {
+      "cooldown": 20,
+      "radius": 0.4,
+      "bodytype": "dynamic",
+      "density": 1.0,
+      "friction": 0.0,
+      "restitution": 0.0,
+      "force": 80.0,
+      "damping": 10.0,
+      "maxspeed": 5.0,
+      "startframe": 0,
+      "walklimit": 4,
+      "texture":     	{
+        "left": "enemy",
+        "right": "enemy",
+        "up": "enemy",
+        "down": "enemy"
+      },
+      "movesound": "enemystep",
+      "constantsound": "enemyconstant",
+      "debugcolor": "white",
+      "debugopacity": 192,
+      "stateTints": {
+        "calm": [1.0, 1.0, 1.0, 1.0],
+        "alert": [0.0, 1.0, 0.0, 1.0],
+        "aggressive": [1.0, 0.0, 0.0, 1.0]
+      },
+      "textureoffset" : {
+        "x": 0,
+        "y": 0
+      },
       "tintOpacity": 192
     }
   },
@@ -65,21 +115,47 @@
     "friction":       0.0,
     "restitution":    0.0,
     "texture":        "fire",
-    "shotsound":      "fire",
-    "burnoutsound":   "fall",
+    "shotsound":      "flareshot",
+    "burnoutsound":   "flareout",
     "initialforce":   3.0,
     "damping": 		 0.0,
     "tint": [1.0, 1.0, 1.0, 1.0],
     "startframe":       0
   },
-  "wall": {
+  "fireball" : {
+    "radius":      	  0.1,
+    "lighradius":     2,
+    "bodytype":    	  "dynamic",
+    "density":        1.0,
+    "friction":       0.0,
+    "restitution":    0.0,
+    "texture":        "fireball",
+    "initialforce":   9.0,
+    "damping": 		 0.0,
+    "tint": [1.0, 1.0, 1.0, 1.0],
+    "startframe":       0
+  },
+  "wall-side": {
     "pad":       	[ 0.1f, 0.1f],
     "bodytype":     "static",
     "density":        0.0,
     "friction":       0.4,
     "restitution":    0.1,
-    "texture":      "earth",
+    "texture":      "wall-side",
     "debugcolor":   "yellow",
     "debugopacity":  200
+  },
+  "wall-top": {
+    "pad":       	[ 0.1f, 0.1f],
+    "bodytype":     "static",
+    "density":        0.0,
+    "friction":       0.4,
+    "restitution":    0.1,
+    "texture":      "wall-top",
+    "debugcolor":   "yellow",
+    "debugopacity":  200
+  },
+  "background": {
+    "texture":      "floor-tile"
   }
 }

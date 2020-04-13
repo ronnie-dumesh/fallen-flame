@@ -58,8 +58,17 @@ public abstract class AIController {
 
         int action = move;
 
+        action |= getOtherAction();
+
         return action;
     }
+
+    /**
+     * Returns action codes for actions besides movement.
+     * Defaults to 0 (no other action) unless extending class overwrites this function.
+     * @return int control code
+     */
+    protected int getOtherAction() { return 0; }
 
     /**
      * Change the state of the enemy using a Finite State Machine.
