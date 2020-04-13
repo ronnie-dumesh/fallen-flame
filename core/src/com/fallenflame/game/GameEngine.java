@@ -341,6 +341,10 @@ public class GameEngine implements Screen, InputProcessor {
      * @param delta Number of seconds since last animation frame
      */
     public void update(float delta) {
+        // If the player won or lost, don't update
+        if(prevSuccess || prevFailed)
+            return;
+
         if (flarePressed && !flarePrevious) {
             level.createFlare(getMousePosition());
         }
@@ -376,8 +380,10 @@ public class GameEngine implements Screen, InputProcessor {
         }
         level.movePlayer(angle, tempAngle);
         level.update(delta);
-        isSuccess = level.getLevelState() == LevelController.LevelState.WIN;
-        isFailed = level.getLevelState() == LevelController.LevelState.LOSS;
+        // Get new victory state
+        isSuccess = level.getLevelState() == LevelController.LevelState.WIN || prevSuccess;
+        isFailed = level.getLevelState() == LevelController.LevelState.LOSS || prevFailed;
+        // If new win or loss, start countdown
         if((isSuccess && !prevSuccess) || (isFailed && !prevFailed)){
             countdown = COUNTDOWN_TIME;
         }
