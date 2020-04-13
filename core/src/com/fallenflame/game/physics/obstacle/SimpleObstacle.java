@@ -769,7 +769,23 @@ public abstract class SimpleObstacle extends Obstacle {
 		texture = value;
 		origin.set(texture.getRegionWidth()/2.0f, texture.getRegionHeight()/2.0f);
 	}
-	
+
+	/**
+	 * Set texture with an offset x, y
+	 *
+	 * In order for drawing to work properly, you MUST set the drawScale.
+	 * The drawScale converts the physics units to pixels.
+	 *
+	 * @param value  the object texture for drawing purposes.
+	 * @param x offset of x-axis from physics body (in meters)
+	 * @param y offset of y-axis from physics body (in meters)
+	 */
+	public void setTexture(TextureRegion value, float x, float y){
+		texture = value;
+		origin.set(texture.getRegionWidth()/2.0f + x * getDrawScale().x,
+				texture.getRegionHeight()/2.0f + y * getDrawScale().y);
+	}
+
 	/**
 	 * Draws the physics object.
 	 *
