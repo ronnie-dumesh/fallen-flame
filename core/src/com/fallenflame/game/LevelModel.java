@@ -195,7 +195,7 @@ public class LevelModel {
      * @return isSafe boolean
      */
     public boolean isSafe(int x, int y) {
-        return (inBounds(x,y) && !(tileGrid[x][y].wall)) || tileGrid[x][y].goal;
+        return inBounds(x,y) && (!(tileGrid[x][y].wall) ||tileGrid[x][y].goal);
     } //TODO: temporary change
 
     /** Whether wall is on a tile. */
