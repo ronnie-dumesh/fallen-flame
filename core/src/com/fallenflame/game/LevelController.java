@@ -374,6 +374,9 @@ public class LevelController implements ContactListener {
             else if(enemyType.equals("typeB")){
                 enemy = new EnemyTypeBModel();
             }
+            else if(enemyType.equals("ghost")){
+                enemy = new EnemyGhostModel();
+            }
             else {
                 Gdx.app.error("LevelController", "Enemy type without model", new IllegalArgumentException());
                 return;
@@ -389,6 +392,9 @@ public class LevelController implements ContactListener {
             }
             else if(enemyType.equals("typeB")) {
                 AIControllers.add(new AITypeBController(enemyID, levelModel, enemies, player));
+            }
+            else if(enemyType.equals("ghost")){
+                AIControllers.add(new AIGhostController(enemyID, levelModel, enemies, player));
             }
             else{
                 Gdx.app.error("LevelController", "Enemy type without AIController", new IllegalArgumentException());

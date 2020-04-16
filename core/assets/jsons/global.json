@@ -94,6 +94,38 @@
         "y": 0
       },
       "tintOpacity": 192
+    },
+    "ghost":  {
+      "radius": 0.4,
+      "bodytype": "dynamic",
+      "density": 1.0,
+      "friction": 0.0,
+      "restitution": 0.0,
+      "force": 60.0,
+      "damping": 10.0,
+      "maxspeed": 3.0,
+      "startframe": 0,
+      "walklimit": 4,
+      "texture":     	{
+        "left": "enemyb",
+        "right": "enemyb",
+        "up": "enemyb",
+        "down": "enemyb"
+      },
+      "movesound": "enemystep",
+      "constantsound": "enemyconstant",
+      "debugcolor": "white",
+      "debugopacity": 192,
+      "stateTints": {
+        "calm": [1.0, 1.0, 1.0, 1.0],
+        "alert": [0.0, 1.0, 0.0, 1.0],
+        "aggressive": [1.0, 0.0, 0.0, 1.0]
+      },
+      "textureoffset" : {
+        "x": 0,
+        "y": 0
+      },
+      "tintOpacity": 192
     }
   },
   "exit": {
