@@ -40,7 +40,7 @@ public class LevelController implements ContactListener {
      * Value of 1 means drop-off rate is exactly equivalent to 1/distance */
     public static final float ENEMY_CONS_VOL_SCL = 1f;
     /** Pitch for enemy constant sounds */
-    public static final float ENEMY_CONS_PITCH = .5f;
+    public static final float ENEMY_CONS_PITCH = 1f;
     /** Volume scaling for panning
      * Must be in range [0,1]. 1 is maximum panning, 0 is no panning. */
     public static final float PAN_SCL = .4f;
@@ -509,16 +509,16 @@ public class LevelController implements ContactListener {
                 }
                 // Play enemy sounds
                 float pan = (enemy.getX() - player.getX()) * PAN_SCL;
-                if (enemy.isActivated() && (enemy.getMoveSoundID() == -1)) {
+                if (enemy.isActivated() && (enemy.getActiveSoundID() == -1)) {
                     //start sound
-                    enemy.setMoveSoundID(enemy.getMoveSound().loop(ENEMY_MOV_BASE_VOL, ENEMY_MOV_PITCH, pan));
+                    enemy.setActiveSoundID(enemy.getActiveSound().loop(ENEMY_MOV_BASE_VOL, ENEMY_MOV_PITCH, pan));
                 } else if (!enemy.isActivated()) {
                     //end sound
-                    enemy.getMoveSound().stop();
-                    enemy.setMoveSoundID(-1);
+                    enemy.getActiveSound().stop();
+                    enemy.setActiveSoundID(-1);
                 } else {
                     //modify sound
-                    enemy.getMoveSound().setPan(enemy.getMoveSoundID(), pan, ENEMY_MOV_BASE_VOL * ((1/enemy.getDistanceBetween(player) * ENEMY_MOVE_VOL_SCL)));
+                    enemy.getActiveSound().setPan(enemy.getActiveSoundID(), pan, ENEMY_MOV_BASE_VOL * ((1/enemy.getDistanceBetween(player) * ENEMY_MOVE_VOL_SCL)));
                 }
                 enemy.getConstantSound().setPan(enemy.getConstantSoundID(), pan, ENEMY_CONS_BASE_VOL * ((1/enemy.getDistanceBetween(player) * ENEMY_CONS_VOL_SCL)));
                 assert inBounds(enemy);
@@ -530,7 +530,7 @@ public class LevelController implements ContactListener {
                 FlareModel flare = i.next();
                 if(!(Float.compare(flare.timeToBurnout(), 0.0f) > 0)){
                     flare.deactivatePhysics(world);
-                    flare.getBurnoutSound().play();
+                    System.out.println(flare.getBurnoutSound().play());
                     flare.dispose();
                     i.remove();
                 }
