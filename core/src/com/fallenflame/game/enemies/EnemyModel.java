@@ -18,14 +18,14 @@ public abstract class EnemyModel extends CharacterModel {
 
     private ObjectMap<ActivationStates, Color> stateTints = new ObjectMap<>();
 
-    /**Enemy move sound (Acquired from https://freesound.org/people/000600/sounds/180015/)*/
-    private Sound moveSound;
+    /**Enemy active sound (Acquired from https://freesound.org/people/000600/sounds/180015/)*/
+    private Sound activeSound;
 
     /**Enemy constant sound (Acquired from https://freesound.org/people/ecfike/sounds/132865/)*/
     private Sound constantSound;
 
-    /**ID of enemy move sound*/
-    protected long moveSoundID;
+    /**ID of enemy active sound*/
+    protected long activeSoundID;
 
     /**ID of enemy constant sound*/
     protected long constantSoundID;
@@ -67,9 +67,9 @@ public abstract class EnemyModel extends CharacterModel {
     public void initialize(JsonValue json, float[] pos) {
         super.initialize(json, pos);
 
-        String moveSoundKey = json.get("movesound").asString();
-        moveSound = JsonAssetManager.getInstance().getEntry(moveSoundKey, Sound.class);
-        moveSoundID = -1;
+        String activeSoundKey = json.get("activesound").asString();
+        activeSound = JsonAssetManager.getInstance().getEntry(activeSoundKey, Sound.class);
+        activeSoundID = -1;
 
         String constantSoundKey = json.get("constantsound").asString();
         constantSound = JsonAssetManager.getInstance().getEntry(constantSoundKey, Sound.class);
@@ -150,17 +150,17 @@ public abstract class EnemyModel extends CharacterModel {
     }
 
     /**
-     * Returns the move sound
+     * Returns the active sound
      *
-     * @return the move sound
+     * @return the active sound
      */
-    public Sound getMoveSound() {
-        return moveSound;
+    public Sound getActiveSound() {
+        return activeSound;
     }
 
-    public long getMoveSoundID() {return moveSoundID;}
+    public long getActiveSoundID() {return activeSoundID;}
 
-    public void setMoveSoundID(long id) {moveSoundID = id;}
+    public void setActiveSoundID(long id) {activeSoundID = id;}
 
     /**
      * Returns the constant sound

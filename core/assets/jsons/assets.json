@@ -107,19 +107,19 @@
 	},
 	"sounds": {
 		"flareout": {
-			"file": "sounds/flareout.mp3"
+			"file": "sounds/flareout.wav"
 		},
 		"flareshot": {
-			"file": "sounds/flareshot.mp3"
+			"file": "sounds/flareshot.wav"
 		},
 		"walk": {
-			"file": "sounds/Walk.mp3"
+			"file": "sounds/walk.wav"
 		},
 		"enemystep": {
-			"file": "sounds/bark.mp3"
+			"file": "sounds/bark.wav"
 		},
 		"enemyconstant": {
-			"file": "sounds/enemyconstant.mp3"
+			"file": "sounds/growl.wav"
 		}
 	}
 }
