@@ -107,7 +107,7 @@ public class LightController {
 
         // Create player light.
         playerLight = createPointLight(player.getLightRadius());
-        attachLightTo(playerLight, player);
+        playerLight.setActive(true);
 
         // Create empty maps for flare, fireball and enemy lights.
         this.flareLights = new HashMap<>();
@@ -146,6 +146,7 @@ public class LightController {
      * @param o The obstacle.
      */
     protected void attachLightTo(PointSource l, Obstacle o) {
+        //Obstacle oCopy = new Obstacle(o);
         l.attachToBody(o.getBody(), l.getX(), l.getY(), l.getDirection());
         l.setActive(true);
     }
@@ -196,6 +197,7 @@ public class LightController {
         list.stream().filter(i -> !lightMap.containsKey(i)).forEach(i -> {
             PointSource f = createPointLight(i.getLightRadius());
             f.setColor(i.getLightColor());
+            f.setActive(true);
             attachLightTo(f, i);
             lightMap.put(i, f);
         });
@@ -222,6 +224,7 @@ public class LightController {
 
         // Update player light.
         playerLight.setDistance(player.getLightRadius());
+        playerLight.setPosition(player.getTextureX(), player.getTextureY());
 
         // Update flare lights.
         updateLightsForList(flares, flareLights);

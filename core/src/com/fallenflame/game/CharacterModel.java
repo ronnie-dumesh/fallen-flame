@@ -425,17 +425,15 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     /**
      * @return The X coordinate of the center of texture of the CharacterModel
      */
-    @Override
-    public float getX(){
-        return super.getX() + textureOffset.x / 2.0f;
+    public float getTextureX(){
+        return super.getX() - textureOffset.x;
     }
 
     /**
      * @return The Y coordinate of the center of texture of the CharacterModel
      */
-    @Override
-    public float getY(){
-        return super.getY() + textureOffset.y / 2.0f;
+    public float getTextureY(){
+        return super.getY() - textureOffset.y;
     }
 
     /**
