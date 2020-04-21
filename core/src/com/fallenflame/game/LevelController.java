@@ -684,10 +684,6 @@ public class LevelController implements ContactListener {
      * @return True if player can sneak
      */
     public boolean makeSneak(){
-        // player cannot sneak
-        if(player.getSneakVal() == 0)
-            return false;
-
         player.setLightRadiusSaved(player.getLightRadius());
         player.setLightRadiusSneak();
         player.setSneaking();
