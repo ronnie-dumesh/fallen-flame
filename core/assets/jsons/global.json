@@ -14,6 +14,7 @@
     "sprintlightrad":  10,
     "sneaklightrad":    1,
     "minlightradius":   2,
+    "startSneakVal":   100,
     "texture":     	{
       "left": "player-left",
       "right": "player-right",
@@ -101,9 +102,9 @@
       "density": 1.0,
       "friction": 0.0,
       "restitution": 0.0,
-      "force": 60.0,
+      "force": 90.0,
       "damping": 10.0,
-      "maxspeed": 3.0,
+      "maxspeed": 6.0,
       "startframe": 0,
       "walklimit": 4,
       "texture":     	{

@@ -373,7 +373,9 @@ public class GameEngine implements Screen, InputProcessor {
         }
         if (sneakPressed && !sneakPrevious) {
             // If player just started sneaking
-            level.makeSneak();
+            sneakPressed = level.makeSneak();
+            // Sets sneakPressed to makeSneak() return fo sneakPressed is false if player could not sneak
+            //  because they were out of sneak
         } else if (!sneakPressed && sneakPrevious) {
             // If player just stopped sneaking
             level.makeWalk();

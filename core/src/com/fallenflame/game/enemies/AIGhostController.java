@@ -8,23 +8,10 @@ import java.util.List;
 
 public class AIGhostController extends AIController {
 
-    /**
-     * Enumeration to encode the finite state machine.
-     */
-    private enum FSMState {
-        /**
-         * The enemy does not have a target
-         */
-        IDLE,
-        /**
-         * The enemy is chasing the player
-         */
-        CHASE,
-    }
+    /** Margin of error for movement (to prevent overly finicky movement) */
+    private static float MARGIN = .2f;
 
     // Instance Attributes
-    /** The enemy's current state*/
-    private FSMState state;
     /** The player*/
     private PlayerModel player;
     /** The enemy being controlled by this AIController */
@@ -43,30 +30,54 @@ public class AIGhostController extends AIController {
         this.player = player;
         assert(enemy.getClass() == EnemyGhostModel.class);
         this.enemy = (EnemyGhostModel)super.enemy;
-        state = FSMState.CHASE;
     }
 
     /**
-     * Change the state of the enemy using a Finite State Machine.
+     * Change the state of the enemy using a Finite State Machine. Ghost is always in chase mode
      */
-    protected void changeStateIfApplicable() {
-        switch (state) {
-            case IDLE:
-                if (!isBlockedByLight()) {
-                    state = FSMState.CHASE;
-                }
-                break;
+    protected void changeStateIfApplicable() { }
 
-            case CHASE:
-                enemy.makeAggressive();
-                if (isBlockedByLight()) {
-                    state = FSMState.IDLE;
-                }
-                break;
-
-            default:
-                Gdx.app.error("AIGhostController", "Impossible state reached", new IllegalArgumentException());
-                assert false;
+    /**
+     * Ghost enemy always moves directly towards player because it can move through walls
+     * @return ctrlCode to move towards player
+     */
+    @Override
+    protected int getMoveAlongPathToGoalTile() {
+        // We need to move right
+        if(player.getPosition().x - enemy.getPosition().x - MARGIN > 0) {
+            // Move up
+            if(player.getPosition().y - enemy.getPosition().y - MARGIN > 0)
+                return EnemyModel.CONTROL_MOVE_UP_RIGHT;
+            // Move down
+            else if(player.getPosition().y - enemy.getPosition().y + MARGIN < 0)
+                return EnemyModel.CONTROL_MOVE_DOWN_RIGHT;
+            // No lateral movement
+            else
+                return EnemyModel.CONTROL_MOVE_RIGHT;
+        }
+        // Move left
+        else if(player.getPosition().x - enemy.getPosition().x + MARGIN < 0)  {
+            // Move up
+            if(player.getPosition().y - enemy.getPosition().y - MARGIN > 0)
+                return EnemyModel.CONTROL_MOVE_UP_LEFT;
+            // Move down
+            else if(player.getPosition().y - enemy.getPosition().y + MARGIN < 0)
+                return EnemyModel.CONTROL_MOVE_DOWN_LEFT;
+            // No lateral movement
+            else
+                return EnemyModel.CONTROL_MOVE_LEFT;
+        }
+        // No horizontal movement
+        else {
+            // Move up
+            if(player.getPosition().y - enemy.getPosition().y - MARGIN > 0)
+                return EnemyModel.CONTROL_MOVE_UP;
+            // Move down
+            else if(player.getPosition().y - enemy.getPosition().y + MARGIN < 0)
+                return EnemyModel.CONTROL_MOVE_DOWN;
+            // No lateral movement
+            else
+                return EnemyModel.CONTROL_NO_ACTION;
         }
     }
 
@@ -76,17 +87,12 @@ public class AIGhostController extends AIController {
      * This method implements pathfinding through the use of goal tiles.
      */
     protected void markGoalTiles() {
-        switch (state) {
-            case IDLE:
-                break;
-
-            case CHASE:
-                level.setGoal(level.screenToTile(player.getX()), level.screenToTile(player.getY()));
-                break;
-        }
+        // Would be required if we switch to normal pathfinding:
+        // level.setGoal(level.screenToTile(player.getX()), level.screenToTile(player.getY()));
     }
 
     /**
+     * [ NOT USED WITH CURRENT BEHAVIOR, but kept in case behavior changes]
      * Returns true if the player's light radius blocks the ghost enemy's progression.
      * This is the case when the player's light radius is greater than it's minimum value, and
      * the ghost is within that radius.

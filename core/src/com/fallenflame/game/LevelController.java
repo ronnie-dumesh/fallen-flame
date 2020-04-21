@@ -64,10 +64,17 @@ public class LevelController implements ContactListener {
     private List<FireballModel> fireballs;
     /** Level Model for AI Pathfinding */
     private LevelModel levelModel;
+
+    // JSON data (for objects created after population)
     /** Flare JSONValue */
     private JsonValue flareJSON;
     /** Fireball JSONValue */
     private JsonValue fireballJSON;
+    /** Ghost Enemy JSONValue */
+    private JsonValue ghostJSON;
+
+    /** Player starting position (for use by ghost) */
+    private float[] startPos;
 
     /** Whether or not the level is in debug mode (showing off physics) */
     private int debug;
@@ -85,9 +92,7 @@ public class LevelController implements ContactListener {
     protected TextureRegion background;
 
     // Controllers
-    /** Light Controller */
     private final LightController lightController;
-    /** AI Controllers */
     private final List<AIController> AIControllers;
     private final FogController fogController;
 
@@ -340,6 +345,7 @@ public class LevelController implements ContactListener {
         player.setDrawScale(scale);
         player.activatePhysics(world);
         assert inBounds(player);
+        startPos = levelJson.get("playerpos").asFloatArray();
         // Create Exit
         exit = new ExitModel();
         exit.initialize(globalJson.get("exit"), levelJson.get("exitpos").asFloatArray());
@@ -374,9 +380,6 @@ public class LevelController implements ContactListener {
             else if(enemyType.equals("typeB")){
                 enemy = new EnemyTypeBModel();
             }
-            else if(enemyType.equals("ghost")){
-                enemy = new EnemyGhostModel();
-            }
             else {
                 Gdx.app.error("LevelController", "Enemy type without model", new IllegalArgumentException());
                 return;
@@ -393,9 +396,6 @@ public class LevelController implements ContactListener {
             else if(enemyType.equals("typeB")) {
                 AIControllers.add(new AITypeBController(enemyID, levelModel, enemies, player));
             }
-            else if(enemyType.equals("ghost")){
-                AIControllers.add(new AIGhostController(enemyID, levelModel, enemies, player));
-            }
             else{
                 Gdx.app.error("LevelController", "Enemy type without AIController", new IllegalArgumentException());
                 return;
@@ -404,9 +404,10 @@ public class LevelController implements ContactListener {
             enemyID++;
             assert inBounds(enemy);
         }
-        // Prepare flare and fireball jsons
+        // Prepare flare, fireball, and ghost jsons
         flareJSON = globalJson.get("flare");
         fireballJSON = globalJson.get("fireball");
+        ghostJSON = globalEnemies.get("ghost");
 
         // Initialize levelModel, lightController, and fogController
         levelModel.initialize(bounds, walls, enemies);
@@ -489,7 +490,14 @@ public class LevelController implements ContactListener {
             player.update(dt);
             assert inBounds(player);
 
-            // TODO: handle enemy placement in levelmodel
+            // Decrement sneak value if player is sneaking
+            if(player.isSneaking()){
+                player.decSneakVal();
+                // Add ghost enemy if player has used all their sneak
+                if(player.getSneakVal() == 0)
+                    addGhost();
+            }
+
 
             // Get Enemy Actions
             Iterator<AIController> ctrlI = AIControllers.iterator();
@@ -590,6 +598,20 @@ public class LevelController implements ContactListener {
         return stepped;
     }
 
+    /**
+     * Adds the ghost enemy
+     */
+    public void addGhost() {
+        // Create ghost model
+        EnemyModel ghost = new EnemyGhostModel();
+        ghost.initialize(ghostJSON, startPos);
+        ghost.setConstantSoundID(ghost.getConstantSound().loop(0, ENEMY_CONS_PITCH, 0));
+        ghost.setDrawScale(scale);
+        ghost.activatePhysics(world);
+        enemies.add(ghost);
+        // Create ghost controller
+        AIControllers.add(new AIGhostController(enemies.size()-1, levelModel, enemies, player));
+    }
 
     /**
      * Launch a flare from the player towards the mouse position based on preset flareJSON data, or does nothing if the
@@ -640,7 +662,7 @@ public class LevelController implements ContactListener {
     public void makeSprint(){
         player.setLightRadiusSaved(player.getLightRadius());
         player.setLightRadius(player.getLightRadiusSprint());
-        player.setWalking(false);
+        player.setSprinting();
         player.setForce(player.getForceSprint());
     }
 
@@ -651,7 +673,7 @@ public class LevelController implements ContactListener {
      */
     public void makeWalk(){
         player.setLightRadius(player.getLightRadiusSaved());
-        player.setWalking(true);
+        player.setWalking();
         player.setForce(player.getForceWalk());
     }
 
@@ -659,12 +681,18 @@ public class LevelController implements ContactListener {
      * Change the player's movement to sneak
      * Store current light radius in lightRadiusSaved and change light radius to lightRadiusSneak
      * (Called by GameEngine)
+     * @return True if player can sneak
      */
-    public void makeSneak(){
+    public boolean makeSneak(){
+        // player cannot sneak
+        if(player.getSneakVal() == 0)
+            return false;
+
         player.setLightRadiusSaved(player.getLightRadius());
         player.setLightRadiusSneak();
-        player.setWalking(false);
+        player.setSneaking();
         player.setForce(player.getForceSneak());
+        return true;
     }
 
     /**

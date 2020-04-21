@@ -12,6 +12,15 @@ import com.fallenflame.game.util.JsonAssetManager;
  * by reading the JSON value.
  */
 public class PlayerModel extends CharacterModel {
+    /** Player movement types enum */
+    private enum MovementState {
+        WALK,
+        SNEAK,
+        SPRINT
+    }
+    /** How the player is currently moving */
+    private MovementState move;
+
     /** Number of flares the player can have on the screen at once */
     private int flareCount;
     /** Player's force when moving at standard walk speed */
@@ -22,8 +31,8 @@ public class PlayerModel extends CharacterModel {
     protected float lightRadiusSaved;
     protected float lightRadiusSprint;
     protected float lightRadiusSneak;
-    /** If player is walking (as opposed to sprinting or sneaking) */
-    protected boolean walking;
+    /** Player sneak left (once hits 0, player cannot sneak) */
+    protected int sneakVal;
 
     /**Tint of player light */
     protected Color tint;
@@ -46,8 +55,9 @@ public class PlayerModel extends CharacterModel {
         lightRadiusSprint = json.get("sprintlightrad").asInt();
         lightRadiusSneak = json.get("sneaklightrad").asInt();
         minLightRadius = json.get("minlightradius").asInt();
+        sneakVal = json.get("startSneakVal").asInt();
         lightRadius = minLightRadius;
-        walking = true;
+        move = MovementState.WALK;
 
         float[] tintValues = json.get("tint").asFloatArray();//RGBA
         tint = new Color(tintValues[0], tintValues[1], tintValues[2], tintValues[3]);
@@ -79,6 +89,12 @@ public class PlayerModel extends CharacterModel {
     public float getLightRadius() {
         return lightRadius;
     }
+
+    /** Get amount of sneak updates left for player */
+    public int getSneakVal() { return sneakVal; }
+
+    /** Decrement sneak value by 1 (for 1 update of sneaking) */
+    public void decSneakVal() { sneakVal--; }
 
     /**
      * Gets player color tint
@@ -163,17 +179,24 @@ public class PlayerModel extends CharacterModel {
         return lightRadiusSprint;
     }
 
-    /**
-     * Sets whether player is walking
-     * @param b True if walking, False if sprinting or sneaking
-     */
-    public void setWalking(Boolean b) { walking = b; }
+    /** Sets player as walking */
+    public void setWalking() { move = MovementState.WALK; }
+    /** Sets player as sneaking */
+    public void setSneaking() { move = MovementState.SNEAK; }
+    /** Sets player as sprinting */
+    public void setSprinting() { move = MovementState.SPRINT; }
 
     /**
      * Returns whether player is walking
      * @return True if walking, False if sprinting or sneaking
      */
-    public boolean isWalking() { return walking; }
+    public boolean isWalking() { return move == MovementState.WALK; }
+
+    /**
+     * Return True if player is sneaking
+     * @return True if sneaking, False if sprinting or walking
+     */
+    public boolean isSneaking() { return move == MovementState.SNEAK; }
 
     public void incrementLightRadius(float i) { setLightRadius(lightRadius + i); }
 
