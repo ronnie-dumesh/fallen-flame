@@ -16,6 +16,7 @@
     1.22,
     2.38
   ],
+  "startSneakVal" : 100,
   "exitpos": [
     14.72,
     10.729999999999999
@@ -29,7 +30,7 @@
         3.56,
         6.76
       ],
-      "enemytype": "ghost"
+      "enemytype": "typeA"
     },
     {
       "enemypos": [

@@ -341,7 +341,10 @@ public class LevelController implements ContactListener {
 
         // Create player
         player = new PlayerModel();
-        player.initialize(globalJson.get("player"), levelJson.get("playerpos").asFloatArray());
+        if(levelJson.has("startSneakVal"))
+            player.initialize(globalJson.get("player"), levelJson.get("playerpos").asFloatArray(), levelJson.get("startSneakVal").asInt());
+        else
+            player.initialize(globalJson.get("player"), levelJson.get("playerpos").asFloatArray());
         player.setDrawScale(scale);
         player.activatePhysics(world);
         assert inBounds(player);

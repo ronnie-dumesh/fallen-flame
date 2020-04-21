@@ -14,7 +14,7 @@
     "sprintlightrad":  10,
     "sneaklightrad":    1,
     "minlightradius":   2,
-    "startSneakVal":   100,
+    "defaultStartSneakVal":   100,
     "texture":     	{
       "left": "player-left",
       "right": "player-right",

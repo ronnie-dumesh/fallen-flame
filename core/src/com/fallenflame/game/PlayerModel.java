@@ -48,14 +48,14 @@ public class PlayerModel extends CharacterModel {
      *
      * @param json	the JSON subtree defining the player
      */
-    public void initialize(JsonValue json, float[] pos) {
+    public void initialize(JsonValue json, float[] pos, int startSneakVal) {
         super.initialize(json, pos);
         flareCount = json.get("flarecount").asInt();
         forceWalk = getForce();
         lightRadiusSprint = json.get("sprintlightrad").asInt();
         lightRadiusSneak = json.get("sneaklightrad").asInt();
         minLightRadius = json.get("minlightradius").asInt();
-        sneakVal = json.get("startSneakVal").asInt();
+        sneakVal = startSneakVal;
         lightRadius = minLightRadius;
         move = MovementState.WALK;
 
@@ -64,6 +64,10 @@ public class PlayerModel extends CharacterModel {
 
         String walkSoundKey = json.get("walksound").asString();
         walkSound = JsonAssetManager.getInstance().getEntry(walkSoundKey, Sound.class);
+    }
+
+    public void initialize(JsonValue json, float[] pos) {
+        initialize(json, pos, json.get("defaultStartSneakVal").asInt());
     }
 
     /**
