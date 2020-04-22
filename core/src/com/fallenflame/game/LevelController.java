@@ -9,10 +9,8 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
 import com.fallenflame.game.enemies.*;
 import com.fallenflame.game.physics.obstacle.Obstacle;
-import sun.awt.image.ImageWatched;
 import com.fallenflame.game.util.JsonAssetManager;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 

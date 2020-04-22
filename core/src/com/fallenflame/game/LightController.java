@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
@@ -106,8 +107,7 @@ public class LightController {
         this.lightingConfig = levelLighting;
 
         // Create player light.
-        playerLight = createPointLight(player.getLightRadius());
-        attachLightTo(playerLight, player);
+        playerLight = createPointLight(player.getLightRadius(), player.getTextureX(), player.getTextureY());
 
         // Create empty maps for flare, fireball and enemy lights.
         this.flareLights = new HashMap<>();
@@ -140,34 +140,22 @@ public class LightController {
     }
 
     /**
-     * Attach light to an obstacle, and activate the light.
-     *
-     * @param l The light.
-     * @param o The obstacle.
-     */
-    protected void attachLightTo(PointSource l, Obstacle o) {
-        l.attachToBody(o.getBody(), l.getX(), l.getY(), l.getDirection());
-        l.setActive(true);
-    }
-
-    /**
      * Create a point light.
      *
      * @param dist The distance of the light.
+     *
      * @return The {@code PointSource} instance.
      */
-    protected PointSource createPointLight(float dist) {
-        float[] pos = {0, 0};
-
+    protected PointSource createPointLight(float dist, float x, float y) {
         // Create point source.
-        PointSource p = new PointSource(rayhandler, RAYS, Color.WHITE, dist, pos[0], pos[1]);
+        PointSource p = new PointSource(rayhandler, RAYS, Color.WHITE, dist, x, y);
         p.setSoft(true);
 
         // Set up filter.
         Filter f = new Filter();
         f.categoryBits = f.maskBits = 0;
         p.setContactFilter(f);
-        p.setActive(false);
+        p.setActive(true);
 
         return p;
     }
@@ -190,13 +178,13 @@ public class LightController {
         for (Map.Entry<T, PointSource> entry : entrySet) {
             entry.getValue().setDistance(entry.getKey().getLightRadius());
             entry.getValue().setColor(entry.getKey().getLightColor());
+            entry.getValue().setPosition(entry.getKey().getPosition());
         }
 
         // Last step: Create lights for new things in the list.
         list.stream().filter(i -> !lightMap.containsKey(i)).forEach(i -> {
-            PointSource f = createPointLight(i.getLightRadius());
+            PointSource f = createPointLight(i.getLightRadius(), i.getX(), i.getY());
             f.setColor(i.getLightColor());
-            attachLightTo(f, i);
             lightMap.put(i, f);
         });
     }
@@ -222,7 +210,7 @@ public class LightController {
 
         // Update player light.
         playerLight.setDistance(player.getLightRadius());
-        //TODO: possible solution for fixing light offset with setDistance()?
+        playerLight.setPosition(player.getTextureX(), player.getTextureY());
 
         // Update flare lights.
         updateLightsForList(flares, flareLights);
