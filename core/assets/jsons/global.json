@@ -27,7 +27,7 @@
     "tint": [1.0, 1.0, 1.0, 1.0],
     "textureoffset" : {
       "x": -0,
-      "y": -0.65
+      "y": -0.6
     }
   },
   "enemies": {
@@ -48,7 +48,7 @@
         "up": "enemy",
         "down": "enemy"
       },
-      "movesound": "enemystep",
+      "activesound": "enemystep",
       "constantsound": "enemyconstant",
       "debugcolor": "white",
       "debugopacity": 192,
@@ -81,7 +81,7 @@
         "up": "enemyb",
         "down": "enemyb"
       },
-      "movesound": "enemystep",
+      "activesound": "enemystep",
       "constantsound": "enemyconstant",
       "debugcolor": "white",
       "debugopacity": 192,
