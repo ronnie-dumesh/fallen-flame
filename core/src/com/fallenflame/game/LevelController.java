@@ -684,14 +684,12 @@ public class LevelController implements ContactListener {
      * Change the player's movement to sneak
      * Store current light radius in lightRadiusSaved and change light radius to lightRadiusSneak
      * (Called by GameEngine)
-     * @return True if player can sneak
      */
-    public boolean makeSneak(){
+    public void makeSneak(){
         player.setLightRadiusSaved(player.getLightRadius());
         player.setLightRadiusSneak();
         player.setSneaking();
         player.setForce(player.getForceSneak());
-        return true;
     }
 
     /**
