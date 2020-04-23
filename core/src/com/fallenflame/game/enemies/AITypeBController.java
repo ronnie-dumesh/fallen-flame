@@ -25,8 +25,6 @@ public class AITypeBController extends AIController {
     // Instance Attributes
     /** The enemy's current state*/
     private FSMState state;
-    /** The player*/
-    private PlayerModel player;
     /** The enemy being controlled by this AIController */
     private EnemyTypeBModel enemy;
     /** How long enemy has been in sustained fire */
@@ -41,7 +39,7 @@ public class AITypeBController extends AIController {
      * @param player The player to target
      */
     public AITypeBController(int id, LevelModel level, List<EnemyModel> enemies, PlayerModel player) {
-        super(id, level, enemies);
+        super(id, level, enemies, player);
         this.player = player;
         assert(enemy.getClass() == EnemyTypeBModel.class);
         this.enemy = (EnemyTypeBModel)super.enemy;
@@ -56,7 +54,7 @@ public class AITypeBController extends AIController {
             case IDLE:
                 enemy.makeCalm();
                 // Check for player target within range
-                if(withinRange()) {
+                if(withinPlayerLight()) {
                     enemy.setFiringTarget(player.getX(), player.getY());
                     state = FSMState.DIRECT_FIRE;
                     break;
@@ -66,7 +64,7 @@ public class AITypeBController extends AIController {
                 enemy.makeAggressive();
                 enemy.setFiringTarget(player.getX(), player.getY());
                 // If player now out of range, switch to sustained fire at last known position
-                if(!withinRange()) {
+                if(!withinPlayerLight()) {
                     state = FSMState.SUSTAINED_FIRE;
                     firingTime = 0;
                     break;
@@ -75,7 +73,7 @@ public class AITypeBController extends AIController {
             case SUSTAINED_FIRE:
                 enemy.makeAlert();
                 // Check for player target within range
-                if(withinRange()) {
+                if(withinPlayerLight()) {
                     state = FSMState.DIRECT_FIRE;
                     break;
                 }
@@ -112,9 +110,4 @@ public class AITypeBController extends AIController {
         return EnemyModel.CONTROL_NO_ACTION;
     }
 
-    /** Returns whether an enemy is in range to chase a player */
-    private boolean withinRange(){
-        double distance = cartesianDistance(enemy.getX(),player.getX(),enemy.getY(),player.getY());
-        return distance <= player.getLightRadius();
-    }
 }
