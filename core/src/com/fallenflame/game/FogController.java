@@ -48,7 +48,7 @@ public class FogController {
                                 fogArr.removeValue(effect, true);
                             } else {
                                 if (!fog[x][y].durationSet) {
-                                    effect.setDuration(50);
+                                    effect.setDuration(10);
                                 }
                             }
                         }
@@ -73,8 +73,8 @@ public class FogController {
                     if (fogArr.size < 2 || (levelModel.hasEnemy(x, y) && fogArr.size < 9)) {
                         ParticleEffectPool.PooledEffect effect = fogPool.obtain();
                         for (int i = 0; i < (1 + (levelModel.hasEnemy(x, y) ? 8 : 1)); i++) {
-                            float randomVal = (float) (Math.random() * TILE_SIZE);
-                            effect.setPosition((x * TILE_SIZE + randomVal) * scale.x, (y * TILE_SIZE + randomVal) * scale.y);
+                            float randomVal = (float) (Math.random());
+                            effect.setPosition(((x + randomVal)* TILE_SIZE)  * scale.x, ((y + randomVal) * TILE_SIZE ) * scale.y);
                             fog[x][y].fogParticles.add(effect);
                         }
                     }

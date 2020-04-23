@@ -40,22 +40,24 @@ active: false
 - Y Offset - 
 active: false
 - Spawn Shape - 
-shape: point
+shape: ellipse
+edges: false
+side: both
 - Spawn Width - 
-lowMin: 22.0
-lowMax: 22.0
-highMin: 24.0
-highMax: 24.0
+lowMin: 3.0
+lowMax: 3.0
+highMin: 5.0
+highMax: 5.0
 relative: false
 scalingCount: 1
 scaling0: 0.11764706
 timelineCount: 1
 timeline0: 0.0
 - Spawn Height - 
-lowMin: 15.0
-lowMax: 15.0
-highMin: 19.0
-highMax: 19.0
+lowMin: 2.0
+lowMax: 2.0
+highMin: 5.0
+highMax: 5.0
 relative: false
 scalingCount: 1
 scaling0: 0.21568628
@@ -64,16 +66,16 @@ timeline0: 0.0
 - X Scale - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 32.0
-highMax: 32.0
+highMin: 64.0
+highMax: 64.0
 relative: false
 scalingCount: 3
 scaling0: 0.9607843
-scaling1: 0.4509804
+scaling1: 1.0
 scaling2: 1.0
 timelineCount: 3
 timeline0: 0.0
-timeline1: 0.5
+timeline1: 0.44520548
 timeline2: 1.0
 - Y Scale - 
 active: false
@@ -115,9 +117,9 @@ active: false
 active: false
 - Tint - 
 colorsCount: 3
-colors0: 0.1882353
-colors1: 0.1882353
-colors2: 0.1882353
+colors0: 0.1254902
+colors1: 0.1254902
+colors2: 0.1254902
 timelineCount: 1
 timeline0: 0.0
 - Transparency - 
