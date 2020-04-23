@@ -14,6 +14,7 @@
     "sprintlightrad":  10,
     "sneaklightrad":    1,
     "minlightradius":   2,
+    "defaultStartSneakVal":   100,
     "texture":     	{
       "left": "player-left",
       "right": "player-right",
@@ -82,6 +83,39 @@
       },
       "activesound": "enemystep",
       "constantsound": "enemyconstant",
+      "debugcolor": "white",
+      "debugopacity": 192,
+      "stateTints": {
+        "calm": [1.0, 1.0, 1.0, 1.0],
+        "alert": [0.0, 1.0, 0.0, 1.0],
+        "aggressive": [1.0, 0.0, 0.0, 1.0]
+      },
+      "textureoffset" : {
+        "x": 0,
+        "y": 0
+      },
+      "tintOpacity": 192
+    },
+    "ghost":  {
+      "radius": 0.4,
+      "bodytype": "dynamic",
+      "density": 1.0,
+      "friction": 0.0,
+      "restitution": 0.0,
+      "force": 90.0,
+      "damping": 10.0,
+      "maxspeed": 6.0,
+      "startframe": 0,
+      "walklimit": 4,
+      "texture":     	{
+        "left": "enemyb",
+        "right": "enemyb",
+        "up": "enemyb",
+        "down": "enemyb"
+      },
+      "movesound": "enemystep",
+      "constantsound": "enemyconstant",
+      "activesound": "enemystep",
       "debugcolor": "white",
       "debugopacity": 192,
       "stateTints": {

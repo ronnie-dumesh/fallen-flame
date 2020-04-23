@@ -1,5 +1,6 @@
 package com.fallenflame.game.enemies;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.fallenflame.game.FlareModel;
 import com.fallenflame.game.LevelModel;
@@ -137,6 +138,7 @@ public class AITypeAController extends AIController {
                 break;
 
             default:
+                Gdx.app.error("AITypeAController", "Impossible state reached", new IllegalArgumentException());
                 assert false;
         }
     }
