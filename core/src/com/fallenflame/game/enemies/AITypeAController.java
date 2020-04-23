@@ -30,8 +30,6 @@ public class AITypeAController extends AIController {
     // Instance Attributes
     /** The enemy's current state*/
     private FSMState state;
-    /** The player*/
-    private PlayerModel player;
     /** The enemy being controlled by this AIController */
     private EnemyTypeAModel enemy;
     /** The flares in the world */
@@ -48,8 +46,7 @@ public class AITypeAController extends AIController {
      */
     public AITypeAController(int id, LevelModel level, List<EnemyModel> enemies, PlayerModel player,
                         List<FlareModel> flares) {
-        super(id, level, enemies);
-        this.player = player;
+        super(id, level, enemies, player);
         assert(enemy.getClass() == EnemyTypeAModel.class);
         this.enemy = (EnemyTypeAModel)super.enemy;
         this.flares = flares;
@@ -64,7 +61,7 @@ public class AITypeAController extends AIController {
             case IDLE:
                 enemy.makeCalm();
                 // Check for player in range
-                if(withinChase()){
+                if(withinPlayerLight()){
                     state = FSMState.CHASE;
                     break;
                 }
@@ -83,7 +80,7 @@ public class AITypeAController extends AIController {
             case CHASE:
                 enemy.makeAggressive();
 
-                if(!withinChase()){
+                if(!withinPlayerLight()){
                     state = FSMState.INVESTIGATE;
                     enemy.setInvestigatePosition(new Vector2(player.getX(), player.getY()));
                 }
@@ -93,7 +90,7 @@ public class AITypeAController extends AIController {
                 enemy.makeAlert();
                 assert enemy.getInvestigatePosition() != null;
                 // Check for player in range
-                if(withinChase()){
+                if(withinPlayerLight()){
                     state = FSMState.CHASE;
                     enemy.clearInvestigateFlare();
                     break;
@@ -150,12 +147,6 @@ public class AITypeAController extends AIController {
                 level.screenToTile(enemy.getY()),
                 level.screenToTile(enemy.getInvestigatePositionY()));
         return distance <= REACHED_INVESTIGATE;
-    }
-
-    /** Returns whether an enemy is in range to chase a player */
-    private boolean withinChase(){
-        double distance = cartesianDistance(enemy.getX(),player.getX(),enemy.getY(),player.getY());
-        return distance <= player.getLightRadius();
     }
 
     /** Returns whether an enemy is in range to chase a player */
