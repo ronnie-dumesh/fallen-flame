@@ -114,6 +114,7 @@
         "down": "enemyb"
       },
       "movesound": "enemystep",
+      "activesound": "enemystep",
       "constantsound": "enemyconstant",
       "debugcolor": "white",
       "debugopacity": 192,

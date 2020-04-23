@@ -34,28 +34,49 @@ public class FogController {
         for (int x = 0; x < tileGridW; x++) {
             for (int y = 0; y < tileGridH; y++) {
                 //To prevent drawing on tiles with the player or a wall as well as if its within the light radius
-                if (levelModel.hasWall(x, y) || levelModel.hasPlayer(x, y)) continue;
-                boolean withinLight = (Math.pow((Math.pow((x*TILE_SIZE) - (playerModel.getX()), 2) +
-                        Math.pow((y*TILE_SIZE) - (playerModel.getY()), 2)), 0.5))
+                if (levelModel.hasWall(x, y)) continue;
+                boolean withinLight = (Math.pow((Math.pow((x * TILE_SIZE) - (playerModel.getX()), 2) +
+                        Math.pow((y * TILE_SIZE) - (playerModel.getY()), 2)), 0.5))
                         <= playerModel.getLightRadius();
-                if(withinLight) continue;
-                if(fog[x][y] == null) {
-                    fog[x][y] = new fogParticle();
-                }
-                Array<ParticleEffectPool.PooledEffect> fogArr = fog[x][y].fogParticles;
-                /*Free up complete fog particles so new ones can hopefully use more of the pool's resources*/
-                for(ParticleEffectPool.PooledEffect effect: fogArr){
-                    effect.isComplete();
-                    effect.free();
-                    fogArr.removeValue(effect, true);
-                }
-                /*Only make a new fog particle if we do not have enough particles in the array for that tile*/
-                if (fogArr.size < 2|| (levelModel.hasEnemy(x, y) && fogArr.size < 9)) {
-                    ParticleEffectPool.PooledEffect effect = fogPool.obtain();
-                    for (int i = 0; i < (1 + (levelModel.hasEnemy(x, y) ? 8 : 1)); i++) {
-                        float randomVal = (float) (Math.random() * TILE_SIZE);
-                        effect.setPosition((x * TILE_SIZE + randomVal) * scale.x, (y * TILE_SIZE + randomVal) * scale.y);
-                        fog[x][y].fogParticles.add(effect);
+                Array<ParticleEffectPool.PooledEffect> fogArr;
+                if (withinLight || levelModel.hasPlayer(x, y)) {
+                    if (fog[x][y] != null) {
+                        fogArr = fog[x][y].fogParticles;
+                        for (ParticleEffectPool.PooledEffect effect : fogArr) {
+                            if (effect.isComplete()) {
+                                effect.free();
+                                fogArr.removeValue(effect, true);
+                            } else {
+                                if (!fog[x][y].durationSet) {
+                                    effect.setDuration(50);
+                                }
+                            }
+                        }
+                        fog[x][y].durationSet = true;
+                    }
+                } else {
+
+                    if (fog[x][y] == null) {
+                        fog[x][y] = new fogParticle();
+                    }
+                    fog[x][y].durationSet = false;
+                    fogArr = fog[x][y].fogParticles;
+                    /*Free up complete fog particles so new ones can hopefully use more of the pool's resources*/
+                    for (ParticleEffectPool.PooledEffect effect : fogArr) {
+                        if (effect.isComplete()) ;
+                        {
+                            effect.free();
+                            fogArr.removeValue(effect, true);
+                        }
+                    }
+                    /*Only make a new fog particle if we do not have enough particles in the array for that tile*/
+                    if (fogArr.size < 2 || (levelModel.hasEnemy(x, y) && fogArr.size < 9)) {
+                        ParticleEffectPool.PooledEffect effect = fogPool.obtain();
+                        for (int i = 0; i < (1 + (levelModel.hasEnemy(x, y) ? 8 : 1)); i++) {
+                            float randomVal = (float) (Math.random() * TILE_SIZE);
+                            effect.setPosition((x * TILE_SIZE + randomVal) * scale.x, (y * TILE_SIZE + randomVal) * scale.y);
+                            fog[x][y].fogParticles.add(effect);
+                        }
                     }
                 }
             }
@@ -73,10 +94,12 @@ public class FogController {
     protected class fogParticle {
         //TODO: Figure out a system that doesn't involve making an inner class for the sole purpose of having a 2D array of Arrays
         public Array<ParticleEffectPool.PooledEffect> fogParticles;
+        public boolean durationSet;
 
         /**Creates a new fogParticle with an empty array*/
         public fogParticle(){
             fogParticles = new Array<>();
+            durationSet = false;
 
         }
 

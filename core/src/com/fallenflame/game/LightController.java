@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  */
 public class LightController {
     /** Ambient light level */
-    public static final float AMBIENT_LIGHT = 0.2f;
+    public static final float AMBIENT_LIGHT = 0.5f;
 
     /**
      * Logger for outputting info.
