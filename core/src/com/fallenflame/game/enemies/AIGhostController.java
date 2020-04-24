@@ -12,11 +12,6 @@ public class AIGhostController extends AIController {
     private static float MARGIN = .2f;
 
     // Instance Attributes
-<<<<<<< HEAD
-    /** The player*/
-    private PlayerModel player;
-=======
->>>>>>> master
     /** The enemy being controlled by this AIController */
     private EnemyGhostModel enemy;
 
@@ -29,11 +24,7 @@ public class AIGhostController extends AIController {
      * @param player The player to target
      */
     public AIGhostController(int id, LevelModel level, List<EnemyModel> enemies, PlayerModel player) {
-<<<<<<< HEAD
-        super(id, level, enemies);
-=======
         super(id, level, enemies, player);
->>>>>>> master
         this.player = player;
         assert(enemy.getClass() == EnemyGhostModel.class);
         this.enemy = (EnemyGhostModel)super.enemy;
@@ -97,18 +88,4 @@ public class AIGhostController extends AIController {
         // Would be required if we switch to normal pathfinding:
         // level.setGoal(level.screenToTile(player.getX()), level.screenToTile(player.getY()));
     }
-<<<<<<< HEAD
-
-    /**
-     * [ NOT USED WITH CURRENT BEHAVIOR, but kept in case behavior changes]
-     * Returns true if the player's light radius blocks the ghost enemy's progression.
-     * This is the case when the player's light radius is greater than it's minimum value, and
-     * the ghost is within that radius.
-     */
-    private boolean isBlockedByLight(){
-        return (player.getLightRadius() >= player.getMinLightRadius()) &&
-                cartesianDistance(enemy.getX(), player.getX(), enemy.getY(), player.getY()) <= player.getLightRadius();
-    }
-=======
->>>>>>> master
 }
