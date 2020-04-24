@@ -1,6 +1,7 @@
 package com.fallenflame.game.enemies;
 
 import com.fallenflame.game.LevelModel;
+import com.fallenflame.game.PlayerModel;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +13,8 @@ public abstract class AIController {
     // Instance Attributes
     /** The enemy being controlled by this AIController */
     protected EnemyModel enemy;
+    /** THe player */
+    protected PlayerModel player;
     /** The game level; used for pathfinding */
     protected LevelModel level;
     /** The enemy's next action --> control code */
@@ -28,9 +31,10 @@ public abstract class AIController {
      * @param level The game level (for pathfinding)
      * @param enemies The list of enemies
      */
-    public AIController(int id, LevelModel level, List<EnemyModel> enemies) {
+    public AIController(int id, LevelModel level, List<EnemyModel> enemies, PlayerModel player) {
         this.enemy = enemies.get(id);
         this.level = level;
+        this.player = player;
         move  = EnemyModel.CONTROL_NO_ACTION;
         ticks = 0;
 
@@ -159,6 +163,12 @@ public abstract class AIController {
         public TileIndex(int x, int y, int ctrlCode) {
             this.x = x; this.y = y; this.ctrlCode = ctrlCode;
         }
+    }
+
+    /** Returns whether an enemy is in the player's light radius */
+    protected boolean withinPlayerLight(){
+        double distance = cartesianDistance(enemy.getTextureX(),player.getTextureX(),enemy.getTextureY(),player.getTextureY());
+        return distance <= player.getLightRadius();
     }
 
     /**
