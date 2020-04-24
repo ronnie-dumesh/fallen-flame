@@ -2,6 +2,7 @@ package com.fallenflame.game.enemies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonValue;
 import com.fallenflame.game.FlareModel;
 import com.fallenflame.game.LevelModel;
 import com.fallenflame.game.PlayerModel;
@@ -9,6 +10,11 @@ import com.fallenflame.game.enemies.EnemyModel;
 
 import java.util.*;
 
+/**
+ * This class is the AI Controller for all moving enemies.
+ * Subtype Default: enemy stands still when idle
+ * Subtype Pathing: enemy follows a path when idle
+ */
 public class AITypeAController extends AIController {
     /**
      * Enumeration to encode the finite state machine.
@@ -34,6 +40,10 @@ public class AITypeAController extends AIController {
     private EnemyTypeAModel enemy;
     /** The flares in the world */
     private List<FlareModel> flares;
+    /** Pathing step coordinates - Null for enemies not of subtype Pathing */
+    private Vector2[] pathCoors;
+    /** Current point in path */
+    private int pathPoint;
 
     /**
      * Creates an AIController for the enemy with the given id.
@@ -50,7 +60,37 @@ public class AITypeAController extends AIController {
         assert(enemy.getClass() == EnemyTypeAModel.class);
         this.enemy = (EnemyTypeAModel)super.enemy;
         this.flares = flares;
+        pathCoors = null;
         state = FSMState.IDLE;
+    }
+
+    /**
+     * Creates an AIController for an enemy of subtype pathing.
+     *
+     * @param id The unique enemy identifier
+     * @param level The game level (for pathfinding)
+     * @param enemies The list of enemies
+     * @param player The player to target
+     * @param flares The flares that may attract the enemy
+     */
+    public AITypeAController(int id, LevelModel level, List<EnemyModel> enemies, PlayerModel player,
+                             List<FlareModel> flares, JsonValue pathCoorsJSON) {
+        super(id, level, enemies);
+        this.player = player;
+        assert(enemy.getClass() == EnemyTypeAModel.class);
+        this.enemy = (EnemyTypeAModel)super.enemy;
+        this.flares = flares;
+        state = FSMState.IDLE;
+        // unpack pathing coordinates
+        Vector2[] pathCoors = new Vector2[pathCoorsJSON.size];
+        for(int i=0; i<pathCoorsJSON.size; i++) {
+            int[] coor = pathCoorsJSON.get(i).asIntArray();
+            pathCoors[i] = new Vector2(coor[0], coor[1]);
+        }
+        this.pathCoors = pathCoors;
+        // initialize pathing
+        pathPoint = 0;
+        enemy.setInvestigatePosition(pathCoors[pathPoint]);
     }
 
     /**
@@ -73,6 +113,14 @@ public class AITypeAController extends AIController {
                         enemy.setInvestigatePosition(new Vector2(f.getX(), f.getY()));
                         enemy.setInvestigateFlare(f);
                         break;
+                    }
+                }
+                // If enemy is of subtype pathing
+                if(pathCoors != null) {
+                    // update investigation position
+                    if(investigateReached()) {
+                        pathPoint = (pathPoint + 1) % pathCoors.length;
+                        enemy.setInvestigatePosition(pathCoors[pathPoint]);
                     }
                 }
                 break;
@@ -107,6 +155,10 @@ public class AITypeAController extends AIController {
                     enemy.setInvestigatePosition(null);
                     enemy.clearInvestigateFlare();
                     state = FSMState.IDLE;
+                    // If enemy is of subtype pathing
+                    if(pathCoors != null){
+                        enemy.setInvestigatePosition(pathCoors[pathPoint]);
+                    }
                 }
                 break;
 
@@ -123,6 +175,11 @@ public class AITypeAController extends AIController {
     protected void markGoalTiles() {
         switch(state) {
             case IDLE:
+                // If enemy is of subtype pathing
+                if(pathCoors != null){
+                    level.setGoal(level.screenToTile(enemy.getInvestigatePositionX()),
+                            level.screenToTile(enemy.getInvestigatePositionY()));
+                }
                 break; // no goal tile
 
             case CHASE:
