@@ -75,7 +75,7 @@ public class AITypeAController extends AIController {
      */
     public AITypeAController(int id, LevelModel level, List<EnemyModel> enemies, PlayerModel player,
                              List<FlareModel> flares, JsonValue pathCoorsJSON) {
-        super(id, level, enemies);
+        super(id, level, enemies, player);
         this.player = player;
         assert(enemy.getClass() == EnemyTypeAModel.class);
         this.enemy = (EnemyTypeAModel)super.enemy;
