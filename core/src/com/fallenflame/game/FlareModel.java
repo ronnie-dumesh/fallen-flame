@@ -30,8 +30,8 @@ public class FlareModel extends WheelObstacle implements ILight {
     /** How long a flare can last, in milliseconds. */
     private int flareDuration;
 
-    /** Time when it was fired **/
-    private long startTime;
+    /** Time when flare stuck to wall **/
+    private long stuckTime;
 
     /** Light Radius */
     private float lightRadius;
@@ -183,7 +183,6 @@ public class FlareModel extends WheelObstacle implements ILight {
         super(pos.x,pos.y,1.0f);
         setFixedRotation(false);
         this.setSensor(true);
-        startTime = System.currentTimeMillis();
     }
 
     /**
@@ -269,6 +268,7 @@ public class FlareModel extends WheelObstacle implements ILight {
     public void stopMovement() {
         body.setLinearVelocity(new Vector2(0,0));
         isStuck = true;
+        stuckTime = System.currentTimeMillis();
     }
 
     /**
@@ -289,11 +289,12 @@ public class FlareModel extends WheelObstacle implements ILight {
 
     /**
      * How long until flare is deactived
-     * @return time left
+     * @return 1 if flare is not yet stuck to wall, otherwise returns stuck time left until burnout
      */
     public int timeToBurnout() {
-        int timeLeft = flareDuration - (int) (System.currentTimeMillis() - startTime);
-        return Math.max(timeLeft, 0);
+        if(isStuck)
+            return Math.max(flareDuration - (int) (System.currentTimeMillis() - stuckTime), 0);
+        return 1;
     }
 
     /**

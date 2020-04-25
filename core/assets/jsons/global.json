@@ -145,7 +145,7 @@
   "flare" : {
     "radius":      	  0.1,
     "lighradius":     3.5,
-    "flareduration":  6000,
+    "flareduration":  1500,
     "bodytype":    	  "dynamic",
     "density":        1.0,
     "friction":       0.0,
@@ -153,7 +153,7 @@
     "texture":        "fire",
     "shotsound":      "flareshot",
     "burnoutsound":   "flareout",
-    "initialforce":   3.0,
+    "initialforce":   3.5,
     "damping": 		 0.0,
     "tint": [1.0, 1.0, 1.0, 1.0],
     "startframe":       0

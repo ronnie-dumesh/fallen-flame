@@ -100,20 +100,12 @@ public class AITypeAController extends AIController {
         switch(state) {
             case IDLE:
                 enemy.makeCalm();
+                // Check for flares in range
+                checkFlares();
                 // Check for player in range
                 if(withinPlayerLight()){
                     state = FSMState.CHASE;
                     break;
-                }
-                // Check for flares in range
-                for(FlareModel f : flares){
-                    // If flare found, chase flare
-                    if(withinFlareRange(f)){
-                        state = FSMState.INVESTIGATE;
-                        enemy.setInvestigatePosition(new Vector2(f.getX(), f.getY()));
-                        enemy.setInvestigateFlare(f);
-                        break;
-                    }
                 }
                 // If enemy is of subtype pathing
                 if(pathCoors != null) {
@@ -127,7 +119,9 @@ public class AITypeAController extends AIController {
 
             case CHASE:
                 enemy.makeAggressive();
-
+                // Check for flares in range <-- we check this here because the enemy can be "distracted" by flares
+                checkFlares();
+                // If no longer in player light, go to last known position
                 if(!withinPlayerLight()){
                     state = FSMState.INVESTIGATE;
                     enemy.setInvestigatePosition(new Vector2(player.getX(), player.getY()));
@@ -137,19 +131,20 @@ public class AITypeAController extends AIController {
             case INVESTIGATE:
                 enemy.makeAlert();
                 assert enemy.getInvestigatePosition() != null;
-                // Check for player in range
-                if(withinPlayerLight()){
-                    state = FSMState.CHASE;
-                    enemy.clearInvestigateFlare();
-                    break;
-                }
                 // Check if investigating flare
                 if(enemy.isInvestigatingFlare()){
                     // Update investigation position for moving flare
                     enemy.setInvestigatePosition(enemy.getInvestigateFlare().getX(), enemy.getInvestigateFlare().getY());
                 }
-                // If we reached investigation position AND we were chasing player OR we were chasing a flare that
-                // has stopped moving OR we are chasing a flare that has burned out then we can clear and move on
+                // Only heck for player in range iff enemy is not investigating flare
+                else if(withinPlayerLight()){
+                    state = FSMState.CHASE;
+                    enemy.clearInvestigateFlare();
+                    break;
+                }
+
+                // If we reached investigation position AND we were investigating player OR we were investigating a flare
+                // that has stopped moving OR we are chasing a flare that has burned out then we can clear and move on
                 if(investigateReached() && (!enemy.isInvestigatingFlare() || enemy.getInvestigateFlare().isStuck()
                                 || enemy.getInvestigateFlare().timeToBurnout() <= 0)){
                     enemy.setInvestigatePosition(null);
@@ -164,6 +159,22 @@ public class AITypeAController extends AIController {
 
             default:
                 assert false;
+        }
+    }
+
+    /**
+     * Helper function for checking for flares and investigating those that are within range
+     */
+    private void checkFlares(){
+        // Check for flares in range
+        for(FlareModel f : flares){
+            // If flare found, chase flare
+            if(withinFlareRange(f)){
+                state = FSMState.INVESTIGATE;
+                enemy.setInvestigatePosition(new Vector2(f.getX(), f.getY()));
+                enemy.setInvestigateFlare(f);
+                break;
+            }
         }
     }
 
