@@ -141,7 +141,7 @@ public class GameEngine implements Screen, InputProcessor {
         saveJson = jsonReader.parse(Gdx.files.internal("jsons/save.json"));
         globalJson = jsonReader.parse(Gdx.files.internal("jsons/global.json"));
         fogTemplate = new ParticleEffect();
-        fogTemplate.load(Gdx.files.internal("effects/fog.p"), Gdx.files.internal("textures"));
+        fogTemplate.load(Gdx.files.internal("effects/fog2.p"), Gdx.files.internal("textures"));
 
         JsonAssetManager.getInstance().loadDirectory(assetJson);
     }
