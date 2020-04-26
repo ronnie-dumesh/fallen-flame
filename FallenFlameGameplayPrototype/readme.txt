@@ -1,1 +1,0 @@
-Use the arrow keys to move the player. Press or hold 'G' to place gasoline on the player's location. Press 'F' to light gasoline within a radius of the player. Fire will spread from list gasoline to adjacent lit gasoline

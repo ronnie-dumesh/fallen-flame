@@ -50,6 +50,11 @@ public class LightController {
     protected JsonValue lightingConfig;
 
     /**
+     * The light of the exit. This is to be created by this controller at initialisation phase.
+     */
+    protected PointSource exitLight;
+
+    /**
      * The light of the player. This is to be created by this controller at initialisation phase.
      */
     protected PointSource playerLight;
@@ -89,7 +94,8 @@ public class LightController {
      * @param world The instance of Box2D {@code World}.
      * @param bounds The bound of the viewport.
      */
-    public void initialize(PlayerModel player, JsonValue levelLighting, World world, Rectangle bounds) {
+    public void initialize(PlayerModel player, ExitModel exit,
+                           JsonValue levelLighting, World world, Rectangle bounds) {
         // Set up camera first.
         raycamera = new OrthographicCamera(bounds.width, bounds.height);
 
@@ -108,6 +114,9 @@ public class LightController {
 
         // Create player light.
         playerLight = createPointLight(player.getLightRadius(), player.getTextureX(), player.getTextureY());
+
+        // Create exit light.
+        exitLight = createPointLight(exit.getLightRadius(), exit.getX(), exit.getY());
 
         // Create empty maps for flare, fireball and enemy lights.
         this.flareLights = new HashMap<>();
@@ -131,6 +140,7 @@ public class LightController {
         this.player = null;
         this.lightingConfig = null;
         this.playerLight = null;
+        this.exitLight = null;
         this.flareLights.clear();
         this.flareLights = null;
         this.fireballLights.clear();
