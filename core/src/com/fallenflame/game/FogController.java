@@ -25,7 +25,6 @@ public class FogController {
         int[] n = levelModel.tileGridSize();
         tileGridW = n[0];
         tileGridH = n[1];
-        ticks = 0;
         /*Using a 2D array of an array (called fogParticle) to keep track of which fog particles are complete and need
         * new particles versus which ones do not. This fixes the initial issue of us creating 10,000 fog particles as
         * fog particles were created whether or not the particle around that tile was complete*/
@@ -44,34 +43,42 @@ public class FogController {
                 if (withinLight || levelModel.hasPlayer(x, y)) {
                     if (fog[x][y] != null) {
                         fogArr = fog[x][y].fogParticles;
-                        fog[x][y].hasPlayer = true;
                         for (ParticleEffectPool.PooledEffect effect : fogArr) {
                                 effect.free();
                                 fogArr.removeValue(effect, true);
-                                fog[x][y].timeSinceDuration = 0;
-                                ticks = 0;
-                        }
                     }
+                }
                 } else {
                     if (fog[x][y] == null) {
                         fog[x][y] = new fogParticle();
                     }
-                    fog[x][y].hadPlayer = fog[x][y].hasPlayer;
-                    fog[x][y].hasPlayer = false;
+                    fogArr = fog[x][y].fogParticles;
+                    if (fogArr.size > 1 && !levelModel.hasEnemy(x, y)) {
+                        for (ParticleEffectPool.PooledEffect effect : fogArr) {
+                            //Allow the thing to force complete and make it automatically complete
+                            effect.allowCompletion();
+                            effect.setDuration(0);
+                            if(effect.isComplete()) {
+                                effect.free();
+                                fogArr.removeValue(effect, true);
+                                //This will just remove it from drawing again, it will not automatically remove particles
+                            }
+                        }
+                    }
                     /*Only make a new fog particle if we do not have enough particles in the array for that tile*/
                     if (fog[x][y].fogParticles.size < 1 || (levelModel.hasEnemy(x, y) && fog[x][y].fogParticles.size < 8)) {
-                        ParticleEffectPool.PooledEffect effect = fogPool.obtain();
                         for (int i = 0; i < (1 + (levelModel.hasEnemy(x, y) ? 7 : 0)); i++) {
-                            float randomVal = (float) (Math.random());
-                            effect.setPosition(((x + randomVal)* TILE_SIZE)  * scale.x, ((y + randomVal) * TILE_SIZE ) * scale.y);
+                            ParticleEffectPool.PooledEffect effect = fogPool.obtain();
+                            effect.reset();
+                            float randomX = levelModel.hasEnemy(x, y) ? (float) ((Math.random() - 0.5) * 6.0) : 0;
+                            float randomY = levelModel.hasEnemy(x, y) ? (float) ((Math.random() - 0.5) * 6.0) : 0;
+                            effect.setPosition(((x + randomX) * TILE_SIZE) * scale.x, ((y + randomY) * TILE_SIZE) * scale.y);
                             fog[x][y].fogParticles.add(effect);
                         }
                     }
                 }
-                ticks++;
             }
         }
-        ticks += Math.random() > 0.5 ? 2 : 1;
     }
 
     public void draw(GameCanvas canvas, float delta) {
@@ -83,19 +90,11 @@ public class FogController {
  *fogparticles: An Array of Pooled Effects. Need to use Array as this list's length will vary as things are added/removed
  * */
     protected class fogParticle {
-        //TODO: Figure out a system that doesn't involve making an inner class for the sole purpose of having a 2D array of Arrays
         protected Array<ParticleEffectPool.PooledEffect> fogParticles;
-        protected int timeSinceDuration;
-        protected boolean hadPlayer;
-        protected boolean hasPlayer;
 
         /**Creates a new fogParticle with an empty array*/
         public fogParticle(){
             fogParticles = new Array<>();
-            timeSinceDuration = 0;
-            hadPlayer = false;
-            hasPlayer = false;
-
         }
 
     }
