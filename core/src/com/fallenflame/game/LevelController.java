@@ -399,7 +399,7 @@ public class LevelController implements ContactListener {
                     AIControllers.add(new AITypeAController(enemyID, levelModel, enemies, player, flares));
             }
             else if(enemyType.equals("typeB")) {
-                AIControllers.add(new AITypeBController(enemyID, levelModel, enemies, player));
+                AIControllers.add(new AITypeBController(enemyID, levelModel, enemies, player, flares));
             }
             else{
                 Gdx.app.error("LevelController", "Enemy type without AIController", new IllegalArgumentException());
@@ -416,9 +416,9 @@ public class LevelController implements ContactListener {
 
         // Initialize levelModel, lightController, and fogController
         levelModel.initialize(bounds, walls, enemies);
-
         lightController.initialize(player, exit, levelJson.get("lighting"), world, bounds);
-        fogController.initialize(fogTemplate, levelModel, player);
+        fogController.initialize(fogTemplate, levelModel, player, flares);
+
     }
 
     /**
@@ -549,7 +549,6 @@ public class LevelController implements ContactListener {
                 FlareModel flare = i.next();
                 if(!(Float.compare(flare.timeToBurnout(), 0.0f) > 0)){
                     flare.deactivatePhysics(world);
-                    System.out.println(flare.getBurnoutSound().play());
                     flare.dispose();
                     i.remove();
                 }

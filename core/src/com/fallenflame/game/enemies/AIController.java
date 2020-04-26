@@ -1,5 +1,6 @@
 package com.fallenflame.game.enemies;
 
+import com.fallenflame.game.FlareModel;
 import com.fallenflame.game.LevelModel;
 import com.fallenflame.game.PlayerModel;
 
@@ -169,6 +170,12 @@ public abstract class AIController {
     protected boolean withinPlayerLight(){
         double distance = cartesianDistance(enemy.getTextureX(),player.getTextureX(),enemy.getTextureY(),player.getTextureY());
         return distance <= player.getLightRadius();
+    }
+
+    /** Returns whether an enemy is in range to chase a player */
+    protected boolean withinFlareRange(FlareModel f){
+        double distance = cartesianDistance(enemy.getX(),f.getX(),enemy.getY(),f.getY());
+        return distance <= f.getLightRadius();
     }
 
     /**
