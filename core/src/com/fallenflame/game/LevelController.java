@@ -399,7 +399,7 @@ public class LevelController implements ContactListener {
                     AIControllers.add(new AITypeAController(enemyID, levelModel, enemies, player, flares));
             }
             else if(enemyType.equals("typeB")) {
-                AIControllers.add(new AITypeBController(enemyID, levelModel, enemies, player));
+                AIControllers.add(new AITypeBController(enemyID, levelModel, enemies, player, flares));
             }
             else{
                 Gdx.app.error("LevelController", "Enemy type without AIController", new IllegalArgumentException());

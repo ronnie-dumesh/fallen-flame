@@ -216,10 +216,4 @@ public class AITypeAController extends AIController {
                 level.screenToTile(enemy.getInvestigatePositionY()));
         return distance <= REACHED_INVESTIGATE;
     }
-
-    /** Returns whether an enemy is in range to chase a player */
-    private boolean withinFlareRange(FlareModel f){
-        double distance = cartesianDistance(enemy.getX(),f.getX(),enemy.getY(),f.getY());
-        return distance <= f.getLightRadius();
-    }
 }
