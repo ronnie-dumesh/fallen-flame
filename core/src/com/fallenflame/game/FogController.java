@@ -3,6 +3,7 @@ package com.fallenflame.game;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.Iterator;
@@ -39,9 +40,36 @@ public class FogController {
         fog = new fogParticle[tileGridW][tileGridH];
     }
 
-    public void updateFog(Vector2 scale) {
+    public void updateFogAndDraw(GameCanvas canvas, Vector2 scale, float delta) {
+        // Cache values locally so we don't have to do expensive calculations each loop.
+        float px = playerModel.getX(), py = playerModel.getY(), lightRadius = playerModel.getLightRadius();
+        // Camera pos:
+        Vector3 cameraPos = canvas.getCamera().position;
+        // These are the ratio to translate camera pos to tile pos.
+        float ratioX = scale.x * TILE_SIZE, ratioY = scale.y * TILE_SIZE;
+        // Bounds of the camera in tile units. Could be out of bounds on tile map! (e.g. lowX could be -3)
+        int lowX = (int) Math.floor((cameraPos.x - canvas.getWidth() / 2f) / ratioX),
+                highX = (int) Math.floor((cameraPos.x + canvas.getWidth() / 2f) / ratioX),
+                lowY = (int) Math.floor((cameraPos.y - canvas.getHeight() / 2f) / ratioY),
+                highY = (int) Math.floor((cameraPos.y + canvas.getHeight() / 2f) / ratioY);
         for (int x = 0; x < tileGridW; x++) {
             for (int y = 0; y < tileGridH; y++) {
+                // If this tile is not in camera, clear its content.
+                if (x < lowX || x >= highX || y < lowY || y >= highY) {
+                    if (fog[x][y] != null) {
+
+                        for(ParticleEffectPool.PooledEffect effect: fog[x][y].fogParticles) {
+                            effect.allowCompletion();
+                            effect.setDuration(0);
+                            if (effect.isComplete()) {
+                                effect.free();
+                                fog[x][y].fogParticles.removeValue(effect, true);
+                                //This will just remove it from drawing again, it will not automatically remove particles
+                            }
+                        }
+                    }
+                    continue;
+                }
                 //To prevent drawing on tiles with the player or a wall as well as if its within the light radius
                 if (levelModel.hasWall(x, y)) continue;
                 boolean withinLight = (Math.pow((Math.pow((x * TILE_SIZE) - (playerModel.getX()), 2) +
@@ -89,6 +117,7 @@ public class FogController {
                                 }
                             }
                         }
+
                         /*Only make a new fog particle if we do not have enough particles in the array for that tile*/
                         if (fogArr.size < NUM_FOG_NORMAL || (levelModel.hasEnemy(x, y) && fogArr.size < NUM_FOG_ENEMIES)) {
                             ParticleEffectPool.PooledEffect effect = fogPool.obtain();
@@ -106,9 +135,6 @@ public class FogController {
                 }
             }
         }
-    }
-
-    public void draw(GameCanvas canvas, float delta) {
         canvas.begin();
         canvas.drawFog(fog, delta);
         canvas.end();

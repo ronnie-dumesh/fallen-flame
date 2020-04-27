@@ -4,6 +4,7 @@ import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
@@ -86,27 +87,33 @@ public class LightController {
 
     protected boolean debug;
 
+    protected float scale;
+
     /**
      * Initialise this controller.
      *
      * @param player The player instance.
      * @param levelLighting The lighting JSON config of this level.
      * @param world The instance of Box2D {@code World}.
-     * @param bounds The bound of the viewport.
+     * @param scale Scale for rendering.
      */
+
     public void initialize(PlayerModel player, ExitModel exit,
-                           JsonValue levelLighting, World world, Rectangle bounds) {
+                           JsonValue levelLighting, World world, Rectangle bounds, Vector2 scale) {
         // Set up camera first.
-        raycamera = new OrthographicCamera(bounds.width, bounds.height);
+        raycamera = new OrthographicCamera(
+                Gdx.graphics.getWidth() / scale.x,
+                Gdx.graphics.getHeight() / scale.y);
 
         // set up ray handler.
         RayHandler.setGammaCorrection(true);
         RayHandler.useDiffuseLight(true);
         rayhandler = new RayHandler(world, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        rayhandler.setCombinedMatrix(raycamera);
         rayhandler.setAmbientLight(0, 0, 0, AMBIENT_LIGHT);
         rayhandler.setBlur(true);
         rayhandler.setBlurNum(3);
+
+        updateCamera();
 
         // Save player and config.
         this.player = player;
@@ -199,6 +206,12 @@ public class LightController {
         });
     }
 
+    private void updateCamera() {
+        if (player != null) raycamera.position.set(player.getX(), player.getY(), 0);
+        raycamera.update();
+        rayhandler.setCombinedMatrix(raycamera);
+    }
+
     /**
      * Update all lights, call this before {@code draw()}.
      *
@@ -213,10 +226,7 @@ public class LightController {
             rayhandler.setAmbientLight(0, 0, 0, 0);
         }
 
-        // Update raycamera.
-        raycamera.position.set(player.getX(), player.getY(), 0);
-        raycamera.update();
-        rayhandler.setCombinedMatrix(raycamera);
+        updateCamera();
 
         // Update player light.
         playerLight.setDistance(player.getLightRadius());
