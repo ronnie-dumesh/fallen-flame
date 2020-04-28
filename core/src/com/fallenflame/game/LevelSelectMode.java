@@ -71,6 +71,7 @@ public class LevelSelectMode implements Screen, InputProcessor {
     @Override
     public void show() {
         displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
+        BGMController.startBGM("menu-music");
     }
 
     @Override
@@ -128,12 +129,12 @@ public class LevelSelectMode implements Screen, InputProcessor {
 
     @Override
     public void hide() {
-
+        BGMController.stopBGMIfPlaying("menu-music");
     }
 
     @Override
     public void dispose() {
-
+        BGMController.stopBGMIfPlaying("menu-music");
     }
 
     /**

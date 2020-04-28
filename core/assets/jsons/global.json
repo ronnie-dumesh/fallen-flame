@@ -21,6 +21,7 @@
       "up": "player-up",
       "down": "player-down"
     },
+    "walksound":    "new-walk",
     "firebuddy": {
       "texture": {
         "left": "fire-buddy-left",
@@ -60,8 +61,8 @@
         "up": "enemy-a-up",
         "down": "enemy-a-down"
       },
-      "activesound": "enemystep",
-      "constantsound": "enemyconstant",
+      "activesound": "new-monster-high",
+      "constantsound": "new-monster-low",
       "debugcolor": "white",
       "debugopacity": 192,
       "statetints": {
@@ -90,8 +91,8 @@
       "texture":     	{
         "shoot": "enemy-b-throwing"
       },
-      "activesound": "enemystep",
-      "constantsound": "enemyconstant",
+      "activesound": "new-flame",
+      "constantsound": "new-monster-low",
       "debugcolor": "white",
       "debugopacity": 192,
       "stateTints": {
@@ -122,9 +123,9 @@
         "up": "ghost-up",
         "down": "ghost-down"
       },
-      "movesound": "enemystep",
-      "constantsound": "enemyconstant",
-      "activesound": "enemystep",
+      "constantsound": "new-monster-low",
+      "activesound": "new-monster-weird",
+      "bgm": "feud-of-nora-dog-and-nora-cat",
       "debugcolor": "white",
       "debugopacity": 192,
       "stateTints": {

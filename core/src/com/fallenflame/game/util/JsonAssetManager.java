@@ -239,8 +239,6 @@ public class JsonAssetManager extends AssetManager {
 		while (json != null) {
 			String file = json.getString("file");
 			if (isLoaded(file)) {
-				SoundController controller = SoundController.getInstance();
-				controller.deallocate(this, file);
 				if (sounds.containsKey(file)) {
 					sounds.remove(file);
 				}
@@ -341,8 +339,6 @@ public class JsonAssetManager extends AssetManager {
 	private Sound allocateSound(JsonValue json) {
 		String filename = json.getString("file");
 		Sound sound = get(filename, Sound.class);
-		SoundController controller = SoundController.getInstance();
-		controller.allocate(this, filename);
 		sounds.put(json.name(), sound);
 		return sound;
 	}

@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
 import com.fallenflame.game.enemies.*;
 import com.fallenflame.game.physics.obstacle.Obstacle;
+import com.fallenflame.game.util.BGMController;
 import com.fallenflame.game.util.JsonAssetManager;
 
 import java.util.*;
@@ -122,6 +123,9 @@ public class LevelController implements ContactListener {
     private final LightController lightController;
     private final List<AIController> AIControllers;
     private final FogController fogController;
+
+    // BGM
+    private String bgm;
 
     /** Enum to specify level state */
     public enum LevelState {
@@ -463,6 +467,8 @@ public class LevelController implements ContactListener {
         fireballJSON = globalJson.get("fireball");
         ghostJSON = globalEnemies.get("ghost");
 
+        bgm = levelJson.has("bgm") ? levelJson.get("bgm").asString() : null;
+
         // Initialize levelModel, lightController, and fogController
         levelModel.initialize(bounds, walls, enemies);
         lightController.initialize(player, exit, levelJson.get("lighting"), world, bounds, scale);
@@ -489,6 +495,7 @@ public class LevelController implements ContactListener {
         walls.clear();
         for(EnemyModel enemy : enemies) {
             enemy.getConstantSound().stop();
+            enemy.getActiveSound().stop();
             enemy.deactivatePhysics(world);
             enemy.dispose();
         }
@@ -615,6 +622,16 @@ public class LevelController implements ContactListener {
                     f.dispose();
                     ii.remove();
                 }
+            }
+
+            if (player.getSneakVal() > 0 || !ghostJSON.has("bgm") || ghostJSON.get("bgm").asString().equals("")) {
+                if (bgm != null && !bgm.equals("")) {
+                    BGMController.startBGM(bgm);
+                } else {
+                    BGMController.stopBGM();
+                }
+            } else {
+                BGMController.startBGM(ghostJSON.get("bgm").asString());
             }
 
             // Update level model.
