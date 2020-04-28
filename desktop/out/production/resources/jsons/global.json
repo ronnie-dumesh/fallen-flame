@@ -14,6 +14,7 @@
     "sprintlightrad":  10,
     "sneaklightrad":    1,
     "minlightradius":   2,
+    "defaultStartSneakVal":   100,
     "texture":     	{
       "left": "player-left",
       "right": "player-right",
@@ -26,7 +27,7 @@
     "tint": [1.0, 1.0, 1.0, 1.0],
     "textureoffset" : {
       "x": -0,
-      "y": -0.65
+      "y": -0.6
     }
   },
   "enemies": {
@@ -42,10 +43,10 @@
       "startframe": 0,
       "walklimit": 4,
       "texture":     	{
-        "left": "enemy",
-        "right": "enemy",
-        "up": "enemy",
-        "down": "enemy"
+        "left": "enemy-a-left",
+        "right": "enemy-a-right",
+        "up": "enemy-a-up",
+        "down": "enemy-a-down"
       },
       "activesound": "enemystep",
       "constantsound": "enemyconstant",
@@ -58,7 +59,7 @@
         },
       "textureoffset" : {
         "x": 0,
-        "y": 0
+        "y": -0.65
       },
       "tintOpacity": 192
     },
@@ -72,6 +73,35 @@
       "force": 80.0,
       "damping": 10.0,
       "maxspeed": 5.0,
+      "startframe": 9,
+      "walklimit": 4,
+      "texture":     	{
+        "shoot": "enemy-b-throwing"
+      },
+      "activesound": "enemystep",
+      "constantsound": "enemyconstant",
+      "debugcolor": "white",
+      "debugopacity": 192,
+      "stateTints": {
+        "calm": [1.0, 1.0, 1.0, 1.0],
+        "alert": [0.0, 1.0, 0.0, 1.0],
+        "aggressive": [1.0, 0.0, 0.0, 1.0]
+      },
+      "textureoffset" : {
+        "x": 0.15,
+        "y": -0.65
+      },
+      "tintOpacity": 192
+    },
+    "ghost":  {
+      "radius": 0.4,
+      "bodytype": "dynamic",
+      "density": 1.0,
+      "friction": 0.0,
+      "restitution": 0.0,
+      "force": 90.0,
+      "damping": 10.0,
+      "maxspeed": 6.0,
       "startframe": 0,
       "walklimit": 4,
       "texture":     	{
@@ -80,8 +110,9 @@
         "up": "enemyb",
         "down": "enemyb"
       },
-      "activesound": "enemystep",
+      "movesound": "enemystep",
       "constantsound": "enemyconstant",
+      "activesound": "enemystep",
       "debugcolor": "white",
       "debugopacity": 192,
       "stateTints": {
@@ -103,21 +134,23 @@
     "friction":       0.0,
     "restitution":    0.0,
     "texture":       "goal",
+    "tint":           [1.0, 1.0, 1.0, 1.0],
+    "lightradius":   1,
     "debugcolor":    "yellow",
     "debugopacity":   200
   },
   "flare" : {
     "radius":      	  0.1,
     "lighradius":     3.5,
-    "flareduration":  6000,
+    "flareduration":  1500,
     "bodytype":    	  "dynamic",
     "density":        1.0,
     "friction":       0.0,
     "restitution":    0.0,
-    "texture":        "fire",
+    "texture":        "flare",
     "shotsound":      "flareshot",
     "burnoutsound":   "flareout",
-    "initialforce":   3.0,
+    "initialforce":   3.5,
     "damping": 		 0.0,
     "tint": [1.0, 1.0, 1.0, 1.0],
     "startframe":       0
@@ -130,7 +163,7 @@
     "friction":       0.0,
     "restitution":    0.0,
     "texture":        "fireball",
-    "initialforce":   9.0,
+    "initialforce":   17.0,
     "damping": 		 0.0,
     "tint": [1.0, 1.0, 1.0, 1.0],
     "startframe":       0

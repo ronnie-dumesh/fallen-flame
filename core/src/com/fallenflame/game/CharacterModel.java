@@ -21,14 +21,15 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     /** The current horizontal movement of the character */
     private Vector2 movement = new Vector2();
     /** Whether or not to animate the current frame */
-    private boolean animate = false;
+    protected boolean animate = false;
 
     /** How many frames until we can walk again */
-    private int walkCool;
+    protected int walkCool;
     /** The standard number of frames to wait until we can walk again */
-    private int walkLimit;
+    protected int walkLimit;
 
     /** FilmStrip pointers to the texture regions */
+    protected FilmStrip filmstrip;
     protected FilmStrip filmstripWalkRight;
     protected FilmStrip filmstripWalkLeft;
     protected FilmStrip filmstripWalkUp;
@@ -38,7 +39,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     protected Vector2 textureOffset = new Vector2();
 
     /** The current animation frame of the avatar */
-    private int startFrame;
+    protected int startFrame;
 
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
@@ -282,7 +283,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
         setStartFrame(json.get("startframe").asInt());
         setWalkLimit(json.get("walklimit").asInt());
         setTextureOffset(json.get("textureoffset").get("x").asFloat(),
-                        json.get("textureoffset").get("y").asFloat());
+                json.get("textureoffset").get("y").asFloat());
 
         // Reflection is best way to convert name to color
 //        Color debugColor;
@@ -296,13 +297,10 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
 //        int opacity = json.get("debugopacity").asInt();
 //        debugColor.mul(opacity/255.0f);
 //        setDebugColor(debugColor);
-
-        //Now get the texture from the AssetManager singleton
-        textureHelper(json);
     }
 
     /**
-     * Intializes the CharacterModel texture using the JSON file
+     * Intializes the CharacterModel textures using the JSON file
      *
      * The JSON value has been parsed and is part of a bigger level file.
      *
@@ -310,7 +308,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
      *              that has the fields "walk-right", "walk-left", "left",
      *              "right", "up", "down"
      */
-    private void textureHelper(JsonValue json){
+    public void initializeTextures(JsonValue json){
         JsonValue textureJson = json.get("texture");
 
         String key = textureJson.get("right").asString();
@@ -346,7 +344,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
         }
 
         //pick default direction
-        FilmStrip filmstrip = filmstripWalkRight;
+        filmstrip = filmstripWalkRight;
         setTexture(filmstrip, textureOffset.x, textureOffset.y);
     }
 
@@ -387,9 +385,6 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
         double angle = getAngle();
         if(angle < 0) angle = angle + 2 * Math.PI;
         int angle100 = (int) (angle * 100);
-
-
-        FilmStrip filmstrip;
 
         if(angle100 == 0){
             filmstrip = filmstripWalkUp;

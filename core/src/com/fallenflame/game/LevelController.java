@@ -337,11 +337,12 @@ public class LevelController implements ContactListener {
 
         // Create player
         player = new PlayerModel();
+        player.setDrawScale(scale);
         if(levelJson.has("startSneakVal"))
             player.initialize(globalJson.get("player"), levelJson.get("playerpos").asFloatArray(), levelJson.get("startSneakVal").asInt());
         else
             player.initialize(globalJson.get("player"), levelJson.get("playerpos").asFloatArray());
-        player.setDrawScale(scale);
+        player.initializeTextures(globalJson.get("player"));
         player.activatePhysics(world);
         assert inBounds(player);
         startPos = levelJson.get("playerpos").asFloatArray();
@@ -383,9 +384,10 @@ public class LevelController implements ContactListener {
                 Gdx.app.error("LevelController", "Enemy type without model", new IllegalArgumentException());
                 return;
             }
-            enemy.initialize(globalEnemies.get(enemyType), enemyJSON.get("enemypos").asFloatArray());
-            enemy.setConstantSoundID(enemy.getConstantSound().loop(0, ENEMY_CONS_PITCH, 0));
             enemy.setDrawScale(scale);
+            enemy.initialize(globalEnemies.get(enemyType), enemyJSON.get("enemypos").asFloatArray());
+            enemy.initializeTextures(globalEnemies.get(enemyType));
+            enemy.setConstantSoundID(enemy.getConstantSound().loop(0, ENEMY_CONS_PITCH, 0));
             enemy.activatePhysics(world);
             enemies.add(enemy);
             // Initialize AIController
@@ -524,6 +526,7 @@ public class LevelController implements ContactListener {
                     else
                         ((EnemyTypeBModel)enemy).coolDown(true);
                 }
+                enemy.update(dt);
                 // Play enemy sounds
                 float pan = (enemy.getX() - player.getX()) * PAN_SCL;
                 if (enemy.isActivated() && (enemy.getActiveSoundID() == -1)) {
@@ -604,6 +607,7 @@ public class LevelController implements ContactListener {
         // Create ghost model
         EnemyModel ghost = new EnemyGhostModel();
         ghost.initialize(ghostJSON, startPos);
+        ghost.initializeTextures(ghostJSON);
         ghost.setConstantSoundID(ghost.getConstantSound().loop(0, ENEMY_CONS_PITCH, 0));
         ghost.setDrawScale(scale);
         ghost.activatePhysics(world);
