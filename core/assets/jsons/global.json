@@ -124,7 +124,7 @@
       },
       "constantsound": "new-monster-low",
       "activesound": "new-monster-weird",
-      "bgm": "feud-of-nora-dog-and-nora-cat",
+      "bgm": "",
       "debugcolor": "white",
       "debugopacity": 192,
       "stateTints": {
