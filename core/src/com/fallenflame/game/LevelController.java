@@ -576,6 +576,12 @@ public class LevelController implements ContactListener {
         }
     }
 
+    public void stopAllSounds(){
+        for(EnemyModel e : enemies){
+            e.getActiveSound().stop();
+        }
+    }
+
     /**
      * Fixes the physics frame rate to be in sync with the animation framerate
      *

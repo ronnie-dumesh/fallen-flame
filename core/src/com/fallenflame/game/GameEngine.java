@@ -321,7 +321,7 @@ public class GameEngine implements Screen, InputProcessor {
             }
         }
         if (exitPressed && !exitPrevious) {
-            listener.exitScreen(this, EXIT_QUIT);
+            listener.exitScreen(this, 0);
             return false;
         }
         //If countdown is > -1, then the player must have won or lost. Either continue to show the win condition message
@@ -460,6 +460,7 @@ public class GameEngine implements Screen, InputProcessor {
      * also paused before it is destroyed.
      */
     public void pause() {
+        level.stopAllSounds();
        isPaused = true;
     }
 
