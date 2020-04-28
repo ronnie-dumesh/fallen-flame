@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
 import com.fallenflame.game.enemies.*;
 import com.fallenflame.game.physics.obstacle.Obstacle;
+import com.fallenflame.game.util.BGMController;
 import com.fallenflame.game.util.JsonAssetManager;
 
 import java.util.*;
@@ -89,10 +90,42 @@ public class LevelController implements ContactListener {
     /** The world background */
     protected TextureRegion background;
 
+    // Sneak Bar
+    /** The texture used for the sneakbar */
+    protected TextureRegion sneakBarTexture;
+    /** The color used to tint the sneakbar */
+    protected Color sneakBarColor;
+    /** The offset of the sneakbar from the player*/
+    protected Vector2 sneakBarOffset;
+    /** The width of the sneak bar */
+    protected float sneakBarWidth;
+    /** The height of the sneak bar */
+    protected float sneakBarHeight;
+    /** The maximum sneak value allowed in the game */
+    protected float maxSneakValue;
+
+    /** The texture used for the flarecount */
+    protected TextureRegion flareCountTexture;
+    /** The color used to tint the flarecount */
+    protected Color flareCountColor;
+    /** The offset of the leftmost flarecount from the player */
+    protected Vector2 flareCountOffset;
+    /** The width of the total flare count */
+    protected float flareCountWidth;
+    /** The height of the flare count */
+    protected float flareCountHeight;
+    /** The maximum flare count allowed in game */
+    protected float maxFlareCount;
+    /** The distance between each counter */
+    protected float flareCountSplit;
+
     // Controllers
     private final LightController lightController;
     private final List<AIController> AIControllers;
     private final FogController fogController;
+
+    // BGM
+    private String bgm;
 
     /** Enum to specify level state */
     public enum LevelState {
@@ -318,17 +351,35 @@ public class LevelController implements ContactListener {
         populated = true;
 
         float[] pSize = levelJson.get("physicsSize").asFloatArray();
-        int[] gSize = levelJson.get("graphicSize").asIntArray();
 
         world = new World(Vector2.Zero,false);
         bounds = new Rectangle(0,0,pSize[0],pSize[1]);
-        scale.x = gSize[0]/pSize[0];
-        scale.y = gSize[1]/pSize[1];
+        scale.x = scale.y = 50;
 
         String key = globalJson.get("background").get("texture").asString();
         if (levelJson.get("background").has("texture"))
             levelJson.get("background").get("texture").asString(); // Get specific texture if available
         background = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+
+        sneakBarTexture = background;
+        float[] sneakBarRGB = globalJson.get("sneakmeter").get("color").asFloatArray();
+        sneakBarColor = new Color(sneakBarRGB[0], sneakBarRGB[1], sneakBarRGB[2], sneakBarRGB[3]);
+        sneakBarOffset = new Vector2 (globalJson.get("sneakmeter").get("xoffset").asFloat(),
+                                        globalJson.get("sneakmeter").get("yoffset").asFloat());
+        maxSneakValue = globalJson.get("sneakmeter").get("maxsneak").asFloat();
+        sneakBarWidth = globalJson.get("sneakmeter").get("width").asFloat();
+        sneakBarHeight = globalJson.get("sneakmeter").get("height").asFloat();
+
+        flareCountTexture = background;
+        float[] flareCountRGB = globalJson.get("flarecount").get("color").asFloatArray();
+        flareCountColor = new Color(flareCountRGB[0], flareCountRGB[1], flareCountRGB[2], flareCountRGB[3]);
+        flareCountSplit = globalJson.get("flarecount").get("flare-split").asFloat();
+        flareCountWidth = globalJson.get("flarecount").get("width").asFloat();
+        flareCountHeight = globalJson.get("flarecount").get("height").asFloat();
+        flareCountOffset = new Vector2 (globalJson.get("flarecount").get("xoffset").asFloat(),
+                globalJson.get("flarecount").get("yoffset").asFloat());
+        maxFlareCount = globalJson.get("flarecount").get("maxflares").asFloat();
+
 
         // Compute the FPS
         int[] fps = levelJson.get("fpsRange").asIntArray();
@@ -339,11 +390,12 @@ public class LevelController implements ContactListener {
 
         // Create player
         player = new PlayerModel();
+        player.setDrawScale(scale);
         if(levelJson.has("startSneakVal"))
             player.initialize(globalJson.get("player"), levelJson.get("playerpos").asFloatArray(), levelJson.get("startSneakVal").asInt());
         else
             player.initialize(globalJson.get("player"), levelJson.get("playerpos").asFloatArray());
-        player.setDrawScale(scale);
+        player.initializeTextures(globalJson.get("player"));
         player.activatePhysics(world);
         assert inBounds(player);
         startPos = levelJson.get("playerpos").asFloatArray();
@@ -385,9 +437,10 @@ public class LevelController implements ContactListener {
                 Gdx.app.error("LevelController", "Enemy type without model", new IllegalArgumentException());
                 return;
             }
-            enemy.initialize(globalEnemies.get(enemyType), enemyJSON.get("enemypos").asFloatArray());
-            enemy.setConstantSoundID(enemy.getConstantSound().loop(0, ENEMY_CONS_PITCH, 0));
             enemy.setDrawScale(scale);
+            enemy.initialize(globalEnemies.get(enemyType), enemyJSON.get("enemypos").asFloatArray());
+            enemy.initializeTextures(globalEnemies.get(enemyType));
+            enemy.setConstantSoundID(enemy.getConstantSound().loop(0, ENEMY_CONS_PITCH, 0));
             enemy.activatePhysics(world);
             enemies.add(enemy);
             // Initialize AIController
@@ -414,9 +467,11 @@ public class LevelController implements ContactListener {
         fireballJSON = globalJson.get("fireball");
         ghostJSON = globalEnemies.get("ghost");
 
+        bgm = levelJson.has("bgm") ? levelJson.get("bgm").asString() : null;
+
         // Initialize levelModel, lightController, and fogController
         levelModel.initialize(bounds, walls, enemies);
-        lightController.initialize(player, exit, levelJson.get("lighting"), world, bounds);
+        lightController.initialize(player, exit, levelJson.get("lighting"), world, bounds, scale);
         fogController.initialize(fogTemplate, levelModel, player, flares);
 
     }
@@ -440,6 +495,7 @@ public class LevelController implements ContactListener {
         walls.clear();
         for(EnemyModel enemy : enemies) {
             enemy.getConstantSound().stop();
+            enemy.getActiveSound().stop();
             enemy.deactivatePhysics(world);
             enemy.dispose();
         }
@@ -526,6 +582,7 @@ public class LevelController implements ContactListener {
                     else
                         ((EnemyTypeBModel)enemy).coolDown(true);
                 }
+                enemy.update(dt);
                 // Play enemy sounds
                 float pan = (enemy.getX() - player.getX()) * PAN_SCL;
                 if (enemy.isActivated() && (enemy.getActiveSoundID() == -1)) {
@@ -567,14 +624,27 @@ public class LevelController implements ContactListener {
                 }
             }
 
+            if (player.getSneakVal() > 0 || !ghostJSON.has("bgm") || ghostJSON.get("bgm").asString().equals("")) {
+                if (bgm != null && !bgm.equals("")) {
+                    BGMController.startBGM(bgm);
+                } else {
+                    BGMController.stopBGM();
+                }
+            } else {
+                BGMController.startBGM(ghostJSON.get("bgm").asString());
+            }
+
             // Update level model.
             levelModel.update(player, enemies);
 
             // Update lights
             lightController.updateLights(flares, enemies, fireballs);
+        }
+    }
 
-            // Update fog.
-            fogController.updateFog(scale);
+    public void stopAllSounds(){
+        for(EnemyModel e : enemies){
+            e.getActiveSound().stop();
         }
     }
 
@@ -609,6 +679,7 @@ public class LevelController implements ContactListener {
         // Create ghost model
         EnemyModel ghost = new EnemyGhostModel();
         ghost.initialize(ghostJSON, startPos);
+        ghost.initializeTextures(ghostJSON);
         ghost.setConstantSoundID(ghost.getConstantSound().loop(0, ENEMY_CONS_PITCH, 0));
         ghost.setDrawScale(scale);
         ghost.activatePhysics(world);
@@ -624,13 +695,13 @@ public class LevelController implements ContactListener {
      *
      * @param mousePosition Position of mouse when flare launched
      */
-    public void createFlare(Vector2 mousePosition){
+    public void createFlare(Vector2 mousePosition, Vector2 screenDimensions){
         if (flares.size() < player.getFlareCount()) {
             FlareModel flare = new FlareModel(player.getPosition());
             flare.setDrawScale(scale);
             flare.initialize(flareJSON);
             flare.activatePhysics(world);
-            Vector2 centerScreenPosition = new Vector2((bounds.width * scale.x) / 2, (bounds.height * scale.y) / 2);
+            Vector2 centerScreenPosition = new Vector2((screenDimensions.x) / 2, (screenDimensions.y) / 2);
             Vector2 posDif = new Vector2(mousePosition.x - centerScreenPosition.x, mousePosition.y - centerScreenPosition.y);
             float angleRad = posDif.angleRad(new Vector2(1, 0));
             Vector2 force = (new Vector2(flare.getInitialForce(), 0)).rotateRad(angleRad);
@@ -751,7 +822,10 @@ public class LevelController implements ContactListener {
 
         lightController.setDebug(debug2);
         lightController.draw();
-        fogController.draw(canvas, delta);
+        fogController.updateFogAndDraw(canvas, scale, delta);
+
+        drawSneakMeter(canvas);
+        drawFlares(canvas);
 
         // Draw debugging on top of everything.
         if (debug == 1) {
@@ -784,6 +858,55 @@ public class LevelController implements ContactListener {
             levelModel.drawDebug(canvas, scale);
             canvas.endDebug();
         }
+    }
+
+    /**
+     * Draws the number of flares the player has left,
+     * a helper method for LevelController.draw()
+     *
+     * PlayerModel player must not be null
+     *
+     * @param canvas the drawing context
+     */
+    private void drawFlares(GameCanvas canvas){
+        canvas.begin();
+
+        float ox = scale.x * (player.getX() + flareCountOffset.x);
+        float oy = scale.y * (player.getY() + flareCountOffset.y);
+
+        //float aW = scale.x * flareCountWidth
+        float flareWidth = scale.x * ((flareCountWidth / maxFlareCount) - flareCountSplit);  //width of one flare
+
+        float aH = scale.y * flareCountHeight;
+
+        if(sneakBarTexture != null) {
+            for(int i = 0; i <= player.getFlareCount() - flares.size() - 1; i++){
+                float flareX = ox + i * (flareWidth + flareCountSplit * scale.x);
+                canvas.draw(flareCountTexture, flareCountColor, flareX, oy, flareWidth, aH);
+            }
+        }
+        canvas.end();
+    }
+
+    /**
+     * Draws sneak meter, a helper method for LevelController.draw()
+     *
+     * PlayerModel player and Vector2 scale must not be null
+     *
+     * @param canvas the drawing context
+     */
+    private void drawSneakMeter(GameCanvas canvas){
+        canvas.begin();
+
+        float ox = scale.x * (player.getX() + sneakBarOffset.x);
+        float oy = scale.y * (player.getY() + sneakBarOffset.y);
+        float aW = Math.max(0, (player.getSneakVal() / maxSneakValue) * sneakBarWidth * scale.x);
+        float aH = scale.y * sneakBarHeight;
+
+        if(sneakBarTexture != null) {
+            canvas.draw(sneakBarTexture, sneakBarColor, ox, oy, aW, aH);
+        }
+        canvas.end();
     }
 
     /**

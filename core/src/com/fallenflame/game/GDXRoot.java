@@ -23,6 +23,8 @@ import com.fallenflame.game.util.*;
 public class GDXRoot extends Game implements ScreenListener {
 	/** Drawing context to display graphics */
 	private GameCanvas canvas;
+	/** Drawing context to display level select */
+	private GameCanvas levelCanvas;
 	/** Asset Loading Screen. What will show  */
 	private LoadingMode loading;
 	/** Player mode for the the game */
@@ -43,8 +45,9 @@ public class GDXRoot extends Game implements ScreenListener {
 	 */
 	public void create() {
 		canvas  = new GameCanvas();
+		levelCanvas = new GameCanvas();
 		loading = new LoadingMode(canvas,1);
-		levelSelect = new LevelSelectMode(canvas);
+		levelSelect = new LevelSelectMode(levelCanvas);
 		engine = new GameEngine();
 		InputMultiplexer multiplexer = new InputMultiplexer(); //Allows for multiple InputProcessors
 		//Multiplexer is an ordered list, so when an event occurs, it'll check loadingMode first, and then GameEngine
@@ -70,6 +73,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		engine.unloadContent();
 		engine.dispose();
 		canvas.dispose();
+		levelCanvas.dispose();
 		canvas = null;
 
 		// Unload all of the resources
@@ -116,14 +120,18 @@ public class GDXRoot extends Game implements ScreenListener {
 			loading.dispose();
 			loading = null;
 		} else if (screen == levelSelect) {
+			engine.resume();
 			Gdx.input.setInputProcessor(engine);
 			engine.setScreenListener(this);
 			engine.setCanvas(canvas);
 			engine.reset(levelSelect.getLevelSelected());
 			setScreen(engine);
-
-			levelSelect.dispose();
-			levelSelect = null;
+		} else if (screen == engine) {
+			Gdx.input.setInputProcessor(levelSelect);
+			levelSelect.setScreenListener(this);
+			setScreen(levelSelect);
+			engine.pause();
+			levelSelect.reset();
 		} else if (exitCode == engine.EXIT_QUIT) {
 			// We quit the main application
 			Gdx.app.exit();

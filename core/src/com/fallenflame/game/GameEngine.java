@@ -321,7 +321,7 @@ public class GameEngine implements Screen, InputProcessor {
             }
         }
         if (exitPressed && !exitPrevious) {
-            listener.exitScreen(this, EXIT_QUIT);
+            listener.exitScreen(this, 0);
             return false;
         }
         //If countdown is > -1, then the player must have won or lost. Either continue to show the win condition message
@@ -346,7 +346,7 @@ public class GameEngine implements Screen, InputProcessor {
             return;
 
         if (flarePressed && !flarePrevious) {
-            level.createFlare(getMousePosition());
+            level.createFlare(getMousePosition(), getScreenDimensions());
         }
         // Rotate the avatar to face the direction of movement
         tempAngle.set(horizontal,vertical);
@@ -435,6 +435,13 @@ public class GameEngine implements Screen, InputProcessor {
             canvasBounds.set(0,0,width,height);
         }
 
+    /**
+     * Get screen dimensions
+     * @return Vector2 screen dimensions
+     */
+    public Vector2 getScreenDimensions(){
+        return new Vector2(canvas.getWidth(),canvas.getHeight());
+    }
 
     /**
      * Called when the Screen should render itself.
@@ -460,6 +467,7 @@ public class GameEngine implements Screen, InputProcessor {
      * also paused before it is destroyed.
      */
     public void pause() {
+        level.stopAllSounds();
        isPaused = true;
     }
 

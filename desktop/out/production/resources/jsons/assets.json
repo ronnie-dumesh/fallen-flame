@@ -60,6 +60,96 @@
 				"first": 0
 			}
 		},
+		"enemy-a-left": {
+			"file": "textures/enemy-a-walk-left.png",
+			"wrap": false,
+			"strip": {
+				"size": 5,
+				"rows": 1,
+				"cols": 5,
+				"first": 0
+			}
+		},
+		"enemy-a-right": {
+			"file": "textures/enemy-a-walk-right.png",
+			"wrap": false,
+			"strip": {
+				"size": 5,
+				"rows": 1,
+				"cols": 5,
+				"first": 0
+			}
+		},
+		"enemy-a-up": {
+			"file": "textures/enemy-a-walk-right.png",
+			"wrap": false,
+			"strip": {
+				"size": 5,
+				"rows": 1,
+				"cols": 5,
+				"first": 0
+			}
+		},
+		"enemy-a-down": {
+			"file": "textures/enemy-a-walk-right.png",
+			"wrap": false,
+			"strip": {
+				"size": 5,
+				"rows": 1,
+				"cols": 5,
+				"first": 0
+			}
+		},
+		"enemy-b-throwing": {
+			"file": "textures/enemy-b-throwing.png",
+			"wrap": false,
+			"strip": {
+				"size": 10,
+				"rows": 1,
+				"cols": 10,
+				"first": 0
+			}
+		},
+		"fire-buddy-left": {
+			"file": "textures/firebuddyleft.png",
+			"wrap": false,
+			"strip": {
+				"size": 4,
+				"rows": 1,
+				"cols": 4,
+				"first": 0
+			}
+		},
+		"fire-buddy-right": {
+			"file": "textures/firebuddyright.png",
+			"wrap": false,
+			"strip": {
+				"size": 4,
+				"rows": 1,
+				"cols": 4,
+				"first": 0
+			}
+		},
+		"fire-buddy-up": {
+			"file": "textures/firebuddyup.png",
+			"wrap": false,
+			"strip": {
+				"size": 4,
+				"rows": 1,
+				"cols": 4,
+				"first": 0
+			}
+		},
+		"fire-buddy-down": {
+			"file": "textures/firebuddydown.png",
+			"wrap": false,
+			"strip": {
+				"size": 4,
+				"rows": 1,
+				"cols": 4,
+				"first": 0
+			}
+		},
 		"goal": {
 			"file": "textures/helicopter.png",
 			"wrap": false
@@ -92,6 +182,10 @@
 		},
 		"fireball": {
 			"file": "textures/fireball.png",
+			"wrap": false
+		},
+		"flare": {
+			"file": "textures/flare.png",
 			"wrap": false
 		}
 	},

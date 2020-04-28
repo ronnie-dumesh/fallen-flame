@@ -259,7 +259,6 @@ public class FlareModel extends WheelObstacle implements ILight {
         tempAngle.scl(initialForce);
         body.applyForce(tempAngle, getPosition(),true);
         setAngle(angle);
-        filmstrip.setFrame(startFrame);
     }
 
     /**
@@ -279,11 +278,6 @@ public class FlareModel extends WheelObstacle implements ILight {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
-        if (filmstrip != null) {
-            int next = (filmstrip.getFrame()+1) % filmstrip.getSize();
-            filmstrip.setFrame(next);
-        }
-
         super.update(dt);
     }
 
