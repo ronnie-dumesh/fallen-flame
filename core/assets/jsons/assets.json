@@ -246,15 +246,6 @@
 		"flareshot": {
 			"file": "sounds/flareshot.wav"
 		},
-		"walk": {
-			"file": "sounds/walk.wav"
-		},
-		"enemystep": {
-			"file": "sounds/bark.wav"
-		},
-		"enemyconstant": {
-			"file": "sounds/growl.wav"
-		},
 		"new-walk": {
 			"file": "sounds/new-sounds/walk.mp3"
 		},
@@ -273,44 +264,5 @@
 		"menu-music": {
 			"file": "sounds/new-sounds/deep-dark-well.mp3"
 		},
-		"the-doll-thrown-away-in-rain": {
-			"file": "sounds/new-sounds/the-doll-thrown-away-in-rain.mp3"
-		},
-		"soul-of-a-girl": {
-			"file": "sounds/new-sounds/soul-of-a-girl.mp3"
-		},
-		"another-planet": {
-			"file": "sounds/new-sounds/another-planet.mp3"
-		},
-		"cursed-piano": {
-			"file": "sounds/new-sounds/cursed-piano.mp3"
-		},
-		"disturbing-haze": {
-			"file": "sounds/new-sounds/disturbing-haze.mp3"
-		},
-		"hazy-moon": {
-			"file": "sounds/new-sounds/hazy-moon.mp3"
-		},
-		"peaceful-early-evening": {
-			"file": "sounds/new-sounds/peaceful-early-evening.mp3"
-		},
-		"ruins": {
-			"file": "sounds/new-sounds/ruins.mp3"
-		},
-		"silence1": {
-			"file": "sounds/new-sounds/silence1.mp3"
-		},
-		"silence2": {
-			"file": "sounds/new-sounds/silence2.mp3"
-		},
-		"the-deep-long-tunnel": {
-			"file": "sounds/new-sounds/the-deep-long-tunnel.mp3"
-		},
-		"chess": {
-			"file": "sounds/new-sounds/chess.mp3"
-		},
-		"feud-of-nora-dog-and-nora-cat": {
-			"file": "sounds/new-sounds/feud-of-nora-dog-and-nora-cat.mp3"
-		}
 	}
 }

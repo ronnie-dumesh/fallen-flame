@@ -34,7 +34,6 @@
         "y": -2.65
       }
     },
-    "walksound":    "walk",
     "debugcolor":  	"white",
     "debugopacity":	192,
     "tint": [1.0, 1.0, 1.0, 1.0],
