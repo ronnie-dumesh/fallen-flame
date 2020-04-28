@@ -11,6 +11,24 @@
       "unlocked":   true,
       "completed":  true,
       "path":       "levels/medium.json"
+    },
+    {
+      "name":       "exEasyLevel",
+      "unlocked":   true,
+      "completed":  true,
+      "path":       "levels/exEasyLevel.json"
+    },
+    {
+      "name":       "exMediumLevel",
+      "unlocked":   true,
+      "completed":  true,
+      "path":       "levels/exMediumLevel.json"
+    },
+    {
+      "name":       "exHardLevel",
+      "unlocked":   true,
+      "completed":  true,
+      "path":       "levels/exHardLevel.json"
     }
   ]
 }

@@ -346,7 +346,7 @@ public class GameEngine implements Screen, InputProcessor {
             return;
 
         if (flarePressed && !flarePrevious) {
-            level.createFlare(getMousePosition());
+            level.createFlare(getMousePosition(), getScreenDimensions());
         }
         // Rotate the avatar to face the direction of movement
         tempAngle.set(horizontal,vertical);
@@ -435,6 +435,13 @@ public class GameEngine implements Screen, InputProcessor {
             canvasBounds.set(0,0,width,height);
         }
 
+    /**
+     * Get screen dimensions
+     * @return Vector2 screen dimensions
+     */
+    public Vector2 getScreenDimensions(){
+        return new Vector2(canvas.getWidth(),canvas.getHeight());
+    }
 
     /**
      * Called when the Screen should render itself.

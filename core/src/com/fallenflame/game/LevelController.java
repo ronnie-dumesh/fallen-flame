@@ -629,13 +629,13 @@ public class LevelController implements ContactListener {
      *
      * @param mousePosition Position of mouse when flare launched
      */
-    public void createFlare(Vector2 mousePosition){
+    public void createFlare(Vector2 mousePosition, Vector2 screenDimensions){
         if (flares.size() < player.getFlareCount()) {
             FlareModel flare = new FlareModel(player.getPosition());
             flare.setDrawScale(scale);
             flare.initialize(flareJSON);
             flare.activatePhysics(world);
-            Vector2 centerScreenPosition = new Vector2((bounds.width * scale.x) / 2, (bounds.height * scale.y) / 2);
+            Vector2 centerScreenPosition = new Vector2((screenDimensions.x) / 2, (screenDimensions.y) / 2);
             Vector2 posDif = new Vector2(mousePosition.x - centerScreenPosition.x, mousePosition.y - centerScreenPosition.y);
             float angleRad = posDif.angleRad(new Vector2(1, 0));
             Vector2 force = (new Vector2(flare.getInitialForce(), 0)).rotateRad(angleRad);
