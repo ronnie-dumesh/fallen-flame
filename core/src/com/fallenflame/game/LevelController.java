@@ -89,6 +89,35 @@ public class LevelController implements ContactListener {
     /** The world background */
     protected TextureRegion background;
 
+    // Sneak Bar
+    /** The texture used for the sneakbar */
+    protected TextureRegion sneakBarTexture;
+    /** The color used to tint the sneakbar */
+    protected Color sneakBarColor;
+    /** The offset of the sneakbar from the player*/
+    protected Vector2 sneakBarOffset;
+    /** The width of the sneak bar */
+    protected float sneakBarWidth;
+    /** The height of the sneak bar */
+    protected float sneakBarHeight;
+    /** The maximum sneak value allowed in the game */
+    protected float maxSneakValue;
+
+    /** The texture used for the flarecount */
+    protected TextureRegion flareCountTexture;
+    /** The color used to tint the flarecount */
+    protected Color flareCountColor;
+    /** The offset of the leftmost flarecount from the player */
+    protected Vector2 flareCountOffset;
+    /** The width of the total flare count */
+    protected float flareCountWidth;
+    /** The height of the flare count */
+    protected float flareCountHeight;
+    /** The maximum flare count allowed in game */
+    protected float maxFlareCount;
+    /** The distance between each counter */
+    protected float flareCountSplit;
+
     // Controllers
     private final LightController lightController;
     private final List<AIController> AIControllers;
@@ -327,6 +356,26 @@ public class LevelController implements ContactListener {
         if (levelJson.get("background").has("texture"))
             levelJson.get("background").get("texture").asString(); // Get specific texture if available
         background = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+
+        sneakBarTexture = background;
+        float[] sneakBarRGB = globalJson.get("sneakmeter").get("color").asFloatArray();
+        sneakBarColor = new Color(sneakBarRGB[0], sneakBarRGB[1], sneakBarRGB[2], sneakBarRGB[3]);
+        sneakBarOffset = new Vector2 (globalJson.get("sneakmeter").get("xoffset").asFloat(),
+                                        globalJson.get("sneakmeter").get("yoffset").asFloat());
+        maxSneakValue = globalJson.get("sneakmeter").get("maxsneak").asFloat();
+        sneakBarWidth = globalJson.get("sneakmeter").get("width").asFloat();
+        sneakBarHeight = globalJson.get("sneakmeter").get("height").asFloat();
+
+        flareCountTexture = background;
+        float[] flareCountRGB = globalJson.get("flarecount").get("color").asFloatArray();
+        flareCountColor = new Color(flareCountRGB[0], flareCountRGB[1], flareCountRGB[2], flareCountRGB[3]);
+        flareCountSplit = globalJson.get("flarecount").get("flare-split").asFloat();
+        flareCountWidth = globalJson.get("flarecount").get("width").asFloat();
+        flareCountHeight = globalJson.get("flarecount").get("height").asFloat();
+        flareCountOffset = new Vector2 (globalJson.get("flarecount").get("xoffset").asFloat(),
+                globalJson.get("flarecount").get("yoffset").asFloat());
+        maxFlareCount = globalJson.get("flarecount").get("maxflares").asFloat();
+
 
         // Compute the FPS
         int[] fps = levelJson.get("fpsRange").asIntArray();
@@ -758,6 +807,9 @@ public class LevelController implements ContactListener {
         lightController.draw();
         fogController.updateFogAndDraw(canvas, scale, delta);
 
+        drawSneakMeter(canvas);
+        drawFlares(canvas);
+
         // Draw debugging on top of everything.
         if (debug == 1) {
             canvas.beginDebug();
@@ -789,6 +841,55 @@ public class LevelController implements ContactListener {
             levelModel.drawDebug(canvas, scale);
             canvas.endDebug();
         }
+    }
+
+    /**
+     * Draws the number of flares the player has left,
+     * a helper method for LevelController.draw()
+     *
+     * PlayerModel player must not be null
+     *
+     * @param canvas the drawing context
+     */
+    private void drawFlares(GameCanvas canvas){
+        canvas.begin();
+
+        float ox = scale.x * (player.getX() + flareCountOffset.x);
+        float oy = scale.y * (player.getY() + flareCountOffset.y);
+
+        //float aW = scale.x * flareCountWidth
+        float flareWidth = scale.x * ((flareCountWidth / maxFlareCount) - flareCountSplit);  //width of one flare
+
+        float aH = scale.y * flareCountHeight;
+
+        if(sneakBarTexture != null) {
+            for(int i = 0; i <= player.getFlareCount() - flares.size() - 1; i++){
+                float flareX = ox + i * (flareWidth + flareCountSplit * scale.x);
+                canvas.draw(flareCountTexture, flareCountColor, flareX, oy, flareWidth, aH);
+            }
+        }
+        canvas.end();
+    }
+
+    /**
+     * Draws sneak meter, a helper method for LevelController.draw()
+     *
+     * PlayerModel player and Vector2 scale must not be null
+     *
+     * @param canvas the drawing context
+     */
+    private void drawSneakMeter(GameCanvas canvas){
+        canvas.begin();
+
+        float ox = scale.x * (player.getX() + sneakBarOffset.x);
+        float oy = scale.y * (player.getY() + sneakBarOffset.y);
+        float aW = Math.max(0, (player.getSneakVal() / maxSneakValue) * sneakBarWidth * scale.x);
+        float aH = scale.y * sneakBarHeight;
+
+        if(sneakBarTexture != null) {
+            canvas.draw(sneakBarTexture, sneakBarColor, ox, oy, aW, aH);
+        }
+        canvas.end();
     }
 
     /**

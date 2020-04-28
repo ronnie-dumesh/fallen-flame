@@ -202,5 +202,22 @@
   },
   "background": {
     "texture":      "floor-tile"
+  },
+  "sneakmeter": {
+    "xoffset": -7.50,
+    "yoffset": 5.25,
+    "width": 8,
+    "height": 0.4,
+    "maxsneak": 1000,
+    "color": [0.0, 1.0, 0.0, 1.0]
+  },
+  "flarecount": {
+    "xoffset": 3.0,
+    "yoffset": 5.25,
+    "width": 4.5,
+    "height": 0.4,
+    "maxflares": 5,
+    "color": [1.0, 0.682, 0.259, 1.0],
+    "flare-split": 0.1
   }
 }
