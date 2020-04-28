@@ -216,10 +216,6 @@
 			"file": "textures/floor-tile.png",
 			"wrap": true
 		},
-		"earth": {
-			"file": "textures/earthtile.png",
-			"wrap": true
-		},
 		"fireball": {
 			"file": "textures/fireball.png",
 			"wrap": false
