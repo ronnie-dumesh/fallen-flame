@@ -47,6 +47,8 @@ public class LevelController implements ContactListener {
 
     /** Whether or not the level has been populated */
     private boolean populated;
+    /** Whether ot not the ghost has been added to the level*/
+    private boolean ghostAdded = false;
 
     // Physics objects for the level
     /** Reference to the player character */
@@ -91,31 +93,30 @@ public class LevelController implements ContactListener {
     protected TextureRegion background;
 
     // Sneak Bar
-    /** The texture used for the sneakbar */
-    protected TextureRegion sneakBarTexture;
-    /** The color used to tint the sneakbar */
-    protected Color sneakBarColor;
-    /** The offset of the sneakbar from the player*/
-    protected Vector2 sneakBarOffset;
-    /** The width of the sneak bar */
-    protected float sneakBarWidth;
-    /** The height of the sneak bar */
-    protected float sneakBarHeight;
+    /** The texture used for the sneakbar background*/
+    protected TextureRegion sneakBarBackground;
+    /** The texture used for the sneakbar foreground*/
+    protected TextureRegion sneakBarForeground;
+    /** The texture used for the sneakbar ghost active indicator*/
+    protected TextureRegion sneakBarActive;
+    /** The texture used for the sneakbar ghost inactive indicator */
+    protected TextureRegion sneakBarInactive;
     /** The maximum sneak value allowed in the game */
     protected float maxSneakValue;
+    /** The offset of the sneakbar ghost from the player*/
+    protected Vector2 sneakBarOffset;
+    /** The offset of the sneakbar background from the ghost*/
+    protected Vector2 sneakBarBackgroundOffset;
+    /** The offset of the sneakbar foreground from the background */
+    protected Vector2 sneakBarForegroundOffset;
 
-    /** The texture used for the flarecount */
-    protected TextureRegion flareCountTexture;
-    /** The color used to tint the flarecount */
-    protected Color flareCountColor;
+    //flare counter
+    /** The texture used for the flarecount when you have available flares */
+    protected TextureRegion activeFlareCountTexture;
+    /** The texture used for the flarecount when you have unavailable flares */
+    protected TextureRegion inactiveFlareCountTexture;
     /** The offset of the leftmost flarecount from the player */
     protected Vector2 flareCountOffset;
-    /** The width of the total flare count */
-    protected float flareCountWidth;
-    /** The height of the flare count */
-    protected float flareCountHeight;
-    /** The maximum flare count allowed in game */
-    protected float maxFlareCount;
     /** The distance between each counter */
     protected float flareCountSplit;
 
@@ -361,25 +362,34 @@ public class LevelController implements ContactListener {
             levelJson.get("background").get("texture").asString(); // Get specific texture if available
         background = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
 
-        sneakBarTexture = background;
-        float[] sneakBarRGB = globalJson.get("sneakmeter").get("color").asFloatArray();
-        sneakBarColor = new Color(sneakBarRGB[0], sneakBarRGB[1], sneakBarRGB[2], sneakBarRGB[3]);
-        sneakBarOffset = new Vector2 (globalJson.get("sneakmeter").get("xoffset").asFloat(),
-                                        globalJson.get("sneakmeter").get("yoffset").asFloat());
-        maxSneakValue = globalJson.get("sneakmeter").get("maxsneak").asFloat();
-        sneakBarWidth = globalJson.get("sneakmeter").get("width").asFloat();
-        sneakBarHeight = globalJson.get("sneakmeter").get("height").asFloat();
 
-        flareCountTexture = background;
-        float[] flareCountRGB = globalJson.get("flarecount").get("color").asFloatArray();
-        flareCountColor = new Color(flareCountRGB[0], flareCountRGB[1], flareCountRGB[2], flareCountRGB[3]);
-        flareCountSplit = globalJson.get("flarecount").get("flare-split").asFloat();
-        flareCountWidth = globalJson.get("flarecount").get("width").asFloat();
-        flareCountHeight = globalJson.get("flarecount").get("height").asFloat();
-        flareCountOffset = new Vector2 (globalJson.get("flarecount").get("xoffset").asFloat(),
-                globalJson.get("flarecount").get("yoffset").asFloat());
-        maxFlareCount = globalJson.get("flarecount").get("maxflares").asFloat();
+        JsonValue sneakBarJSON = globalJson.get("sneakbar");
+        maxSneakValue = sneakBarJSON.get("maxsneak").asFloat();
+        key = sneakBarJSON.get("texture").get("meterbackground").asString();
+        sneakBarBackground = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        key = sneakBarJSON.get("texture").get("meterforeground").asString();
+        sneakBarForeground = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        key = sneakBarJSON.get("texture").get("active").asString();
+        sneakBarActive = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        key = sneakBarJSON.get("texture").get("inactive").asString();
+        sneakBarInactive = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
 
+        JsonValue textureOffsets = sneakBarJSON.get("textureoffsets");
+        sneakBarOffset = new Vector2 (textureOffsets.get("ghostfromplayer").get("x").asFloat(),
+                                         textureOffsets.get("ghostfromplayer").get("y").asFloat());
+        sneakBarBackgroundOffset =   new Vector2 (textureOffsets.get("backgroundfromghost").get("x").asFloat(),
+                                                    textureOffsets.get("backgroundfromghost").get("y").asFloat());
+        sneakBarForegroundOffset =  new Vector2 (textureOffsets.get("foregroundfrombackground").get("x").asFloat(),
+                                                    textureOffsets.get("foregroundfrombackground").get("y").asFloat());
+
+        JsonValue flareCountJSON = globalJson.get("flarecount");
+        key = flareCountJSON.get("texture").get("active").asString();
+        activeFlareCountTexture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        key = flareCountJSON.get("texture").get("inactive").asString();
+        inactiveFlareCountTexture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        flareCountSplit = flareCountJSON.get("flare-split").asFloat();
+        flareCountOffset = new Vector2 (flareCountJSON.get("textureoffset").get("x").asFloat(),
+              flareCountJSON.get("textureoffset").get("y").asFloat());
 
         // Compute the FPS
         int[] fps = levelJson.get("fpsRange").asIntArray();
@@ -553,10 +563,14 @@ public class LevelController implements ContactListener {
 
             // Decrement sneak value if player is sneaking
             if(player.isSneaking()){
-                player.decSneakVal();
+                if(player.getSneakVal() > 0){
+                    player.decSneakVal();
+                }
                 // Add ghost enemy if player has used all their sneak
-                if(player.getSneakVal() == 0)
+                else if(player.getSneakVal() == 0 && ghostAdded == false) {
                     addGhost();
+                    ghostAdded = true;
+                }
             }
 
 
@@ -576,11 +590,12 @@ public class LevelController implements ContactListener {
                 enemy.executeMovementAction(action);
                 // Check if enemy is firing, for now only supports EnemyTypeBModel. TODO: Will need to rework if more firing enemies
                 boolean firing = (action & EnemyModel.CONTROL_FIRE) != 0;
-                if (enemy.getClass() == EnemyTypeBModel.class && firing) {
-                    if(((EnemyTypeBModel)enemy).canFire())
-                        fireWeapon((EnemyTypeBModel)enemy);
-                    else
-                        ((EnemyTypeBModel)enemy).coolDown(true);
+                if (enemy.getClass() == EnemyTypeBModel.class) {
+                    if(firing && ((EnemyTypeBModel) enemy).canFire()) {
+                        fireWeapon((EnemyTypeBModel) enemy);
+                    } else {
+                        ((EnemyTypeBModel) enemy).coolDown(true);
+                    }
                 }
                 enemy.update(dt);
                 // Play enemy sounds
@@ -868,23 +883,25 @@ public class LevelController implements ContactListener {
      *
      * @param canvas the drawing context
      */
-    private void drawFlares(GameCanvas canvas){
+    private void drawFlares(GameCanvas canvas) {
         canvas.begin();
 
         float ox = scale.x * (player.getX() + flareCountOffset.x);
         float oy = scale.y * (player.getY() + flareCountOffset.y);
 
-        //float aW = scale.x * flareCountWidth
-        float flareWidth = scale.x * ((flareCountWidth / maxFlareCount) - flareCountSplit);  //width of one flare
+        float flareWidth = activeFlareCountTexture.getRegionWidth() + flareCountSplit * scale.x;
 
-        float aH = scale.y * flareCountHeight;
-
-        if(sneakBarTexture != null) {
-            for(int i = 0; i <= player.getFlareCount() - flares.size() - 1; i++){
-                float flareX = ox + i * (flareWidth + flareCountSplit * scale.x);
-                canvas.draw(flareCountTexture, flareCountColor, flareX, oy, flareWidth, aH);
+        if (activeFlareCountTexture != null && inactiveFlareCountTexture != null) {
+            for (int i = 0; i <= player.getFlareCount() - flares.size() - 1; i++) {
+                float activeFlareX = ox + i * flareWidth;
+                canvas.draw(activeFlareCountTexture, activeFlareX, oy);
+            }
+            for (int j = player.getFlareCount() - flares.size(); j < player.getFlareCount(); j++){
+                float inactiveFlareX = ox + j * flareWidth;
+                canvas.draw(inactiveFlareCountTexture, inactiveFlareX, oy);
             }
         }
+
         canvas.end();
     }
 
@@ -900,11 +917,25 @@ public class LevelController implements ContactListener {
 
         float ox = scale.x * (player.getX() + sneakBarOffset.x);
         float oy = scale.y * (player.getY() + sneakBarOffset.y);
-        float aW = Math.max(0, (player.getSneakVal() / maxSneakValue) * sneakBarWidth * scale.x);
-        float aH = scale.y * sneakBarHeight;
+        float oxBack = ox + sneakBarBackgroundOffset.x * scale.x;
+        float oyBack = oy + sneakBarBackgroundOffset.y * scale.y;
+        float oxFront = oxBack + sneakBarForegroundOffset.x * scale.x;
+        float oyFront = oyBack + sneakBarForegroundOffset.y * scale.y;
 
-        if(sneakBarTexture != null) {
-            canvas.draw(sneakBarTexture, sneakBarColor, ox, oy, aW, aH);
+        if(sneakBarBackground != null && sneakBarForeground != null
+                && sneakBarActive != null && sneakBarInactive != null) {
+            canvas.draw(sneakBarBackground, oxBack, oyBack);
+            if(player.getSneakVal() > 0) {
+                canvas.draw(sneakBarInactive, ox, oy);
+
+                float percentFilled = player.getSneakVal() / maxSneakValue;
+                float barLength = percentFilled * sneakBarForeground.getRegionWidth();
+                float barHeight = sneakBarForeground.getRegionHeight();
+                //white chosen as dummy color (no tint)
+                canvas.draw(sneakBarForeground, Color.WHITE, oxFront, oyFront, barLength, barHeight);
+            } else {
+                canvas.draw(sneakBarActive, ox, oy);
+            }
         }
         canvas.end();
     }

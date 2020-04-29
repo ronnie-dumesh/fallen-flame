@@ -30,8 +30,12 @@
         "down": "fire-buddy-down"
       },
       "textureoffset": {
-        "x": -1.15,
-        "y": -2.65
+        "x": -0.62,
+        "y": -1.25
+      },
+      "sneaktextureoffset": {
+        "x": -0.0,
+        "y": -0.45
       }
     },
     "debugcolor":  	"white",
@@ -85,7 +89,7 @@
       "force": 80.0,
       "damping": 10.0,
       "maxspeed": 5.0,
-      "startframe": 9,
+      "startframe": 4,
       "walklimit": 4,
       "texture":     	{
         "shoot": "enemy-b-throwing"
@@ -203,21 +207,38 @@
   "background": {
     "texture":      "floor-tile"
   },
-  "sneakmeter": {
-    "xoffset": -7.50,
-    "yoffset": 5.25,
-    "width": 8,
-    "height": 0.4,
-    "maxsneak": 1000,
-    "color": [0.0, 1.0, 0.0, 1.0]
+  "sneakbar": {
+    "texture": {
+      "meterbackground": "sneak-meter-background",
+      "meterforeground": "sneak-meter-foreground",
+      "active": "ghost-active-icon",
+      "inactive": "ghost-inactive-icon"
+    },
+    "textureoffsets": {
+      "ghostfromplayer": {
+        "x": -7.50,
+        "y": 4.875
+      },
+      "backgroundfromghost": {
+        "x": 0.75,
+        "y": 0
+      },
+      "foregroundfrombackground": {
+        "x": 0.20,
+        "y": 0.19
+      }
+    },
+    "maxsneak": 1000
   },
   "flarecount": {
-    "xoffset": 3.0,
-    "yoffset": 5.25,
-    "width": 4.5,
-    "height": 0.4,
-    "maxflares": 5,
-    "color": [1.0, 0.682, 0.259, 1.0],
-    "flare-split": 0.1
+    "texture": {
+      "active": "activeflarecounter",
+      "inactive": "inactiveflarecounter"
+    },
+    "textureoffset": {
+      "x": 4.875,
+      "y": 4.875
+    },
+    "flare-split": 0.15
   }
 }

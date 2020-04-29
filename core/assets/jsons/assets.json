@@ -223,6 +223,30 @@
 		"flare": {
 			"file": "textures/flare.png",
 			"wrap": false
+		},
+		"activeflarecounter": {
+			"file": "textures/r_active_flare.png",
+			"wrap": false
+		},
+		"inactiveflarecounter": {
+			"file": "textures/r_inactive_flare.png",
+			"wrap": false
+		},
+		"sneak-meter-background": {
+			"file": "textures/r_sneak_meter.png",
+			"wrap": false
+		},
+		"sneak-meter-foreground": {
+			"file": "textures/r_sneak_amount_left.png",
+			"wrap": false
+		},
+		"ghost-inactive-icon": {
+			"file": "textures/ghost_icon_up.png",
+			"wrap": false
+		},
+		"ghost-active-icon": {
+			"file": "textures/ghost_icon_right.png",
+			"wrap": false
 		}
 	},
 	"fonts": {
