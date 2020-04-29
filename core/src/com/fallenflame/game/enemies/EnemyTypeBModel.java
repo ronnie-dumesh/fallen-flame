@@ -97,9 +97,9 @@ public class EnemyTypeBModel extends EnemyModel{
         // Animate if necessary
         if(filmstrip == null){return;}
 
-        if(firecool == cooldownLength){shootAnimation = true;}
-
-        if(shootAnimation && firecool % (cooldownLength / filmstrip.getSize()) == 0) {
+        int switchEvery = cooldownLength / filmstrip.getSize(); //spread throw across all frames
+        if(firecool == 0){filmstrip.setFrame(startFrame);}
+        else if(firecool % switchEvery == 0){
             int next = (filmstrip.getFrame() + 1) % filmstrip.getSize();
             filmstrip.setFrame(next);
         }

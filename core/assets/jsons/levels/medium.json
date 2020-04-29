@@ -1,6 +1,6 @@
 {
   "bgm": "menu-music",
-  "name": "Easy",
+  "name": "medium",
   "physicsSize": [
     16,
     12
@@ -10,13 +10,13 @@
     60
   ],
   "playerpos": [
-    1.5,
-    1.5
+    1.22,
+    2.38
   ],
-  "startSneakVal" : 200,
+  "startSneakVal" : 100,
   "exitpos": [
-    1.5,
-    5.35
+    14.72,
+    10.729999999999999
   ],
   "background": {
     "texture": "floor-tile"
@@ -24,22 +24,15 @@
   "enemies": [
     {
       "enemypos": [
-        5,
-        5
+        3.56,
+        6.76
       ],
-      "enemytype": "typeA",
-      "subtype": "pathing",
-      "pathCoors": [
-        [7.7, 5.1],
-        [14.45, 1.34],
-        [14.45, 7.61],
-        [5, 5]
-      ]
+      "enemytype": "typeA"
     },
     {
       "enemypos": [
-        7,
-        7
+        7.94,
+        6.2
       ],
       "enemytype": "typeB"
     }
@@ -58,95 +51,7 @@
   "walls": [
     {
       "pos": [
-        1.75,
-        3
-      ],
-      "size": [
-        2.5,
-        0.5
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        2.75,
-        4.75
-      ],
-      "size": [
-        0.5,
-        4
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        11,
-        6.5
-      ],
-      "size": [
-        5,
-        0.5
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        13.25,
-        4.5
-      ],
-      "size": [
-        0.5,
-        4.5
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        6,
-        6.5
-      ],
-      "size": [
-        0.5,
-        0.5
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        10,
-        3.5
-      ],
-      "size": [
-        0.5,
-        0.5
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        7,
-        9
-      ],
-      "size": [
-        13,
-        0.5
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
         0.25,
-        6
-      ],
-      "size": [
-        0.5,
-        12
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        15.75,
         6
       ],
       "size": [
@@ -174,6 +79,72 @@
       "size": [
         16,
         0.5
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        15.75,
+        6
+      ],
+      "size": [
+        0.5,
+        12
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        1.2999999999999998,
+        9.18
+      ],
+      "size": [
+        2.24,
+        5.640000000000001
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        4.84,
+        3.3099999999999996
+      ],
+      "size": [
+        0.5,
+        6.619999999999999
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        12.260000000000002,
+        11.239999999999998
+      ],
+      "size": [
+        2.400000000000002,
+        0.9200000000000017
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        13.38,
+        7.680000000000001
+      ],
+      "size": [
+        1.0400000000000027,
+        8.639999999999999
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        12.18,
+        5.940000000000001
+      ],
+      "size": [
+        2.3599999999999994,
+        5.119999999999998
       ],
       "texture": "wall-side"
     }
