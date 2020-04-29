@@ -216,16 +216,36 @@
 			"file": "textures/floor-tile.png",
 			"wrap": true
 		},
-		"earth": {
-			"file": "textures/earthtile.png",
-			"wrap": true
-		},
 		"fireball": {
 			"file": "textures/fireball.png",
 			"wrap": false
 		},
 		"flare": {
 			"file": "textures/flare.png",
+			"wrap": false
+		},
+		"activeflarecounter": {
+			"file": "textures/r_active_flare.png",
+			"wrap": false
+		},
+		"inactiveflarecounter": {
+			"file": "textures/r_inactive_flare.png",
+			"wrap": false
+		},
+		"sneak-meter-background": {
+			"file": "textures/r_sneak_meter.png",
+			"wrap": false
+		},
+		"sneak-meter-foreground": {
+			"file": "textures/r_sneak_amount_left.png",
+			"wrap": false
+		},
+		"ghost-inactive-icon": {
+			"file": "textures/ghost_icon_up.png",
+			"wrap": false
+		},
+		"ghost-active-icon": {
+			"file": "textures/ghost_icon_right.png",
 			"wrap": false
 		}
 	},
@@ -246,15 +266,6 @@
 		"flareshot": {
 			"file": "sounds/flareshot.wav"
 		},
-		"walk": {
-			"file": "sounds/walk.wav"
-		},
-		"enemystep": {
-			"file": "sounds/bark.wav"
-		},
-		"enemyconstant": {
-			"file": "sounds/growl.wav"
-		},
 		"new-walk": {
 			"file": "sounds/new-sounds/walk.mp3"
 		},
@@ -273,44 +284,5 @@
 		"menu-music": {
 			"file": "sounds/new-sounds/deep-dark-well.mp3"
 		},
-		"the-doll-thrown-away-in-rain": {
-			"file": "sounds/new-sounds/the-doll-thrown-away-in-rain.mp3"
-		},
-		"soul-of-a-girl": {
-			"file": "sounds/new-sounds/soul-of-a-girl.mp3"
-		},
-		"another-planet": {
-			"file": "sounds/new-sounds/another-planet.mp3"
-		},
-		"cursed-piano": {
-			"file": "sounds/new-sounds/cursed-piano.mp3"
-		},
-		"disturbing-haze": {
-			"file": "sounds/new-sounds/disturbing-haze.mp3"
-		},
-		"hazy-moon": {
-			"file": "sounds/new-sounds/hazy-moon.mp3"
-		},
-		"peaceful-early-evening": {
-			"file": "sounds/new-sounds/peaceful-early-evening.mp3"
-		},
-		"ruins": {
-			"file": "sounds/new-sounds/ruins.mp3"
-		},
-		"silence1": {
-			"file": "sounds/new-sounds/silence1.mp3"
-		},
-		"silence2": {
-			"file": "sounds/new-sounds/silence2.mp3"
-		},
-		"the-deep-long-tunnel": {
-			"file": "sounds/new-sounds/the-deep-long-tunnel.mp3"
-		},
-		"chess": {
-			"file": "sounds/new-sounds/chess.mp3"
-		},
-		"feud-of-nora-dog-and-nora-cat": {
-			"file": "sounds/new-sounds/feud-of-nora-dog-and-nora-cat.mp3"
-		}
 	}
 }

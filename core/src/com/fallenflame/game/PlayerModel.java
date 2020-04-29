@@ -34,7 +34,7 @@ public class PlayerModel extends CharacterModel {
     protected float lightRadiusSaved;
     protected float lightRadiusSprint;
     protected float lightRadiusSneak;
-    /** Player sneak left (once hits 0, player cannot sneak) */
+    /** Player sneak left (once hits 0, a ghost is deployed on the map) Sneakval must be greater than or equal to 0 */
     protected int sneakVal;
 
     /**Tint of player light */
@@ -53,7 +53,11 @@ public class PlayerModel extends CharacterModel {
     private FilmStrip fireBuddyUp;
     private FilmStrip fireBuddyDown;
 
+    /** Origin of fire buddy when drawing not in sneak mode */
     protected Vector2 fireBuddyOrigin;
+
+    /** Origin of drawing for fire buddy when player is in sneak mode */
+    protected Vector2 fireBuddySneak;
 
     /**
      * Initializes the character via the given JSON value
@@ -129,7 +133,13 @@ public class PlayerModel extends CharacterModel {
         float offsetY = firebuddy.get("textureoffset").get("y").asFloat();
         //set fire buddy origin;
         setFireBuddyOrigin (((TextureRegion)fireBuddyFilmstrip).getRegionWidth()/2.0f + offsetX * drawScale.x,
-                                ((TextureRegion)fireBuddyFilmstrip).getRegionWidth()/2.0f + offsetY * drawScale.y);
+                                ((TextureRegion)fireBuddyFilmstrip).getRegionHeight()/2.0f + offsetY * drawScale.y);
+
+        offsetX = firebuddy.get("sneaktextureoffset").get("x").asFloat();
+        offsetY = firebuddy.get("sneaktextureoffset").get("y").asFloat();
+        //set fire buddy sneak origin
+        setFireBuddySneak(((TextureRegion)fireBuddyFilmstrip).getRegionWidth()/2.0f + offsetX * drawScale.x,
+                ((TextureRegion)fireBuddyFilmstrip).getRegionHeight()/2.0f + offsetY * drawScale.y);
     }
 
     /**
@@ -160,6 +170,36 @@ public class PlayerModel extends CharacterModel {
     protected void setFireBuddyOrigin(float x, float y){
         fireBuddyOrigin = new Vector2(x, y);
     }
+
+    /**
+     * @return the origin of the firebuddy texture when sneaking
+     * as a Vector 2
+     */
+    protected Vector2 getFireBuddySneak() { return new Vector2(fireBuddySneak); }
+
+    /**
+     * @return the origin of the firebuddy texture when sneaking
+     * along the x-axis
+     */
+    protected float getFireBuddySneakX() { return fireBuddySneak.x; }
+
+    /**
+     * @return the origin of the firebuddy texture when sneaking
+     * along the y-axis
+     */
+    protected float getFireBuddySneakY() {return fireBuddySneak.y; }
+
+    /**
+     * Sets the origin of the fire buddy to be (x, y) when sneaking
+     * The y-axis is positive downwards, and the x-axis is positive rightwards
+     *
+     * @param x the offset of the texture on the x-axis
+     * @param y the offset of the texture on the y-axis
+     */
+    protected void setFireBuddySneak(float x, float y){
+        fireBuddySneak = new Vector2(x, y);
+    }
+
 
     /**
      * Returns the minimum light radius the player can have
@@ -337,8 +377,10 @@ public class PlayerModel extends CharacterModel {
     public void draw(GameCanvas canvas) {
         super.draw(canvas);
         if (fireBuddyFilmstrip != null) {
-            canvas.draw(fireBuddyFilmstrip, Color.WHITE, getFireBuddyOriginX(), getFireBuddyOriginY(),
-                    getX()*drawScale.x,getY()*drawScale.y,0 ,0.5f,0.5f);
+            canvas.draw(fireBuddyFilmstrip, Color.WHITE,
+                    isSneaking() ? getFireBuddySneakX() : getFireBuddyOriginX(),
+                    isSneaking() ? getFireBuddySneakY() : getFireBuddyOriginY(),
+                    getX()*drawScale.x,getY()*drawScale.y,0 ,1,1);
         }
     }
 }
