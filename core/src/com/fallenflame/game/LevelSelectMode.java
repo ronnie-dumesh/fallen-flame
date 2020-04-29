@@ -13,17 +13,14 @@ import com.fallenflame.game.util.JsonAssetManager;
 
 public class LevelSelectMode implements Screen, InputProcessor {
 
-    /** Textures temporarily loaded in so I have something to look at as I set up this class */
-    private static final String PLAY_BTN_FILE = "textures/fireplay.png";
-    private Texture playButton = new Texture(PLAY_BTN_FILE);
-    private static final String BACKGROUND_FILE = "textures/firelevelselect.png";
+    private static final String BACKGROUND_FILE = "textures/ls_background.png";
     private Texture background = new Texture(BACKGROUND_FILE);
 
-    private static final String LEVEL_BTN_FILE = "textures/particle.png";
+    private static final String LEVEL_BTN_FILE = "textures/ls_unlocked_level.png";
     private Texture levelButton = new Texture(LEVEL_BTN_FILE);
 
     /** Position vectors for all the level select buttons */
-    private Vector2[] posVec = {new Vector2(50,200),new Vector2(150,300),new Vector2(250,225),new Vector2(350,100),new Vector2(425,250),new Vector2(500,375),new Vector2(550,150),new Vector2(625,300),new Vector2(700,100),new Vector2(750,250)};
+    private Vector2[] posVec = {new Vector2(200,400),new Vector2(300,400),new Vector2(400,400),new Vector2(500,400),new Vector2(600,400),new Vector2(200,200),new Vector2(300,200),new Vector2(400,200),new Vector2(500,200),new Vector2(600,200)};
 
     /** Amount to scale the play button */
     private static float BUTTON_SCALE  = 0.75f;
@@ -78,17 +75,20 @@ public class LevelSelectMode implements Screen, InputProcessor {
     public void render(float delta) {
         canvas.begin();
         canvas.draw(background, 0, 0);
-        canvas.drawTextCentered("Level Select", displayFont, 250);
+        displayFont.setColor(Color.BLACK);
+        displayFont.getData().setScale(.5f);
         for (int i = 0; i < posVec.length; i++) {
             if (hoverState[i] != 1) {
                 canvas.draw(levelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
                         posVec[i].x, posVec[i].y, 0, 1, 1);
             } else {
-                canvas.draw(levelButton, Color.ORANGE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                canvas.draw(levelButton, Color.valueOf("98F3FF"), levelButton.getWidth() / 2, levelButton.getHeight() / 2,
                         posVec[i].x, posVec[i].y, 0, 1, 1);
             }
-            canvas.drawText("" + (i + 1), displayFont, posVec[i].x - 14, posVec[i].y + 80);
+            canvas.drawText("" + (i + 1), displayFont, posVec[i].x - 8, posVec[i].y - 6);
         }
+        displayFont.setColor(Color.WHITE);
+        displayFont.getData().setScale(1f);
         canvas.end();
         // We are are ready, notify our listener
         if (isReady() && listener != null) {
@@ -174,18 +174,18 @@ public class LevelSelectMode implements Screen, InputProcessor {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 
-        if (playButton == null || pressState == 1) {
+        if (pressState == 1) {
             return true;
         }
 
         // Flip to match graphics coordinates
         screenY = heightY-screenY;
 
-        // Level button is a circle.
-        float radius = BUTTON_SCALE*scale*levelButton.getWidth()/2.0f;
+        float w = scale*levelButton.getWidth()/2.0f;
+        float h = scale*levelButton.getHeight()/2.0f;
+
         for (int i = 0; i < posVec.length; i++) {
-            float dist = (screenX-posVec[i].x)*(screenX-posVec[i].x)+(screenY-posVec[i].y)*(screenY-posVec[i].y);
-            if (dist < radius*radius) {
+            if ((Math.pow(screenX-posVec[i].x,2) / (w*w)) + (Math.pow(screenY-posVec[i].y,2) / (h*h)) <= 1) {
                 pressState = 1;
                 levelSelected = i;
             }
@@ -205,11 +205,11 @@ public class LevelSelectMode implements Screen, InputProcessor {
         // Flip to match graphics coordinates
         screenY = heightY-screenY;
 
-        // Play button is a circle.
-        float radius = BUTTON_SCALE*scale*levelButton.getWidth()/2.0f;
+        float w = scale*levelButton.getWidth()/2.0f;
+        float h = scale*levelButton.getHeight()/2.0f;
+
         for (int i = 0; i < posVec.length; i++) {
-            float dist = (screenX-posVec[i].x)*(screenX-posVec[i].x)+(screenY-posVec[i].y)*(screenY-posVec[i].y);
-            if (dist < radius*radius) {
+            if ((Math.pow(screenX-posVec[i].x,2) / (w*w)) + (Math.pow(screenY-posVec[i].y,2) / (h*h)) <= 1) {
                 hoverState[i] = 1;
             } else {
                 hoverState[i] = 0;
