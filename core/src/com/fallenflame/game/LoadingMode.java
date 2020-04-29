@@ -397,6 +397,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 parameter.size = 44;
                 parameter.shadowOffsetX = 0;
                 parameter.shadowOffsetY = 4;
+                parameter.color = Color.WHITE;
                 displayFont = generator.generateFont(parameter);
                 generator.dispose();
                 displayFont.setColor(normalFontColor);
@@ -435,8 +436,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             canvas.draw(menu, 0, 0);
             for(MenuText mt: menuTextArray){
                 if(mt.isHovered){
-                    System.out.println(mt.text + " hovered");
-                    displayFont.setColor(hoveredFontColor);
+                    displayFont.setColor(Color.CYAN);
+                }
+                else{
+                    displayFont.setColor(Color.WHITE);
                 }
                 canvas.drawTextCentered(mt.text, displayFont, text_offset*mt.offset);
             }
