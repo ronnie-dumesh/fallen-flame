@@ -251,7 +251,7 @@
 	},
 	"fonts": {
 		"display": {
-			"file": "fonts/MarkerFelt.ttf",
+			"file": "fonts/chp-fire.ttf",
 			"size": 64
 		},
 		"debug": {
