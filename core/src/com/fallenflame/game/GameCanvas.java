@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 
 public class GameCanvas {
@@ -928,6 +927,26 @@ public class GameCanvas {
         }
         GlyphLayout layout = new GlyphLayout(font,text);
         font.draw(spriteBatch, layout, x, y);
+    }
+
+    /**
+     * Draws text centered on the screen.
+     *
+     * @param text The string to draw
+     * @param font The font to use
+     * @param x The x-coordinate of the lower-left corner
+     * @param y The y-coordinate of the lower-left corner
+     */
+    public void drawTextFromCenter(String text, BitmapFont font, float x, float y) {
+        if (active != DrawPass.STANDARD) {
+            Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+            return;
+        }
+
+        GlyphLayout layout = new GlyphLayout(font,text);
+        float newX = x  - (layout.width / 2.0f);
+        float newY = y  + (layout.height / 2.0f);
+        font.draw(spriteBatch, layout, newX, newY);
     }
 
     /**

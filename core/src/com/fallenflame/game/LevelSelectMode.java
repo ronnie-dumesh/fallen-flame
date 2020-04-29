@@ -20,7 +20,8 @@ public class LevelSelectMode implements Screen, InputProcessor {
     private Texture levelButton = new Texture(LEVEL_BTN_FILE);
 
     /** Position vectors for all the level select buttons */
-    private Vector2[] posVec = {new Vector2(200,400),new Vector2(300,400),new Vector2(400,400),new Vector2(500,400),new Vector2(600,400),new Vector2(200,200),new Vector2(300,200),new Vector2(400,200),new Vector2(500,200),new Vector2(600,200)};
+    private Vector2[] posVecRel = {new Vector2(1f/4f,2f/3f),new Vector2(3f/8f,2f/3f),new Vector2(1f/2f,2f/3f),new Vector2(5f/8f,2f/3f),new Vector2(3f/4f,2f/3f),new Vector2(1f/4f,1f/3f),new Vector2(3f/8f,1f/3f),new Vector2(1f/2f,1f/3f),new Vector2(5f/8f,1f/3f),new Vector2(3f/4f,1f/3f)};
+    private Vector2[] posVec;
 
     /** Amount to scale the play button */
     private static float BUTTON_SCALE  = 0.75f;
@@ -38,6 +39,9 @@ public class LevelSelectMode implements Screen, InputProcessor {
     private static int STANDARD_WIDTH  = 800;
     /** Standard window height (for scaling) */
     private static int STANDARD_HEIGHT = 700;
+
+    /** The width of the canvas window */
+    private int widthX;
 
     /** The height of the canvas window (necessary since sprite origin != screen origin) */
     private int heightY;
@@ -59,8 +63,10 @@ public class LevelSelectMode implements Screen, InputProcessor {
     {
         this.canvas  = canvas;
         pressState = 0;
-        hoverState = new int[posVec.length];
-        for (int i = 0; i < posVec.length; i++) {
+        posVec = new Vector2[posVecRel.length];
+        hoverState = new int[posVecRel.length];
+        for (int i = 0; i < posVecRel.length; i++) {
+            posVec[i] = new Vector2(0f,0f);
             hoverState[i] = 0;
         }
     }
@@ -85,7 +91,7 @@ public class LevelSelectMode implements Screen, InputProcessor {
                 canvas.draw(levelButton, Color.valueOf("98F3FF"), levelButton.getWidth() / 2, levelButton.getHeight() / 2,
                         posVec[i].x, posVec[i].y, 0, 1, 1);
             }
-            canvas.drawText("" + (i + 1), displayFont, posVec[i].x - 8, posVec[i].y - 6);
+            canvas.drawTextFromCenter("" + (i + 1), displayFont, posVec[i].x, posVec[i].y - levelButton.getHeight()/5);
         }
         displayFont.setColor(Color.WHITE);
         displayFont.getData().setScale(1f);
@@ -111,8 +117,12 @@ public class LevelSelectMode implements Screen, InputProcessor {
         float sy = ((float)height)/STANDARD_HEIGHT;
         scale = (sx < sy ? sx : sy);
 
-
+        widthX = width;
         heightY = height;
+
+        for (int i = 0; i < posVecRel.length; i++) {
+            posVec[i] = new Vector2(posVecRel[i].x * widthX,posVecRel[i].y * heightY);
+        }
     }
 
     public void reset() { pressState = 0; }
