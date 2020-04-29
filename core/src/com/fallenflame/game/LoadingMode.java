@@ -32,6 +32,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.controllers.*;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.fallenflame.game.util.*;
 
 /**
@@ -49,14 +50,22 @@ import com.fallenflame.game.util.*;
  */
 public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     // Textures necessary to support the loading screen
-    private static final String BACKGROUND_FILE = "textures/fireloading.png";
-    private static final String PROGRESS_FILE = "textures/fireprogressbar.png";
+    private static final String BACKGROUND_FILE = "textures/loading_new.png";
+    private static final String MENU_BACKGROUND_FILE = "textures/m_background.png";
+    private static final String FIRE_BUDDY_FILE = "textures/firebuddy_light.png";
+    private static final String PROGRESS_FILE = "textures/progressbar.png";
     private static final String PLAY_BTN_FILE = "textures/fireplay.png";
 
     /** Background texture for start-up */
     private Texture background;
+    /**Background for the menu selection screen */
+    private Texture menu;
+    /**Fire buddy to add to background texture for start-up */
+    private Texture fireBuddy;
     /** Play button to display when done */
     private Texture playButton;
+    /**Font for the 3 textures */
+    protected BitmapFont displayFont;
     /** Texture atlas to support a progress bar */
     private Texture statusBar;
 
@@ -82,8 +91,14 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private static int STANDARD_HEIGHT = 700;
     /** Ratio of the bar width to the screen */
     private static float BAR_WIDTH_RATIO  = 0.66f;
-    /** Ration of the bar height to the screen */
-    private static float BAR_HEIGHT_RATIO = 0.25f;
+    /** Ratio of the bar height to the screen */
+    private static float BAR_HEIGHT_RATIO = 0.05f;
+    /**Ratio of the start text to the screen */
+    private static float START_HEIGHT_RATIO = 0.5f;
+    /**Ratio of level select to screen */
+    private static float SELECT_HEIGHT_RATIO = 0.65f;
+    /**Ratio of controls to screen */
+    private static float CONTROL_HEIGHT_RATIO = 0.80f;
     /** Height of the progress bar */
     private static int PROGRESS_HEIGHT = 30;
     /** Width of the rounded cap on left or right */
@@ -195,7 +210,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         // Load the next two images immediately.
         playButton = null;
         background = new Texture(BACKGROUND_FILE);
+        menu = new Texture(MENU_BACKGROUND_FILE);
         statusBar  = new Texture(PROGRESS_FILE);
+        fireBuddy = new Texture(FIRE_BUDDY_FILE);
+
 
         // No progress so far.
         progress   = 0;
@@ -233,8 +251,13 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         statusFrgMiddle = null;
 
         background.dispose();
+        menu.dispose();
+        fireBuddy.dispose();
+
         statusBar.dispose();
         background = null;
+        menu = null;
+        fireBuddy = null;
         statusBar  = null;
         if (playButton != null) {
             playButton.dispose();
@@ -272,10 +295,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     private void draw() {
         canvas.begin();
-        canvas.draw(background, 0, 0);
         if (playButton == null) {
+            canvas.draw(background, 0, 0);
+            canvas.draw(fireBuddy, centerX/1.30f, centerY/.15f);
             drawProgress(canvas);
         } else {
+            canvas.draw(menu, 0, 0);
             Color tint = (pressState == 1 ? Color.GRAY: Color.WHITE);
             canvas.draw(playButton, tint, playButton.getWidth()/2, playButton.getHeight()/2,
                     centerX, centerY, 0, BUTTON_SCALE*scale, BUTTON_SCALE*scale);
