@@ -408,10 +408,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                             (canvas.getWidth() - startLayout.width) / 2, (canvas.getHeight() - startLayout.height) / 2,
                             startLayout.width, startLayout.height), 0));
                     menuTextArray.add(new MenuText(false, "Select", new Rectangle(
-                            (canvas.getWidth() - selectLayout.width) / 2, (canvas.getHeight() - selectLayout.height) / 2,
+                            (canvas.getWidth() - selectLayout.width) / 2, (canvas.getHeight() - selectLayout.height) / 2 + text_offset,
                             selectLayout.width, selectLayout.height), 1));
                     menuTextArray.add(new MenuText(false, "Controls", new Rectangle(
-                            (canvas.getWidth() - controlLayout.width) / 2, (canvas.getHeight() - controlLayout.height) / 2,
+                            (canvas.getWidth() - controlLayout.width) / 2, (canvas.getHeight() - controlLayout.height ) / 2 + (text_offset * 2),
                             controlLayout.width, controlLayout.height), 2));
                 }
             }
@@ -436,8 +436,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             for(MenuText mt: menuTextArray){
                 if(mt.isHovered){
                     System.out.println(mt.text + " hovered");
+                    displayFont.setColor(hoveredFontColor);
                 }
-                displayFont.setColor(mt.isHovered ? hoveredFontColor : normalFontColor);
                 canvas.drawTextCentered(mt.text, displayFont, text_offset*mt.offset);
             }
         }
