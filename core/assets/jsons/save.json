@@ -1,34 +1,32 @@
 {
   "levels": [
     {
-      "name":       "Easy",
+      "name":       "easyLevel",
+      "unlocked":   true,
+      "completed":  true,
+      "path":       "levels/easyLevel.json"
+    },
+    {
+      "name":       "mediumLevel",
+      "unlocked":   true,
+      "completed":  true,
+      "path":       "levels/mediumLevel.json"
+    },
+    {
+      "name":       "hardLevel",
+      "unlocked":   true,
+      "completed":  true,
+      "path":       "levels/hardLevel.json"
+    },{
+      "name":       "easyTest",
       "unlocked":   true,
       "completed":  true,
       "path":       "levels/easy.json"
-    },
-    {
-      "name":       "Medium",
+    },{
+      "name":       "mediumTest",
       "unlocked":   true,
       "completed":  true,
       "path":       "levels/medium.json"
-    },
-    {
-      "name":       "exEasyLevel",
-      "unlocked":   true,
-      "completed":  true,
-      "path":       "levels/exEasyLevel.json"
-    },
-    {
-      "name":       "exMediumLevel",
-      "unlocked":   true,
-      "completed":  true,
-      "path":       "levels/exMediumLevel.json"
-    },
-    {
-      "name":       "exHardLevel",
-      "unlocked":   true,
-      "completed":  true,
-      "path":       "levels/exHardLevel.json"
     }
   ]
 }
