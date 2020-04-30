@@ -2,11 +2,8 @@ package com.fallenflame.game;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.assets.*;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.controllers.*;
 import com.fallenflame.game.util.*;
 
 import com.fallenflame.game.util.JsonAssetManager;
@@ -196,8 +193,11 @@ public class LevelSelectMode implements Screen, InputProcessor {
 
         for (int i = 0; i < posVec.length; i++) {
             if ((Math.pow(screenX-posVec[i].x,2) / (w*w)) + (Math.pow(screenY-posVec[i].y,2) / (h*h)) <= 1) {
-                pressState = 1;
-                levelSelected = i;
+                //TODO: temporary disable of levels 6-10
+                if(i < 5) {
+                    pressState = 1;
+                    levelSelected = i;
+                }
             }
         }
         return false;
