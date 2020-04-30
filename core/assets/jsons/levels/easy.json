@@ -1,0 +1,183 @@
+{
+  "bgm": "menu-music",
+  "name": "Easy",
+  "physicsSize": [
+    16,
+    12
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    1.5,
+    1.5
+  ],
+  "startSneakVal" : 200,
+  "startFlareCount": 4,
+  "maxFlareCount": 4,
+  "exitpos": [
+    1.5,
+    5.35
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        5,
+        5
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [7.7, 5.1],
+        [14.45, 1.34],
+        [14.45, 7.61],
+        [5, 5]
+      ]
+    },
+    {
+      "enemypos": [
+        7,
+        7
+      ],
+      "enemytype": "typeB"
+    }
+  ],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        1.75,
+        3
+      ],
+      "size": [
+        2.5,
+        0.5
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        2.75,
+        4.75
+      ],
+      "size": [
+        0.5,
+        4
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        11,
+        6.5
+      ],
+      "size": [
+        5,
+        0.5
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        13.25,
+        4.5
+      ],
+      "size": [
+        0.5,
+        4.5
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        6,
+        6.5
+      ],
+      "size": [
+        0.5,
+        0.5
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        10,
+        3.5
+      ],
+      "size": [
+        0.5,
+        0.5
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        7,
+        9
+      ],
+      "size": [
+        13,
+        0.5
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.25,
+        6
+      ],
+      "size": [
+        0.5,
+        12
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        15.75,
+        6
+      ],
+      "size": [
+        0.5,
+        12
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        8,
+        0.25
+      ],
+      "size": [
+        16,
+        0.5
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        8,
+        11.75
+      ],
+      "size": [
+        16,
+        0.5
+      ],
+      "texture": "wall-side"
+    }
+  ]
+}
