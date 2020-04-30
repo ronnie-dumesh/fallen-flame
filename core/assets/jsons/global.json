@@ -10,7 +10,7 @@
     "maxspeed": 	  5.0,
     "startframe":       0,
     "walklimit":		4,
-    "flarecount":       5,
+    "standardflarecount": 5,
     "sprintlightrad":  10,
     "sneaklightrad":    1,
     "minlightradius":   2,

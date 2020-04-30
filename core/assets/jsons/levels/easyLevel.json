@@ -14,6 +14,8 @@
     1.5
   ],
   "startSneakVal" : 200,
+  "startFlareCount": 4,
+  "maxFlareCount": 4,
   "exitpos": [
     1.5,
     5.35

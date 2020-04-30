@@ -401,10 +401,7 @@ public class LevelController implements ContactListener {
         // Create player
         player = new PlayerModel();
         player.setDrawScale(scale);
-        if(levelJson.has("startSneakVal"))
-            player.initialize(globalJson.get("player"), levelJson.get("playerpos").asFloatArray(), levelJson.get("startSneakVal").asInt());
-        else
-            player.initialize(globalJson.get("player"), levelJson.get("playerpos").asFloatArray());
+        player.initialize(globalJson.get("player"), levelJson);
         player.initializeTextures(globalJson.get("player"));
         player.activatePhysics(world);
         assert inBounds(player);
@@ -711,7 +708,7 @@ public class LevelController implements ContactListener {
      * @param mousePosition Position of mouse when flare launched
      */
     public void createFlare(Vector2 mousePosition, Vector2 screenDimensions){
-        if (flares.size() < player.getFlareCount()) {
+        if (player.getFlareCount() > 0) {
             FlareModel flare = new FlareModel(player.getPosition());
             flare.setDrawScale(scale);
             flare.initialize(flareJSON);
@@ -724,6 +721,7 @@ public class LevelController implements ContactListener {
             flare.getShotSound().play();
             flares.add(flare);
             assert inBounds(flare);
+            player.decFlareCount();
         }
     }
 
@@ -892,11 +890,11 @@ public class LevelController implements ContactListener {
         float flareWidth = activeFlareCountTexture.getRegionWidth() + flareCountSplit * scale.x;
 
         if (activeFlareCountTexture != null && inactiveFlareCountTexture != null) {
-            for (int i = 0; i <= player.getFlareCount() - flares.size() - 1; i++) {
+            for (int i = 0; i <= player.getFlareCount()  - 1; i++) {
                 float activeFlareX = ox + i * flareWidth;
                 canvas.draw(activeFlareCountTexture, activeFlareX, oy);
             }
-            for (int j = player.getFlareCount() - flares.size(); j < player.getFlareCount(); j++){
+            for (int j = player.getFlareCount() ; j < player.getMaxFlareCount(); j++){
                 float inactiveFlareX = ox + j * flareWidth;
                 canvas.draw(inactiveFlareCountTexture, inactiveFlareX, oy);
             }
