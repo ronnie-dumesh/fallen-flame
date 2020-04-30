@@ -17,6 +17,16 @@
       "unlocked":   true,
       "completed":  true,
       "path":       "levels/hardLevel.json"
+    },{
+      "name":       "easyTest",
+      "unlocked":   true,
+      "completed":  true,
+      "path":       "levels/easy.json"
+    },{
+      "name":       "mediumTest",
+      "unlocked":   true,
+      "completed":  true,
+      "path":       "levels/medium.json"
     }
   ]
 }
