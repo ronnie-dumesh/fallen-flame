@@ -24,7 +24,9 @@ public class PlayerModel extends CharacterModel {
     /** How the player is currently moving */
     private MovementState move;
 
-    /** Number of flares the player can have on the screen at once */
+    /** Max flares player can hold. Also determines UI flare indicators */
+    private int maxFlareCount;
+    /** Number of flares the player has left */
     private int flareCount;
     /** Player's force when moving at standard walk speed */
     protected float forceWalk;
@@ -62,28 +64,29 @@ public class PlayerModel extends CharacterModel {
     /**
      * Initializes the character via the given JSON value
      *
-     * @param json	the JSON subtree defining the player
+     * @param globalJson	the JSON subtree defining global player data
+     * @param levelJson     the JSON subtree defining level data
      */
-    public void initialize(JsonValue json, float[] pos, int startSneakVal) {
-        super.initialize(json, pos);
-        flareCount = json.get("flarecount").asInt();
+    public void initialize(JsonValue globalJson, JsonValue levelJson) {
+        super.initialize(globalJson, levelJson.get("playerpos").asFloatArray());
+        flareCount = levelJson.has("startFlareCount") ?
+                levelJson.get("startFlareCount").asInt() : globalJson.get("standardflarecount").asInt();
+        maxFlareCount = levelJson.has("startFlareCount") ?
+                levelJson.get("startFlareCount").asInt() : globalJson.get("standardflarecount").asInt();
         forceWalk = getForce();
-        lightRadiusSprint = json.get("sprintlightrad").asInt();
-        lightRadiusSneak = json.get("sneaklightrad").asInt();
-        minLightRadius = json.get("minlightradius").asInt();
-        sneakVal = startSneakVal;
+        lightRadiusSprint = globalJson.get("sprintlightrad").asInt();
+        lightRadiusSneak = globalJson.get("sneaklightrad").asInt();
+        minLightRadius = globalJson.get("minlightradius").asInt();
+        sneakVal = levelJson.has("startSneakVal") ?
+                levelJson.get("startSneakVal").asInt() : globalJson.get("defaultStartSneakVal").asInt();
         lightRadius = minLightRadius;
         move = MovementState.WALK;
 
-        float[] tintValues = json.get("tint").asFloatArray();//RGBA
+        float[] tintValues = globalJson.get("tint").asFloatArray();//RGBA
         tint = new Color(tintValues[0], tintValues[1], tintValues[2], tintValues[3]);
 
-        String walkSoundKey = json.get("walksound").asString();
+        String walkSoundKey = globalJson.get("walksound").asString();
         walkSound = JsonAssetManager.getInstance().getEntry(walkSoundKey, Sound.class);
-    }
-
-    public void initialize(JsonValue json, float[] pos) {
-        initialize(json, pos, json.get("defaultStartSneakVal").asInt());
     }
 
     @Override
@@ -209,13 +212,21 @@ public class PlayerModel extends CharacterModel {
     public float getMinLightRadius() { return minLightRadius; }
 
     /**
-     * Returns the number of flares the player can have on the screen at once
-     *
-     * @return the number of flares the player can have on the screen at once
+     * Returns max flare count
      */
-    public int getFlareCount() {
-        return flareCount;
-    }
+    public int getMaxFlareCount() { return maxFlareCount; }
+
+    /**
+     * Returns the number of flares the player has left
+     *
+     * @return the number of flares the player has left
+     */
+    public int getFlareCount() { return flareCount; }
+
+    /**
+     * Decrement flare count (for firing a flare)
+     */
+    public void decFlareCount() { flareCount--; }
 
     /**
      * Gets player light radius
