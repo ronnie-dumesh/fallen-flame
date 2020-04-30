@@ -286,7 +286,7 @@ public class GameEngine implements Screen, InputProcessor {
      * reread from the JSON file, allowing us to make changes on the fly.
      */
     public void reset() {
-        reset(0);
+        reset(lastLevelPlayed);
     }
 
     /**

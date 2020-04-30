@@ -813,7 +813,8 @@ public class LevelController implements ContactListener {
         canvas.begin();
         //draw background
         if (background != null) {
-            canvas.draw(background, Color.WHITE, 0,0, (float) canvas.getWidth(), (float) canvas.getHeight());
+            canvas.draw(background, Color.WHITE, 0,0,
+                    bounds.width * scale.x, bounds.width * scale.y);
         }
 
         // Draw all objects
