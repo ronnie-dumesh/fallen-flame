@@ -12,6 +12,7 @@
     3.3,
     4.28
   ],
+  "bgm": "the-doll-thrown-away-in-rain",
   "exitpos": [
     4.5,
     20.47
@@ -53,13 +54,6 @@
           8.36
         ]
       ]
-    },
-    {
-      "enemypos": [
-        28.66,
-        5.7
-      ],
-      "enemytype": "typeA"
     },
     {
       "enemypos": [
@@ -126,6 +120,13 @@
           21.22
         ]
       ]
+    },
+    {
+      "enemypos": [
+        29.52,
+        7.1
+      ],
+      "enemytype": "typeB"
     }
   ],
   "lighting": {
