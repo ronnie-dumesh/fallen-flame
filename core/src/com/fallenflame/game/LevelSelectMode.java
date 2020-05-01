@@ -14,7 +14,9 @@ public class LevelSelectMode implements Screen, InputProcessor {
     private Texture background = new Texture(BACKGROUND_FILE);
 
     private static final String LEVEL_BTN_FILE = "textures/ls_unlocked_level.png";
+    private static final String LEVEL_LOCKED_FILE = "textures/ls_locked_level.png";
     private Texture levelButton = new Texture(LEVEL_BTN_FILE);
+    private Texture lockedLevelButton = new Texture(LEVEL_LOCKED_FILE);
 
     /** Position vectors for all the level select buttons */
     private Vector2[] posVecRel = {new Vector2(1f/4f,2f/3f),new Vector2(3f/8f,2f/3f),new Vector2(1f/2f,2f/3f),new Vector2(5f/8f,2f/3f),new Vector2(3f/4f,2f/3f),new Vector2(1f/4f,1f/3f),new Vector2(3f/8f,1f/3f),new Vector2(1f/2f,1f/3f),new Vector2(5f/8f,1f/3f),new Vector2(3f/4f,1f/3f)};
@@ -55,11 +57,13 @@ public class LevelSelectMode implements Screen, InputProcessor {
     /** Level selected by the player */
     private int levelSelected;
 
+    private int numberUnlocked;
 
     public LevelSelectMode(GameCanvas canvas)
     {
         this.canvas  = canvas;
         pressState = 0;
+        numberUnlocked = 8;
         posVec = new Vector2[posVecRel.length];
         hoverState = new int[posVecRel.length];
         for (int i = 0; i < posVecRel.length; i++) {
@@ -81,7 +85,11 @@ public class LevelSelectMode implements Screen, InputProcessor {
         displayFont.setColor(Color.BLACK);
         displayFont.getData().setScale(.5f);
         for (int i = 0; i < posVec.length; i++) {
-            if (hoverState[i] != 1) {
+            if(i > numberUnlocked-1){
+                canvas.draw(lockedLevelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                        posVec[i].x, posVec[i].y, 0, 1, 1);
+            }
+           else if (hoverState[i] != 1) {
                 canvas.draw(levelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
                         posVec[i].x, posVec[i].y, 0, 1, 1);
             } else {
@@ -194,7 +202,7 @@ public class LevelSelectMode implements Screen, InputProcessor {
         for (int i = 0; i < posVec.length; i++) {
             if ((Math.pow(screenX-posVec[i].x,2) / (w*w)) + (Math.pow(screenY-posVec[i].y,2) / (h*h)) <= 1) {
                 //TODO: temporary disable of levels 6-10
-                if(i < 5) {
+                if(i < numberUnlocked) {
                     pressState = 1;
                     levelSelected = i;
                 }

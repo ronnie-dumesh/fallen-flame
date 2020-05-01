@@ -1,0 +1,213 @@
+{
+  "name": "level5",
+  "startSneakVal": 982,
+  "physicsSize": [
+    26.88,
+    20.48
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    3.08,
+    12.04
+  ],
+  "exitpos": [
+    23.895,
+    11.21
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        4.64,
+        14.72
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        9.22,
+        13.58
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        4.32,
+        8.3
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        6.64,
+        13.58
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        6.28,
+        10
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        11.8,
+        13.54
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        14.14,
+        13.62
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        16.58,
+        13.58
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        18.9,
+        13.5
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        20.74,
+        14.88
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        8.68,
+        10.16
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        11.44,
+        10.08
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        14.3,
+        10.06
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        16.12,
+        9.94
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        18.66,
+        9.78
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        21.44,
+        8.6
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        2.5,
+        15.28
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        2.36,
+        7.54
+      ],
+      "enemytype": "typeA"
+    }
+  ],
+  "items": [],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        10.88,
+        19.84
+      ],
+      "size": [
+        32,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.64,
+        11.52
+      ],
+      "size": [
+        1.28,
+        23.04
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        26.24,
+        8.96
+      ],
+      "size": [
+        1.28,
+        23.04
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        13.44,
+        0.64
+      ],
+      "size": [
+        26.88,
+        1.28
+      ],
+      "texture": "wall-side"
+    }
+  ],
+  "graphicSize": [
+    800,
+    600
+  ]
+}

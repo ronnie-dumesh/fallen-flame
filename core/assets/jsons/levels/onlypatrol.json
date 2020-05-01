@@ -1,20 +1,20 @@
 {
-  "name": "exMediumLevel",
+  "name": "onlypatrol",
   "physicsSize": [
-    33.28,
-    25.6
+    30.72,
+    23.04
   ],
   "fpsRange": [
     20,
     60
   ],
   "playerpos": [
-    2.96,
-    3.6
+    3,
+    3
   ],
   "exitpos": [
-    30.08,
-    21.75
+    15.28,
+    20.13
   ],
   "background": {
     "texture": "floor-tile"
@@ -22,52 +22,53 @@
   "enemies": [
     {
       "enemypos": [
-        15.46,
-        12.92
-      ],
-      "enemytype": "typeA"
-    },
-    {
-      "enemypos": [
-        26.44,
-        8.5
+        17.58,
+        11.9
       ],
       "enemytype": "typeA",
       "subtype": "pathing",
       "pathCoors": [
         [
-          26.42,
-          6.98
+          12.36,
+          12.02
         ],
         [
-          31.16,
-          6.96
+          12.44,
+          7.9
         ],
         [
-          31.18,
-          8.42
+          28.42,
+          7.94
+        ],
+        [
+          28.28,
+          11.88
         ]
       ]
     },
     {
       "enemypos": [
-        2.24,
-        18.86
+        11.96,
+        17.3
       ],
       "enemytype": "typeA",
       "subtype": "pathing",
       "pathCoors": [
         [
-          2.2,
-          17.18
+          16.4,
+          17.36
         ],
         [
-          7,
-          17.2
+          16.34,
+          14.16
         ],
         [
-          6.98,
-          18.88
+          2.9,
+          13.9
+        ],
+        [
+          3,
+          17.26
         ]
       ]
     }
@@ -87,11 +88,11 @@
   "walls": [
     {
       "pos": [
-        16.64,
-        24.96
+        15.36,
+        22.4
       ],
       "size": [
-        33.28,
+        30.72,
         1.28
       ],
       "texture": "wall-side"
@@ -99,82 +100,38 @@
     {
       "pos": [
         0.64,
-        12.8
+        11.52
       ],
       "size": [
         1.28,
-        25.6
+        23.04
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        32.64,
-        12.8
+        30.08,
+        11.52
       ],
       "size": [
         1.28,
-        25.6
+        23.04
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        16.64,
+        15.36,
         0.64
       ],
       "size": [
-        33.28,
+        30.72,
         1.28
       ],
       "texture": "wall-side"
-    },
-    {
-      "pos": [
-        13.44,
-        7.04
-      ],
-      "size": [
-        24.32,
-        1.28
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        19.84,
-        17.28
-      ],
-      "size": [
-        24.32,
-        1.28
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        19.84,
-        18.56
-      ],
-      "size": [
-        24.32,
-        1.28
-      ],
-      "texture": "wall-top"
-    },
-    {
-      "pos": [
-        13.44,
-        8.32
-      ],
-      "size": [
-        24.32,
-        1.28
-      ],
-      "texture": "wall-top"
     }
   ],
-  "startSneakVal": 500,
+  "startSneakVal": 348,
   "graphicSize": [
     800,
     600

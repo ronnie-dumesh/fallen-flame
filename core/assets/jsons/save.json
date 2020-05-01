@@ -17,7 +17,26 @@
       "unlocked":   true,
       "completed":  true,
       "path":       "levels/hardLevel.json"
-    },{
+    },
+    {
+      "name":       "level4",
+      "unlocked":   true,
+      "completed":  true,
+      "path":       "levels/enemySurroundingPlayer.json"
+    },
+    {
+      "name":       "level5",
+      "unlocked":   true,
+      "completed":  true,
+      "path":       "levels/shooterAndPatrol.json"
+    },
+    {
+      "name":       "level6",
+      "unlocked":   true,
+      "completed":  true,
+      "path":       "levels/onlyPatrol.json"
+    },
+    {
       "name":       "easyTest",
       "unlocked":   true,
       "completed":  true,
