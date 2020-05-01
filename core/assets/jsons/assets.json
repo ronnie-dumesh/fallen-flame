@@ -284,5 +284,8 @@
 		"menu-music": {
 			"file": "sounds/new-sounds/deep-dark-well.mp3"
 		},
+		"the-doll-thrown-away-in-rain": {
+			"file": "sounds/new-sounds/the-doll-thrown-away-in-rain.mp3"
+		}
 	}
 }
