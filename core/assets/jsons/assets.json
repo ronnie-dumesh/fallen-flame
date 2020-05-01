@@ -24,9 +24,9 @@
 			"file": "textures/player-walk-left.png",
 			"wrap": false,
 			"strip": {
-				"size": 26,
+				"size": 11,
 				"rows": 1,
-				"cols": 26,
+				"cols": 11,
 				"first": 0
 			}
 		},
@@ -34,9 +34,9 @@
 			"file": "textures/player-walk-right.png",
 			"wrap": false,
 			"strip": {
-				"size": 26,
+				"size": 11,
 				"rows": 1,
-				"cols": 26,
+				"cols": 11,
 				"first": 0
 			}
 		},
@@ -81,7 +81,7 @@
 			}
 		},
 		"enemy-a-up": {
-			"file": "textures/enemy-a-walk-right.png",
+			"file": "textures/enemy-a-walk-up.png",
 			"wrap": false,
 			"strip": {
 				"size": 5,
@@ -191,7 +191,7 @@
 			}
 		},
 		"goal": {
-			"file": "textures/helicopter.png",
+			"file": "textures/exit.png",
 			"wrap": false
 		},
 		"fire": {
