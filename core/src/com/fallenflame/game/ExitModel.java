@@ -45,7 +45,7 @@ public class ExitModel extends BoxObstacle implements ILight {
      * The JSON value has been parsed and is part of a bigger level file.  However,
      * this JSON value is limited to the exit subtree
      *
-     * @param json	the JSON subtree defining the dude
+     * @param json	the JSON subtree defining the exit
      */
     public void initialize(JsonValue json, float[] pos) {
         setName(json.name());

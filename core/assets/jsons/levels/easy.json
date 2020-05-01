@@ -13,6 +13,16 @@
     1.5,
     1.5
   ],
+  "items": [
+    {
+      "itemPos": [3, 1.5],
+      "itemType": "flare"
+    },
+    {
+      "itemPos": [7, 5],
+      "itemType": "flare"
+    }
+  ],
   "startSneakVal" : 200,
   "startFlareCount": 4,
   "maxFlareCount": 4,

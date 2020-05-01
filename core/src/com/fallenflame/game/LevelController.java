@@ -63,6 +63,10 @@ public class LevelController implements ContactListener {
     private List<FlareModel> flares;
     /** Reference to all fireballs */
     private List<FireballModel> fireballs;
+    /** Reference to all items */
+    private List<ItemModel> items;
+    /** Reference to continuing player-item contacts */
+    private HashSet<ItemModel> itemContacts;
     /** Level Model for AI Pathfinding */
     private LevelModel levelModel;
 
@@ -474,6 +478,22 @@ public class LevelController implements ContactListener {
         fireballJSON = globalJson.get("fireball");
         ghostJSON = globalEnemies.get("ghost");
 
+        // Create items (if any exist)
+        items = new LinkedList();
+        itemContacts = new HashSet();
+        if(levelJson.has("items")){
+            JsonValue globalItemJson = globalJson.get("items");
+            for(JsonValue levelItemJson : levelJson.get("items")){
+                ItemModel item = new ItemModel(levelItemJson.get("itemPos").asFloatArray());
+                item.initialize(globalItemJson, levelItemJson.get("itemType").asString());
+                item.setDrawScale(scale);
+                item.activatePhysics(world);
+                assert inBounds(item);
+                items.add(item);
+            }
+        }
+
+        // Set background music
         bgm = levelJson.has("bgm") ? levelJson.get("bgm").asString() : null;
 
         // Initialize levelModel, lightController, and fogController
@@ -517,6 +537,11 @@ public class LevelController implements ContactListener {
             fireball.dispose();
         }
         fireballs.clear();
+        for(ItemModel item : items) {
+            item.deactivatePhysics(world);
+            item.dispose();
+        }
+        items.clear();
         exit.deactivatePhysics(world);
         exit.dispose();
         player.deactivatePhysics(world);
@@ -569,7 +594,6 @@ public class LevelController implements ContactListener {
                     ghostAdded = true;
                 }
             }
-
 
             // Get Enemy Actions
             Iterator<AIController> ctrlI = AIControllers.iterator();
@@ -636,6 +660,28 @@ public class LevelController implements ContactListener {
                 }
             }
 
+            // Check for contact items' usability
+            Iterator<ItemModel> i3 = itemContacts.iterator();
+            while(i3.hasNext()){
+                ItemModel item = i3.next();
+                // If item is a flare try to increment flare count (will return false if player is at max)
+                if(item.isFlare() && player.incFlareCount()) {
+                    item.deactivate();
+                    i3.remove();
+                }
+            }
+            // Remove old items
+            Iterator<ItemModel> iii = items.iterator();
+            while(iii.hasNext()){
+                ItemModel it = iii.next();
+                if(!it.isActive()){
+                    it.deactivatePhysics(world);
+                    it.dispose();
+                    iii.remove();
+                }
+            }
+
+            // Update background music
             if (player.getSneakVal() > 0 || !ghostJSON.has("bgm") || ghostJSON.get("bgm").asString().equals("")) {
                 if (bgm != null && !bgm.equals("")) {
                     BGMController.startBGM(bgm);
@@ -650,7 +696,7 @@ public class LevelController implements ContactListener {
             levelModel.update(player, enemies);
 
             // Update lights
-            lightController.updateLights(flares, enemies, fireballs);
+            lightController.updateLights(flares, enemies, fireballs, items);
         }
     }
 
@@ -831,6 +877,9 @@ public class LevelController implements ContactListener {
         for(FireballModel fireball : fireballs){
             fireball.draw(canvas);
         }
+        for(ItemModel item : items) {
+            item.draw(canvas);
+        }
         player.draw(canvas);
         canvas.end();
 
@@ -857,6 +906,9 @@ public class LevelController implements ContactListener {
             }
             for(FireballModel fireball: fireballs){
                 fireball.drawDebug(canvas);
+            }
+            for(ItemModel item : items) {
+                item.drawDebug(canvas);
             }
             canvas.endDebug();
             if(ticks % 10 == 0){
@@ -997,12 +1049,45 @@ public class LevelController implements ContactListener {
                     ((FireballModel) bd2).deactivate();
                 }
             }
+            // Check for item pick-up
+            if((bd1 instanceof ItemModel && bd2 instanceof PlayerModel
+                    || bd1 instanceof PlayerModel && bd2 instanceof ItemModel)) {
+                // Ensure bd1 is item
+                if(bd2 instanceof ItemModel) {
+                    Obstacle temp = bd2;
+                    bd2 = bd1;
+                    bd1 = temp;
+                }
+                // Add contact to be handled later (not handled here, so we can handle potentially
+                // after beginContact is finished)
+                itemContacts.add((ItemModel)bd1);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     /** Unused ContactListener method */
-    public void endContact(Contact contact) {}
+    public void endContact(Contact contact) {
+        Fixture fix1 = contact.getFixtureA();
+        Fixture fix2 = contact.getFixtureB();
+        Body body1 = fix1.getBody();
+        Body body2 = fix2.getBody();
+        Obstacle bd1 = (Obstacle)body1.getUserData();
+        Obstacle bd2 = (Obstacle)body2.getUserData();
+
+        // Check if need to remove contact from itemContacts
+        if(bd1 instanceof ItemModel || bd2 instanceof ItemModel) {
+            // Ensure bd1 is item
+            if (bd2 instanceof ItemModel) {
+                Obstacle temp = bd2;
+                bd2 = bd1;
+                bd1 = temp;
+            }
+            if(itemContacts.contains(bd1))
+                itemContacts.remove(bd1);
+        }
+
+    }
     /** Unused ContactListener method */
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     /** Unused ContactListener method */

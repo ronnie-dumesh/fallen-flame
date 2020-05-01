@@ -157,7 +157,7 @@
   },
   "flare" : {
     "radius":      	  0.1,
-    "lighradius":     3.5,
+    "lightradius":     3.5,
     "flareduration":  1500,
     "bodytype":    	  "dynamic",
     "density":        1.0,
@@ -173,7 +173,7 @@
   },
   "fireball" : {
     "radius":      	  0.1,
-    "lighradius":     2,
+    "lightradius":     2,
     "bodytype":    	  "dynamic",
     "density":        1.0,
     "friction":       0.0,
@@ -240,5 +240,17 @@
       "y": 4.875
     },
     "flare-split": 0.15
+  },
+  "items": {
+    "flare": {
+      "radius":      	0.3,
+      "bodytype":    	"static",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":    1,
+      "tint":           [1.0, 1.0, 1.0, 1.0],
+      "texture":        "activeflarecounter"
+    }
   }
 }

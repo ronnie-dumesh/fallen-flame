@@ -83,7 +83,7 @@ public class FireballModel extends WheelObstacle implements ILight {
         setDensity(json.get("density").asFloat());
         setFriction(json.get("friction").asFloat());
         setRestitution(json.get("restitution").asFloat());
-        lightRadius = json.get("lighradius").asFloat();
+        lightRadius = json.get("lightradius").asFloat();
         initialForce = json.get("initialforce").asFloat();
         damping = json.get("damping").asFloat();
         startFrame = json.get("startframe").asInt();

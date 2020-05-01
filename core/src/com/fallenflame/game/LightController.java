@@ -72,6 +72,11 @@ public class LightController {
     protected Map<FireballModel, PointSource> fireballLights;
 
     /**
+     * A map of item lights for all the items.
+     */
+    protected Map<ItemModel, PointSource> itemLights;
+
+    /**
      * A map of lights for all the enemies.
      */
     protected Map<EnemyModel, PointSource> enemyLights;
@@ -136,6 +141,7 @@ public class LightController {
 
         // Create empty maps for flare, fireball and enemy lights.
         this.flareLights = new HashMap<>();
+        this.itemLights = new HashMap<>();
         this.fireballLights = new HashMap<>();
         this.enemyLights = new HashMap<>();
     }
@@ -159,6 +165,8 @@ public class LightController {
         this.exitLight = null;
         this.flareLights.clear();
         this.flareLights = null;
+        this.itemLights.clear();
+        this.itemLights = null;
         this.fireballLights.clear();
         this.fireballLights = null;
         this.enemyLights.clear();
@@ -255,7 +263,8 @@ public class LightController {
      * @param flares A collection of flares.
      * @param enemies A collection of enemies.
      */
-    public void updateLights(Collection<FlareModel> flares, Collection<EnemyModel> enemies, Collection<FireballModel> fireballs) {
+    public void updateLights(Collection<FlareModel> flares, Collection<EnemyModel> enemies,
+                             Collection<FireballModel> fireballs, Collection<ItemModel> items) {
         // Update debug.
         if (debug) {
             rayhandler.setAmbientLight(.5f, .5f, .5f, 0);
@@ -272,6 +281,7 @@ public class LightController {
         // Update flare lights.
         updateLightsForList(flares, flareLights);
         updateLightsForList(fireballs, fireballLights);
+        updateLightsForList(items, itemLights);
 
         // Update enemy lights.
         updateLightsForList(

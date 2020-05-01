@@ -229,6 +229,18 @@ public class PlayerModel extends CharacterModel {
     public void decFlareCount() { flareCount--; }
 
     /**
+     * Increment flare count (for picking up a flare) iff player not at max flares
+     * @return True if player is able to pick it up, else false
+     */
+    public boolean incFlareCount() {
+        if(flareCount < maxFlareCount){
+            flareCount++;
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Gets player light radius
      * @return light radius
      */
