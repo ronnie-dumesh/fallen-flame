@@ -10,15 +10,23 @@ import com.fallenflame.game.util.FilmStrip;
 import com.fallenflame.game.util.JsonAssetManager;
 
 public abstract class CharacterModel extends WheelObstacle implements ILight {
-    // Physics constants
-    /** The factor to multiply by the input */
-    private float force;
-    /** The amount to slow the character down */
-    private float damping;
-    /** The maximum character speed */
-    private float maxspeed;
+    /** Character movement types enum */
+    protected enum MovementState {
+        WALK,
+        SNEAK,
+        SPRINT
+    }
+    /** How the player is currently moving */
+    private MovementState move;
+    // Character Speeds
+    /** Player walk speed */
+    private float walkSpeed;
+    /** Player sprint speed */
+    private float sprintSpeed;
+    /** Player sneak speed */
+    private float sneakSpeed;
 
-    /** The current horizontal movement of the character */
+    /** The current movement of the character */
     private Vector2 movement = new Vector2();
     /** Whether or not to animate the current frame */
     protected boolean animate = false;
@@ -41,30 +49,24 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     /** The current animation frame of the avatar */
     protected int startFrame;
 
-    /** Cache for internal force calculations */
-    private Vector2 forceCache = new Vector2();
+    /** Sets player as walking */
+    public void setWalking() { move = MovementState.WALK; }
+    /** Sets player as sneaking */
+    public void setSneaking() { move = MovementState.SNEAK; }
+    /** Sets player as sprinting */
+    public void setSprinting() { move = MovementState.SPRINT; }
 
     /**
-     * Returns the directional movement of this character.
-     *
-     * This is the result of input times character force.
-     *
-     * @return the directional movement of this character.
+     * Returns whether player is walking
+     * @return True if walking, False if sprinting or sneaking
      */
-    public Vector2 getMovement() {
-        return movement;
-    }
+    public boolean isWalking() { return move == MovementState.WALK; }
 
     /**
-     * Sets the directional movement of this character.
-     *
-     * This is the result of input times character force.
-     *
-     * @param value the directional movement of this character.
+     * Return True if player is sneaking
+     * @return True if sneaking, False if sprinting or walking
      */
-    public void setMovement(Vector2 value) {
-        setMovement(value.x,value.y);
-    }
+    public boolean isSneaking() { return move == MovementState.SNEAK; }
 
     /**
      * Sets the directional movement of this character.
@@ -79,65 +81,19 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     }
 
     /**
-     * Returns how much force to apply to get the character moving
-     *
-     * Multiply this by the input to get the movement value.
-     *
-     * @return how much force to apply to get the character moving
+     * Returns the static speed set for player given current movement state
+     * @return float speed
      */
-    public float getForce() {
-        return force;
-    }
-
-    /**
-     * Sets how much force to apply to get the character moving
-     *
-     * Multiply this by the input to get the movement value.
-     *
-     * @param value	how much force to apply to get the character moving
-     */
-    public void setForce(float value) {
-        force = value;
-    }
-
-    /**
-     * Returns how hard the brakes are applied to get a character to stop moving
-     *
-     * @return how hard the brakes are applied to get a character to stop moving
-     */
-    public float getDamping() {
-        return damping;
-    }
-
-    /**
-     * Sets how hard the brakes are applied to get a character to stop moving
-     *
-     * @param value	how hard the brakes are applied to get a character to stop moving
-     */
-    public void setDamping(float value) {
-        damping = value;
-    }
-
-    /**
-     * Returns the upper limit on character left-right movement.
-     *
-     * This does NOT apply to vertical movement.
-     *
-     * @return the upper limit on character left-right movement.
-     */
-    public float getMaxSpeed() {
-        return maxspeed;
-    }
-
-    /**
-     * Sets the upper limit on character left-right movement.
-     *
-     * This does NOT apply to vertical movement.
-     *
-     * @param value	the upper limit on character left-right movement.
-     */
-    public void setMaxSpeed(float value) {
-        maxspeed = value;
+    public float getSpeed(){
+        switch(move){
+            case SNEAK:
+                return sneakSpeed;
+            case SPRINT:
+                return sprintSpeed;
+            case WALK:
+                return walkSpeed;
+        }
+        return -1;
     }
 
     /**
@@ -196,7 +152,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     }
 
     /**
-     * @param m and n are CharacterModel objects
+     * @param n and n are CharacterModel objects
      * @return the absolute distance from CharacterModel m to CharacterModel n
      */
     public float getDistanceBetween(CharacterModel n) {
@@ -213,7 +169,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
      * viewed on a unit circle. If n is directly right of m, the angle
      * is 0
      *
-     * @param m and n are CharacterModel objects
+     * @param n and n are CharacterModel objects
      * @return angle from CharacterModel m to CharacterModel n in radians
      */
     public float getAngleBetween(CharacterModel n){
@@ -277,26 +233,15 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
         setDensity(json.get("density").asFloat());
         setFriction(json.get("friction").asFloat());
         setRestitution(json.get("restitution").asFloat());
-        setForce(json.get("force").asFloat());
-        setDamping(json.get("damping").asFloat());
-        setMaxSpeed(json.get("maxspeed").asFloat());
         setStartFrame(json.get("startframe").asInt());
         setWalkLimit(json.get("walklimit").asInt());
         setTextureOffset(json.get("textureoffset").get("x").asFloat(),
                 json.get("textureoffset").get("y").asFloat());
 
-        // Reflection is best way to convert name to color
-//        Color debugColor;
-//        try {
-//            String cname = json.get("debugcolor").asString().toUpperCase();
-//            Field field = Class.forName("com.badlogic.gdx.graphics.Color").getField(cname);
-//            debugColor = new Color((Color)field.get(null));
-//        } catch (Exception e) {
-//            debugColor = null; // Not defined
-//        }
-//        int opacity = json.get("debugopacity").asInt();
-//        debugColor.mul(opacity/255.0f);
-//        setDebugColor(debugColor);
+        walkSpeed = json.get("walkspeed").asFloat();
+        sprintSpeed = json.get("sprintspeed").asFloat();
+        sneakSpeed = json.get("sneakspeed").asFloat();
+        move = MovementState.WALK;
     }
 
     /**
@@ -348,29 +293,22 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
         setTexture(filmstrip, textureOffset.x, textureOffset.y);
     }
 
-
-    /**
-     * Applies the force to the body of this character
-     *
-     * This method should be called after the force attribute is set.
-     */
-    public void applyForce() {
-        if (!isActive()) {
+    public void move(Vector2 moveAngle) {
+        if (moveAngle.isZero()){
+            animate = false;
+            setLinearVelocity(new Vector2());
             return;
         }
 
-        // Only walk or spin if we allow it
-        setLinearVelocity(Vector2.Zero);
-        setAngularVelocity(0.0f);
+        animate = true;
+        // Set character angle facing
+        float angle = 0;
+        angle = moveAngle.angle();
+        // Convert to radians with up as 0
+        angle = (float)Math.PI*(angle-90.0f)/180.0f;
+        setAngle(angle);
 
-        // Apply force for movement
-        if (getMovement().len2() > 0f) {
-            forceCache.set(getMovement());
-            body.applyForce(forceCache,getPosition(),true);
-            animate = true;
-        } else {
-            animate = false;
-        }
+        setLinearVelocity(moveAngle.setLength(getSpeed()));
     }
 
     /**

@@ -15,21 +15,11 @@ import com.fallenflame.game.util.JsonAssetManager;
  * by reading the JSON value.
  */
 public class PlayerModel extends CharacterModel {
-    /** Player movement types enum */
-    private enum MovementState {
-        WALK,
-        SNEAK,
-        SPRINT
-    }
-    /** How the player is currently moving */
-    private MovementState move;
-
     /** Max flares player can hold. Also determines UI flare indicators */
     private int maxFlareCount;
     /** Number of flares the player has left */
     private int flareCount;
-    /** Player's force when moving at standard walk speed */
-    protected float forceWalk;
+
     /** Radius of player's light */
     protected float lightRadius;
     protected float minLightRadius;
@@ -69,21 +59,21 @@ public class PlayerModel extends CharacterModel {
      */
     public void initialize(JsonValue globalJson, JsonValue levelJson) {
         super.initialize(globalJson, levelJson.get("playerpos").asFloatArray());
+        // Global json data
+        lightRadiusSprint = globalJson.get("sprintlightrad").asInt();
+        lightRadiusSneak = globalJson.get("sneaklightrad").asInt();
+        minLightRadius = globalJson.get("minlightradius").asInt();
+        lightRadius = minLightRadius;
+        float[] tintValues = globalJson.get("tint").asFloatArray();//RGBA
+        tint = new Color(tintValues[0], tintValues[1], tintValues[2], tintValues[3]);
+
+        // Level json data
         flareCount = levelJson.has("startFlareCount") ?
                 levelJson.get("startFlareCount").asInt() : globalJson.get("standardflarecount").asInt();
         maxFlareCount = levelJson.has("startFlareCount") ?
                 levelJson.get("startFlareCount").asInt() : globalJson.get("standardflarecount").asInt();
-        forceWalk = getForce();
-        lightRadiusSprint = globalJson.get("sprintlightrad").asInt();
-        lightRadiusSneak = globalJson.get("sneaklightrad").asInt();
-        minLightRadius = globalJson.get("minlightradius").asInt();
         sneakVal = levelJson.has("startSneakVal") ?
                 levelJson.get("startSneakVal").asInt() : globalJson.get("defaultStartSneakVal").asInt();
-        lightRadius = minLightRadius;
-        move = MovementState.WALK;
-
-        float[] tintValues = globalJson.get("tint").asFloatArray();//RGBA
-        tint = new Color(tintValues[0], tintValues[1], tintValues[2], tintValues[3]);
 
         String walkSoundKey = globalJson.get("walksound").asString();
         walkSound = JsonAssetManager.getInstance().getEntry(walkSoundKey, Sound.class);
@@ -203,7 +193,6 @@ public class PlayerModel extends CharacterModel {
         fireBuddySneak = new Vector2(x, y);
     }
 
-
     /**
      * Returns the minimum light radius the player can have
      *
@@ -276,35 +265,6 @@ public class PlayerModel extends CharacterModel {
     public void setLightRadiusSneak() { lightRadius = lightRadiusSneak; }
 
     /**
-     * Increments light radius by i (can be positive or negative) ensuring lightRadius is never less than 0.
-     * @param i value to increment radius by
-     */
-
-    /**
-     * Gets player force for sneaking
-     * @return player force for sneaking
-     */
-    public float getForceSneak() {
-        return getForceWalk()/2;
-    }
-
-    /**
-     * Gets player force for sprinting
-     * @return player force for sprinting
-     */
-    public float getForceSprint() {
-        return getForceWalk()*2;
-    }
-
-    /**
-     * Gets player force for walking
-     * @return player force for walking
-     */
-    public float getForceWalk() {
-        return forceWalk;
-    }
-
-    /**
      * Returns the walk sound
      *
      * @return the walk sound
@@ -337,25 +297,10 @@ public class PlayerModel extends CharacterModel {
         return lightRadiusSprint;
     }
 
-    /** Sets player as walking */
-    public void setWalking() { move = MovementState.WALK; }
-    /** Sets player as sneaking */
-    public void setSneaking() { move = MovementState.SNEAK; }
-    /** Sets player as sprinting */
-    public void setSprinting() { move = MovementState.SPRINT; }
-
     /**
-     * Returns whether player is walking
-     * @return True if walking, False if sprinting or sneaking
+     * Increments light radius by i (can be positive or negative) ensuring lightRadius is never less than 0.
+     * @param i value to increment radius by
      */
-    public boolean isWalking() { return move == MovementState.WALK; }
-
-    /**
-     * Return True if player is sneaking
-     * @return True if sneaking, False if sprinting or walking
-     */
-    public boolean isSneaking() { return move == MovementState.SNEAK; }
-
     public void incrementLightRadius(float i) { setLightRadius(lightRadius + i); }
 
     public boolean isPlayingSound() {return playingSound;}

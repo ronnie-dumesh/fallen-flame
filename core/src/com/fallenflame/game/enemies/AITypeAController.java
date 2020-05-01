@@ -31,7 +31,7 @@ public class AITypeAController extends AIController {
     // Constants
     /** The radius from which an enemy could have considered to have finished its investigation
      * of a flare or of a player's last-known location*/
-    private static final int REACHED_INVESTIGATE = 1;
+    private static final int REACHED_INVESTIGATE = 2;
 
     // Instance Attributes
     /** The enemy's current state*/
@@ -99,6 +99,7 @@ public class AITypeAController extends AIController {
     protected void changeStateIfApplicable() {
         switch(state) {
             case IDLE:
+                enemy.setSneaking(); // walk slower when pathing
                 enemy.makeCalm();
                 // Check for flares in range
                 checkFlares();
@@ -118,6 +119,7 @@ public class AITypeAController extends AIController {
                 break;
 
             case CHASE:
+                enemy.setWalking(); // walk normally when chasing
                 enemy.makeAggressive();
                 // Check for flares in range <-- we check this here because the enemy can be "distracted" by flares
                 checkFlares();
@@ -129,6 +131,7 @@ public class AITypeAController extends AIController {
                 break;
 
             case INVESTIGATE:
+                enemy.setWalking(); // walk normally when investigating
                 enemy.makeAlert();
                 assert enemy.getInvestigatePosition() != null;
                 // Check if investigating flare
@@ -136,17 +139,16 @@ public class AITypeAController extends AIController {
                     // Update investigation position for moving flare
                     enemy.setInvestigatePosition(enemy.getInvestigateFlare().getX(), enemy.getInvestigateFlare().getY());
                 }
-                // Only heck for player in range iff enemy is not investigating flare
+                // Only check for player in range iff enemy is not investigating flare
                 else if(withinPlayerLight()){
                     state = FSMState.CHASE;
                     enemy.clearInvestigateFlare();
                     break;
                 }
-
-                // If we reached investigation position AND we were investigating player OR we were investigating a flare
-                // that has stopped moving OR we are chasing a flare that has burned out then we can clear and move on
-                if(investigateReached() && (!enemy.isInvestigatingFlare() || enemy.getInvestigateFlare().isStuck()
-                                || enemy.getInvestigateFlare().timeToBurnout() <= 0)){
+                
+                // if flare died, or we reached investigation position and it wasn't a flare stop
+                if((enemy.isInvestigatingFlare() && (enemy.getInvestigateFlare().timeToBurnout() <= 0)) ||
+                        (investigateReached() && !enemy.isInvestigatingFlare())){
                     enemy.setInvestigatePosition(null);
                     enemy.clearInvestigateFlare();
                     state = FSMState.IDLE;

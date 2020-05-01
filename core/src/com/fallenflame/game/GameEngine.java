@@ -335,7 +335,7 @@ public class GameEngine implements Screen, InputProcessor {
         return true;
     }
 
-    private Vector2 tempAngle = new Vector2();
+    private Vector2 moveAngle = new Vector2();
     /**
      * The core gameplay loop of this world. This checks if the level has ended
      * @param delta Number of seconds since last animation frame
@@ -349,17 +349,12 @@ public class GameEngine implements Screen, InputProcessor {
             level.createFlare(getMousePosition(), getScreenDimensions());
         }
         // Rotate the avatar to face the direction of movement
-        tempAngle.set(horizontal,vertical);
-        tempAngle.setLength(1); // Fix diagonal too-fast issue.
-        float angle = 0;
-        if (tempAngle.len2() > 0.0f) {
+        moveAngle.set(horizontal,vertical);
+        if (moveAngle.len2() > 0.0f) {
             if (!level.getPlayer().isPlayingSound()) {
                 level.getPlayer().getWalkSound().loop(PLAYER_WALK_VOL);
                 level.getPlayer().setPlayingSound(true);
             }
-            angle = tempAngle.angle();
-            // Convert to radians with up as 0
-            angle = (float)Math.PI*(angle-90.0f)/180.0f;
         } else {
             level.getPlayer().getWalkSound().stop();
             level.getPlayer().setPlayingSound(false);
@@ -378,7 +373,7 @@ public class GameEngine implements Screen, InputProcessor {
             // If player just stopped sneaking
             level.makeWalk();
         }
-        level.movePlayer(angle, tempAngle);
+        level.getPlayer().move(moveAngle);
         level.update(delta);
         // Get new victory state
         isSuccess = level.getLevelState() == LevelController.LevelState.WIN || prevSuccess;

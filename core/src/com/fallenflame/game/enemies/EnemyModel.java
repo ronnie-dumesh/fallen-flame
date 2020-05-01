@@ -210,17 +210,7 @@ public abstract class EnemyModel extends CharacterModel {
             tempAngle.set(0.707f, 0.707f);
         }
 
-        tempAngle.scl(getForce());
-        setMovement(tempAngle.x, tempAngle.y);
-        // Only set angle if our temp angle is not 0. If temp angle is 0 then it means no movement, in which case leave
-        // the current facing angle of the enemy as-is.
-        if (!tempAngle.isZero()) {
-            float angle = tempAngle.angle();
-            // Convert to radians with up as 0
-            angle = (float) Math.PI * (angle - 90.0f) / 180.0f;
-            setAngle(angle);
-        }
-        applyForce();
+        move(tempAngle);
         return ctrlCode != CONTROL_NO_ACTION; // Return false if no action.
     }
 }
