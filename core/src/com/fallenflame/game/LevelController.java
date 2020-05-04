@@ -928,12 +928,14 @@ public class LevelController implements ContactListener {
         float flareWidth = activeFlareCountTexture.getRegionWidth() + flareCountSplit * scale.x;
 
         if (activeFlareCountTexture != null && inactiveFlareCountTexture != null) {
-            for (int i = 0; i <= player.getFlareCount()  - 1; i++) {
-                float activeFlareX = ox + i * flareWidth;
+            int flaresUsed = player.getMaxFlareCount() - player.getFlareCount();
+
+            for(int i = flaresUsed; i < player.getMaxFlareCount(); i++){
+                float activeFlareX = ox - i * flareWidth;
                 canvas.draw(activeFlareCountTexture, activeFlareX, oy);
             }
-            for (int j = player.getFlareCount() ; j < player.getMaxFlareCount(); j++){
-                float inactiveFlareX = ox + j * flareWidth;
+            for(int j = 0; j < flaresUsed; j++){
+                float inactiveFlareX = ox - j * flareWidth;
                 canvas.draw(inactiveFlareCountTexture, inactiveFlareX, oy);
             }
         }
