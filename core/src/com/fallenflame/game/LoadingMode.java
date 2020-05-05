@@ -25,17 +25,28 @@ package com.fallenflame.game;
  * LibGDX version, 2/6/2015
  */
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.assets.*;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerListener;
+import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.controllers.*;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.fallenflame.game.util.*;
+import com.fallenflame.game.util.BGMController;
+import com.fallenflame.game.util.JsonAssetManager;
+import com.fallenflame.game.util.ScreenListener;
 
 /**
  * Class that provides a loading screen for the state of the game.
@@ -241,6 +252,9 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private FreeTypeFontGenerator generator;
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
 
+    /** Is the next screen control? */
+    public boolean toControl = false;
+
     /**
      * Returns the budget for the asset loader.
      * <p>
@@ -385,11 +399,17 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @param delta Number of seconds since last animation frame
      */
     private void update(float delta) {
+        if (progress >= 1) {
+            BGMController.startBGM("menu-music", true);
+        }
         if (playButton == null) {
             manager.update(budget);
             this.progress = manager.getProgress();
             if (progress >= 1.0f) {
                 this.progress = 1.0f;
+                // Right now assets don't load until the user clicks play button.
+                // This sends asignal to GDXRoot to load assets.
+                listener.exitScreen(this, 420);
                 playButton = new Texture(PLAY_BTN_FILE);
                 playButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
                 generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_FILE));
@@ -427,7 +447,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * prefer this in lecture.
      */
     private void draw() {
-        canvas.begin();
+        canvas.beginWithoutCamera();
         if (playButton == null) {
             canvas.draw(background, 0, 0);
             canvas.draw(fireBuddy, centerX / 1.20f, centerY / .15f);
@@ -549,6 +569,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     public void hide() {
         // Useless if called in outside animation loop
         active = false;
+        pressState = 0;
+        for (MenuText mt : menuTextArray) {
+            mt.isHovered = false;
+        }
     }
 
     /**
@@ -587,6 +611,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 break;
             }
         }
+        toControl = (menuTextArray.get(2).rect.contains(screenX, screenY));
         return false;
     }
 

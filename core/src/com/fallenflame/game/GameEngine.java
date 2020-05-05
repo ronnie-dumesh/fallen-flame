@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.fallenflame.game.util.InputBindings;
 import com.fallenflame.game.util.JsonAssetManager;
 import com.fallenflame.game.util.ScreenListener;
 
@@ -407,7 +407,7 @@ public class GameEngine implements Screen, InputProcessor {
 
         // Final message
         if (isSuccess) {
-            displayFont.setColor(Color.YELLOW);
+            displayFont.setColor(Color.CYAN);
             canvas.beginWithoutCamera(); // DO NOT SCALE
             canvas.drawTextCentered("VICTORY!", displayFont, 0.0f);
             canvas.end();
@@ -544,13 +544,13 @@ public class GameEngine implements Screen, InputProcessor {
      */
     private void readKeyboard() {
         // Give priority to gamepad results
-        resetPressed = (Gdx.input.isKeyPressed(Input.Keys.R));
+        resetPressed = (Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.RESET_LEVEL)));
         debugPressed = (Gdx.input.isKeyPressed(Input.Keys.G));
         debug2Pressed = (Gdx.input.isKeyPressed(Input.Keys.E));
         exitPressed  = (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
         flarePressed  = (Gdx.input.isButtonPressed(Input.Buttons.LEFT));
-        sprintPressed = (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT));
-        sneakPressed = (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT));
+        sprintPressed = (Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.SPRINTING)));
+        sneakPressed = (Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.SNEAKING)));
         numsPressed[0] = (Gdx.input.isKeyPressed(Input.Keys.NUM_1) || Gdx.input.isKeyPressed(Input.Keys.NUMPAD_1));
         numsPressed[1] = (Gdx.input.isKeyPressed(Input.Keys.NUM_2) || Gdx.input.isKeyPressed(Input.Keys.NUMPAD_2));
         numsPressed[2] = (Gdx.input.isKeyPressed(Input.Keys.NUM_3) || Gdx.input.isKeyPressed(Input.Keys.NUMPAD_3));
@@ -563,25 +563,25 @@ public class GameEngine implements Screen, InputProcessor {
 
         // Directional controls
         horizontal = 0.0f;
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.GO_RIGHT))) {
             horizontal += 1.0f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.GO_LEFT))) {
             horizontal -= 1.0f;
         }
         vertical = 0.0f;
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        if (Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.GO_UP))) {
             vertical += 1.0f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.GO_DOWN))) {
             vertical -= 1.0f;
         }
 
         //#region mouse wheel alternative
-        if(Gdx.input.isKeyPressed(Input.Keys.PERIOD)){
+        if(Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.INCREASE_LIGHT))){
             level.lightFromPlayer(0.5f);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.COMMA)){
+        if(Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.DECREASE_LIGHT))){
             level.lightFromPlayer(-0.5f);
         }
         //#endregion
