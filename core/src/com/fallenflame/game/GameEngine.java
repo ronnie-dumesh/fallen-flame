@@ -43,6 +43,10 @@ public class GameEngine implements Screen, InputProcessor {
     /** Player walk volume */
     private static final float PLAYER_WALK_VOL = .3f;
 
+    /**Boolean to determine if debug keys do anything.
+     * Note: MUST BE FALSE WHEN MAKING A JAR! */
+    private static final boolean ALLOW_DEBUG = false;
+
     private JsonReader jsonReader;
     /** The JSON asset directory */
     private JsonValue assetJson;
@@ -306,10 +310,10 @@ public class GameEngine implements Screen, InputProcessor {
             return true;
         }
 
-        if (debugPressed && !debugPrevious) {
+        if (ALLOW_DEBUG && debugPressed && !debugPrevious) {
             level.setDebug(level.getDebug() + 1);
         }
-        if (debug2Pressed && !debug2Previous) {
+        if (ALLOW_DEBUG && debug2Pressed && !debug2Previous) {
             level.setDebug2(!level.getDebug2());
         }
         if (resetPressed && !resetPrevious) {

@@ -5,12 +5,12 @@
     "density":        1.0,
     "friction":       0.0,
     "restitution":    0.0,
-    "force": 		 80.0,
-    "damping": 		 10.0,
-    "maxspeed": 	  5.0,
+    "walkspeed": 	  3.0,
+    "sneakspeed":     1.5,
+    "sprintspeed": 	  5.0,
     "startframe":       0,
     "walklimit":		4,
-    "flarecount":       5,
+    "standardflarecount": 5,
     "sprintlightrad":  10,
     "sneaklightrad":    1,
     "minlightradius":   2,
@@ -21,7 +21,23 @@
       "up": "player-up",
       "down": "player-down"
     },
-    "walksound":    "walk",
+    "walksound":    "new-walk",
+    "firebuddy": {
+      "texture": {
+        "left": "fire-buddy-left",
+        "right": "fire-buddy-right",
+        "up": "fire-buddy-up",
+        "down": "fire-buddy-down"
+      },
+      "textureoffset": {
+        "x": -0.62,
+        "y": -1.25
+      },
+      "sneaktextureoffset": {
+        "x": -0.0,
+        "y": -0.45
+      }
+    },
     "debugcolor":  	"white",
     "debugopacity":	192,
     "tint": [1.0, 1.0, 1.0, 1.0],
@@ -37,9 +53,9 @@
       "density": 1.0,
       "friction": 0.0,
       "restitution": 0.0,
-      "force": 80.0,
-      "damping": 10.0,
-      "maxspeed": 5.0,
+      "walkspeed": 	  5.0,
+      "sneakspeed":   2.0,
+      "sprintspeed":  6.0,
       "startframe": 0,
       "walklimit": 4,
       "texture":     	{
@@ -48,8 +64,8 @@
         "up": "enemy-a-up",
         "down": "enemy-a-down"
       },
-      "activesound": "enemystep",
-      "constantsound": "enemyconstant",
+      "activesound": "new-monster-high",
+      "constantsound": "new-monster-low",
       "debugcolor": "white",
       "debugopacity": 192,
       "statetints": {
@@ -70,16 +86,16 @@
       "density": 1.0,
       "friction": 0.0,
       "restitution": 0.0,
-      "force": 80.0,
-      "damping": 10.0,
-      "maxspeed": 5.0,
-      "startframe": 9,
+      "walkspeed": 	  3.0,
+      "sneakspeed":   1.5,
+      "sprintspeed":  6,
+      "startframe": 4,
       "walklimit": 4,
       "texture":     	{
         "shoot": "enemy-b-throwing"
       },
-      "activesound": "enemystep",
-      "constantsound": "enemyconstant",
+      "activesound": "new-flame",
+      "constantsound": "new-monster-low",
       "debugcolor": "white",
       "debugopacity": 192,
       "stateTints": {
@@ -88,31 +104,31 @@
         "aggressive": [1.0, 0.0, 0.0, 1.0]
       },
       "textureoffset" : {
-        "x": 0.15,
-        "y": -0.65
+        "x": 0.1,
+        "y": -0.2
       },
       "tintOpacity": 192
     },
     "ghost":  {
-      "radius": 0.4,
+      "radius": 0.7,
       "bodytype": "dynamic",
       "density": 1.0,
       "friction": 0.0,
       "restitution": 0.0,
-      "force": 90.0,
-      "damping": 10.0,
-      "maxspeed": 6.0,
+      "walkspeed": 	  4.0,
+      "sneakspeed":   1.5,
+      "sprintspeed":  8,
       "startframe": 0,
       "walklimit": 4,
       "texture":     	{
-        "left": "enemyb",
-        "right": "enemyb",
-        "up": "enemyb",
-        "down": "enemyb"
+        "left": "ghost-left",
+        "right": "ghost-right",
+        "up": "ghost-up",
+        "down": "ghost-down"
       },
-      "movesound": "enemystep",
-      "constantsound": "enemyconstant",
-      "activesound": "enemystep",
+      "constantsound": "new-monster-low",
+      "activesound": "new-monster-weird",
+      "bgm": "",
       "debugcolor": "white",
       "debugopacity": 192,
       "stateTints": {
@@ -121,8 +137,8 @@
         "aggressive": [1.0, 0.0, 0.0, 1.0]
       },
       "textureoffset" : {
-        "x": 0,
-        "y": 0
+        "x": 0.05,
+        "y": -0.18
       },
       "tintOpacity": 192
     }
@@ -142,7 +158,7 @@
   "flare" : {
     "radius":      	  0.1,
     "lightradius":     3.5,
-    "flareduration":  1500,
+    "flareduration":  2500,
     "bodytype":    	  "dynamic",
     "density":        1.0,
     "friction":       0.0,
@@ -190,5 +206,51 @@
   },
   "background": {
     "texture":      "floor-tile"
+  },
+  "sneakbar": {
+    "texture": {
+      "meterbackground": "sneak-meter-background",
+      "meterforeground": "sneak-meter-foreground",
+      "active": "ghost-active-icon",
+      "inactive": "ghost-inactive-icon"
+    },
+    "textureoffsets": {
+      "ghostfromplayer": {
+        "x": -7.50,
+        "y": 4.875
+      },
+      "backgroundfromghost": {
+        "x": 0.70,
+        "y": -0.15
+      },
+      "foregroundfrombackground": {
+        "x": 0.30,
+        "y": 0.30
+      }
+    },
+    "maxsneak": 1000
+  },
+  "flarecount": {
+    "texture": {
+      "active": "activeflarecounter",
+      "inactive": "inactiveflarecounter"
+    },
+    "textureoffset": {
+      "x": 4.875,
+      "y": 4.875
+    },
+    "flare-split": 0.15
+  },
+  "items": {
+    "flare": {
+      "radius":      	0.3,
+      "bodytype":    	"static",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":    1,
+      "tint":           [1.0, 1.0, 1.0, 1.0],
+      "texture":        "activeflarecounter"
+    }
   }
 }

@@ -1,0 +1,160 @@
+{
+  "name": "level7",
+  "physicsSize": [
+    32,
+    24.32
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    3,
+    3
+  ],
+  "exitpos": [
+    28.16,
+    19.99
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        21.04,
+        3.16
+      ],
+      "enemytype": "typeB"
+    },
+    {
+      "enemypos": [
+        28.12,
+        11.92
+      ],
+      "enemytype": "typeB"
+    },
+    {
+      "enemypos": [
+        15.44,
+        17.52
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          11.94,
+          17.48
+        ],
+        [
+          12.04,
+          14.02
+        ],
+        [
+          18.92,
+          13.84
+        ],
+        [
+          18.92,
+          17.54
+        ]
+      ]
+    }
+  ],
+  "items": [],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        16,
+        23.68
+      ],
+      "size": [
+        32,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.64,
+        12.16
+      ],
+      "size": [
+        1.28,
+        24.32
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        31.36,
+        12.16
+      ],
+      "size": [
+        1.28,
+        24.32
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        16,
+        0.64
+      ],
+      "size": [
+        32,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        19.84,
+        6.4
+      ],
+      "size": [
+        11.52,
+        2.56
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        22.4,
+        15.36
+      ],
+      "size": [
+        6.4,
+        2.56
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        6.4,
+        15.36
+      ],
+      "size": [
+        10.24,
+        2.56
+      ],
+      "texture": "wall-side"
+    }
+  ],
+  "startSneakVal": 345,
+  "graphicSize": [
+    800,
+    600
+  ]
+}

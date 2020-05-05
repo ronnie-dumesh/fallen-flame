@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if ! [ $# -eq 1 ]
+  then
+    echo "One and only one parameter is required." >&2
+    exit 1
+fi
+
+if ! [[ "$1" == *.mp3 ]]
+  then
+    echo "The file must be an mp3 file." >&2
+    exit 1
+fi
+
+if ! [ -x "$(command -v ffmpeg)" ]; then
+  echo "ffmpeg is not installed." >&2
+  exit 1
+fi
+
+if ffmpeg -i "$1" -c:a libmp3lame -q:a 2 -ac 1 output.mp3; then
+  rm "$1"
+  mv output.mp3 "$1"
+  echo "Operation successful."
+else
+  rm output.mp3
+  echo "ffmpeg failed to convert the sound file to mono." >&2
+fi

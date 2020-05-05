@@ -34,7 +34,7 @@
       "name":       "level6",
       "unlocked":   true,
       "completed":  true,
-      "path":       "levels/onlyPatrol.json"
+      "path":       "levels/onlypatrol.json"
     },
     {
       "name":       "easyTest",
