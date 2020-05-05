@@ -177,15 +177,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private static float BUTTON_SCALE = 0.75f;
 
     /**
-     * Start button for XBox controller on Windows
-     */
-    private static int WINDOWS_START = 7;
-    /**
-     * Start button for XBox controller on Mac OS X
-     */
-    private static int MAC_OS_X_START = 4;
-
-    /**
      * AssetManager to be loading in the background
      */
     private AssetManager manager;
@@ -238,10 +229,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * The amount of time to devote to loading assets (as opposed to on screen hints, etc.)
      */
     private int budget;
-    /**
-     * Support for the X-Box start button in place of play button
-     */
-    private int startButton;
     /**
      * Whether or not this player mode is still active
      */
@@ -348,11 +335,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         statusFrgRight = new TextureRegion(statusBar, statusBar.getWidth() - PROGRESS_CAP, offset, PROGRESS_CAP, PROGRESS_HEIGHT);
         statusFrgMiddle = new TextureRegion(statusBar, PROGRESS_CAP, offset, PROGRESS_MIDDLE, PROGRESS_HEIGHT);
 
-        startButton = (System.getProperty("os.name").equals("Mac OS X") ? MAC_OS_X_START : WINDOWS_START);
         // Let ANY connected controller start the game.
-        for (Controller controller : Controllers.getControllers()) {
-            controller.addListener(this);
-        }
+//        for (Controller controller : Controllers.getControllers()) {
+//            controller.addListener(this);
+//        }
         active = true;
     }
 
@@ -646,11 +632,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return whether to hand the event to other listeners.
      */
     public boolean buttonDown(Controller controller, int buttonCode) {
-        if (buttonCode == startButton && pressState == 0) {
-            pressState = 1;
-            return false;
-        }
-        return true;
+        return false;
     }
 
     /**
@@ -665,11 +647,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return whether to hand the event to other listeners.
      */
     public boolean buttonUp(Controller controller, int buttonCode) {
-        if (pressState == 1 && buttonCode == startButton) {
-            pressState = 2;
-            return false;
-        }
-        return true;
+        return false;
     }
 
     // UNSUPPORTED METHODS FROM InputProcessor
