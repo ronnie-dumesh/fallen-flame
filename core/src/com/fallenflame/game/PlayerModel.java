@@ -28,6 +28,8 @@ public class PlayerModel extends CharacterModel {
     protected float lightRadiusSneak;
     /** Player sneak left (once hits 0, a ghost is deployed on the map) Sneakval must be greater than or equal to 0 */
     protected int sneakVal;
+    /** Max sneak player can have at a given level */
+    protected int maxSneakVal;
 
     /**Tint of player light */
     protected Color tint;
@@ -70,10 +72,10 @@ public class PlayerModel extends CharacterModel {
         // Level json data
         flareCount = levelJson.has("startFlareCount") ?
                 levelJson.get("startFlareCount").asInt() : globalJson.get("standardflarecount").asInt();
-        maxFlareCount = levelJson.has("startFlareCount") ?
-                levelJson.get("startFlareCount").asInt() : globalJson.get("standardflarecount").asInt();
+        maxFlareCount = flareCount;
         sneakVal = levelJson.has("startSneakVal") ?
                 levelJson.get("startSneakVal").asInt() : globalJson.get("defaultStartSneakVal").asInt();
+        maxSneakVal = sneakVal;
 
         String walkSoundKey = globalJson.get("walksound").asString();
         walkSound = JsonAssetManager.getInstance().getEntry(walkSoundKey, Sound.class);
@@ -239,6 +241,9 @@ public class PlayerModel extends CharacterModel {
 
     /** Get amount of sneak updates left for player */
     public int getSneakVal() { return sneakVal; }
+
+    /** Get maximum amount of sneak updates left for player on this level*/
+    public int getMaxSneakVal() { return maxSneakVal; }
 
     /** Decrement sneak value by 1 (for 1 update of sneaking) */
     public void decSneakVal() { sneakVal--; }
