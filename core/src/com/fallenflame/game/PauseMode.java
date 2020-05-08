@@ -92,6 +92,7 @@ public class PauseMode implements Screen, InputProcessor {
             return false;
         } else {
             for (int i = 0, j = hoverRects.length; i < j; i++) {
+                if (hoverRects[i] == null) continue;
                 if (hoverRects[i].contains(screenX, screenY)) {
                     listener.exitScreen(this, i);
                 }
@@ -108,6 +109,7 @@ public class PauseMode implements Screen, InputProcessor {
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         for (int i = 0, j = hoverRects.length; i < j; i++) {
+            if (hoverRects[i] == null) continue;
             hoverStates[i] = (hoverRects[i].contains(screenX, screenY)) ? 1 : 0;
         }
         return true;
