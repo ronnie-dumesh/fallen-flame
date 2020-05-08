@@ -4,13 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.fallenflame.game.util.InputBindings;
 import com.fallenflame.game.util.JsonAssetManager;
 import com.fallenflame.game.util.ScreenListener;
@@ -47,6 +50,11 @@ public class GameEngine implements Screen, InputProcessor {
      * Note: MUST BE FALSE WHEN MAKING A JAR! */
     private static final boolean ALLOW_DEBUG = false;
 
+    private static final String SAVE_PATH = "savedata/save.json";
+    private LevelSave[] levelSaves;
+    private LevelSelectMode levelSelect;
+
+    private Json json;
     private JsonReader jsonReader;
     /** The JSON asset directory */
     private JsonValue assetJson;
@@ -142,7 +150,20 @@ public class GameEngine implements Screen, InputProcessor {
 
         jsonReader = new JsonReader();
         assetJson = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
-        saveJson = jsonReader.parse(Gdx.files.internal("jsons/save.json"));
+        if(Gdx.files.local("savedata/save.json").exists()){
+            saveJson = jsonReader.parse(Gdx.files.local("savedata/save.json"));
+            levelSaves = json.readValue(LevelSave[].class, saveJson);
+        }
+        else {
+            // If local save file doesn't exist (like when jar is first opened), create it from internal template
+            saveJson = jsonReader.parse(Gdx.files.internal("jsons/save.json"));
+            FileHandle file = Gdx.files.local(SAVE_PATH);
+            JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
+            settings.outputType = JsonWriter.OutputType.json;
+            levelSaves = json.readValue(LevelSave[].class, saveJson);
+            file.writeString(json.prettyPrint(levelSaves, settings), false);
+        }
+        // Read save data from local save JSON file
         globalJson = jsonReader.parse(Gdx.files.internal("jsons/global.json"));
         fogTemplate = new ParticleEffect();
         fogTemplate.load(Gdx.files.internal("effects/fog2.p"), Gdx.files.internal("textures"));
@@ -222,6 +243,9 @@ public class GameEngine implements Screen, InputProcessor {
     /** Set the new GameCanvas*/
     public void setCanvas(GameCanvas canvas){this.canvas = canvas;}
 
+    /** Get saveJson */
+    public LevelSave[] getLevelSaves() { return levelSaves; }
+
     /**
      * Creates a new game world
      *
@@ -232,7 +256,7 @@ public class GameEngine implements Screen, InputProcessor {
      *
      * Source: Professor White
      */
-    public GameEngine() {
+    public GameEngine(LevelSelectMode levelSelect) {
         jsonReader = new JsonReader();
         level = new LevelController();
         isSuccess = false;
@@ -243,6 +267,8 @@ public class GameEngine implements Screen, InputProcessor {
         isPaused = false;
         canvasBounds = new Rectangle();
         countdown = -1;
+        json = new Json();
+        this.levelSelect = levelSelect;
     }
 
     /**
@@ -262,7 +288,7 @@ public class GameEngine implements Screen, InputProcessor {
      * reread from the JSON file, allowing us to make changes on the fly.
      */
     public void reset(int lid) {
-        if (lid < 0 || lid >= saveJson.get("levels").size) return;
+        if (lid < 0 || lid >= saveJson.size) return;
 
         lastLevelPlayed = lid;
 
@@ -276,7 +302,7 @@ public class GameEngine implements Screen, InputProcessor {
          countdown = -1;
 
         // Reload the json each time
-        String currentLevelPath = "jsons/" + saveJson.get("levels").get(lid).getString("path"); // Currently just gets first level
+        String currentLevelPath = "jsons/" + saveJson.get(lid).getString("path"); // Currently just gets first level
         levelJson = jsonReader.parse(Gdx.files.internal(currentLevelPath));
         level.populate(levelJson, globalJson, fogTemplate);
         level.setLevelState(LevelController.LevelState.IN_PROGRESS);
@@ -329,11 +355,14 @@ public class GameEngine implements Screen, InputProcessor {
             return false;
         }
         //If countdown is > -1, then the player must have won or lost. Either continue to show the win condition message
-        //Or reset, if the countdown is up.
+        //Or if the countdown is up: reset on loss and progress to next level on victory
         else if (countdown > 0) {
             countdown--;
         } else if (countdown == 0) {
-            reset(lastLevelPlayed);
+//            if(isSuccess && lastLevelPlayed < saveJson.size)
+//                reset(lastLevelPlayed+1);
+//            else
+                reset(lastLevelPlayed);
         }
 
         return true;
@@ -382,6 +411,21 @@ public class GameEngine implements Screen, InputProcessor {
         // Get new victory state
         isSuccess = level.getLevelState() == LevelController.LevelState.WIN || prevSuccess;
         isFailed = level.getLevelState() == LevelController.LevelState.LOSS || prevFailed;
+        // If new win, mark level complete in save json and ensure next level is unlocked
+        if(isSuccess && !prevSuccess) {
+            // Update save data
+            levelSaves[lastLevelPlayed].completed = true;
+            if(lastLevelPlayed + 1 < levelSaves.length){
+                levelSaves[lastLevelPlayed + 1].unlocked = true;
+            }
+            // Write save data to local save JSON file
+            JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
+            settings.outputType = JsonWriter.OutputType.json;
+            FileHandle file = Gdx.files.local(SAVE_PATH);
+            file.writeString(json.prettyPrint(levelSaves, settings), false);
+            // Update level select
+            levelSelect.resetNumberUnlocked();
+        }
         // If new win or loss, start countdown
         if((isSuccess && !prevSuccess) || (isFailed && !prevFailed)){
             countdown = COUNTDOWN_TIME;
@@ -665,3 +709,11 @@ public class GameEngine implements Screen, InputProcessor {
     }
 
 }
+
+class LevelSave {
+    protected String name;
+    protected boolean unlocked;
+    protected boolean completed;
+    protected String path;
+}
+

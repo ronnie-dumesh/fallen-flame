@@ -1,6 +1,5 @@
 {
   "name": "level5",
-  "startSneakVal": 982,
   "physicsSize": [
     26.88,
     20.48
@@ -13,6 +12,7 @@
     3.08,
     12.04
   ],
+  "bgm": "the-doll-thrown-away-in-rain",
   "exitpos": [
     23.895,
     11.21
@@ -163,11 +163,11 @@
   "walls": [
     {
       "pos": [
-        10.88,
+        13.44,
         19.84
       ],
       "size": [
-        32,
+        26.88,
         1.28
       ],
       "texture": "wall-side"
@@ -175,7 +175,7 @@
     {
       "pos": [
         0.64,
-        11.52
+        8.96
       ],
       "size": [
         1.28,
@@ -206,6 +206,7 @@
       "texture": "wall-side"
     }
   ],
+  "startSneakVal": 465,
   "graphicSize": [
     800,
     600

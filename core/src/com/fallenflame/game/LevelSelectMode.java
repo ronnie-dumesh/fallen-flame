@@ -21,6 +21,9 @@ public class LevelSelectMode implements Screen, InputProcessor {
     private Texture levelButton = new Texture(LEVEL_BTN_FILE);
     private Texture lockedLevelButton = new Texture(LEVEL_LOCKED_FILE);
 
+    /** Save Json contains data on unlocked levels */
+    private LevelSave[] levelSaves;
+
     /** Position vectors for all the level select buttons */
     private Vector2[] posVecRel = {new Vector2(1f/4f,2f/3f),new Vector2(3f/8f,2f/3f),new Vector2(1f/2f,2f/3f),new Vector2(5f/8f,2f/3f),new Vector2(3f/4f,2f/3f),new Vector2(1f/4f,1f/3f),new Vector2(3f/8f,1f/3f),new Vector2(1f/2f,1f/3f),new Vector2(5f/8f,1f/3f),new Vector2(3f/4f,1f/3f)};
     private Vector2[] posVec;
@@ -71,7 +74,6 @@ public class LevelSelectMode implements Screen, InputProcessor {
     {
         this.canvas  = canvas;
         pressState = 0;
-        numberUnlocked = 8;
         posVec = new Vector2[posVecRel.length];
         hoverState = new int[posVecRel.length + 1]; // Plus one for back button
         for (int i = 0; i < posVecRel.length; i++) {
@@ -79,6 +81,25 @@ public class LevelSelectMode implements Screen, InputProcessor {
             hoverState[i] = 0;
         }
         hoverState[posVecRel.length] = 0;
+    }
+
+    /**
+     * Initializes levelSaves which track level unlock status
+     * and number level unlocked (assumes sequential unlocking)
+     * @param levelSaves
+     */
+    public void initialize(LevelSave[] levelSaves) {
+        this.levelSaves = levelSaves;
+        resetNumberUnlocked();
+    }
+
+    public void resetNumberUnlocked() {
+        numberUnlocked = 1;
+        while(true) {
+            if(numberUnlocked >= levelSaves.length || !levelSaves[numberUnlocked].unlocked)
+                return;
+            numberUnlocked++;
+        }
     }
 
     @Override
@@ -222,7 +243,6 @@ public class LevelSelectMode implements Screen, InputProcessor {
 
         for (int i = 0; i < posVec.length; i++) {
             if ((Math.pow(screenX-posVec[i].x,2) / (w*w)) + (Math.pow(screenY-posVec[i].y,2) / (h*h)) <= 1) {
-                //TODO: temporary disable of levels 6-10
                 if(i < numberUnlocked) {
                     pressState = 1;
                     levelSelected = i;

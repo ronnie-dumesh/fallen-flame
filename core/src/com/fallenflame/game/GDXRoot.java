@@ -68,7 +68,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		control = new ControlMode(levelCanvas);
 		levelSelect = new LevelSelectMode(levelCanvas);
 		pauseMode = new PauseMode(levelCanvas);
-		engine = new GameEngine();
+		engine = new GameEngine(levelSelect);
 		InputMultiplexer multiplexer = new InputMultiplexer(); //Allows for multiple InputProcessors
 		//Multiplexer is an ordered list, so when an event occurs, it'll check loadingMode first, and then GameEngine
 		multiplexer.addProcessor(loading);
@@ -80,6 +80,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		// Initialize the three game worlds
 		engine.preLoadContent();
 		loading.setScreenListener(this);
+		levelSelect.initialize(engine.getLevelSaves());
 		setScreen(loading, false);
 	}
 
