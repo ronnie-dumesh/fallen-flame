@@ -1,12 +1,15 @@
 package com.fallenflame.game;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.fallenflame.game.util.*;
-
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Vector2;
+import com.fallenflame.game.util.BGMController;
 import com.fallenflame.game.util.JsonAssetManager;
+import com.fallenflame.game.util.ScreenListener;
 
 public class LevelSelectMode implements Screen, InputProcessor {
 
@@ -17,6 +20,9 @@ public class LevelSelectMode implements Screen, InputProcessor {
     private static final String LEVEL_LOCKED_FILE = "textures/ls_locked_level.png";
     private Texture levelButton = new Texture(LEVEL_BTN_FILE);
     private Texture lockedLevelButton = new Texture(LEVEL_LOCKED_FILE);
+
+    /** Save Json contains data on unlocked levels */
+    private LevelSave[] levelSaves;
 
     /** Position vectors for all the level select buttons */
     private Vector2[] posVecRel = {new Vector2(1f/4f,2f/3f),new Vector2(3f/8f,2f/3f),new Vector2(1f/2f,2f/3f),new Vector2(5f/8f,2f/3f),new Vector2(3f/4f,2f/3f),new Vector2(1f/4f,1f/3f),new Vector2(3f/8f,1f/3f),new Vector2(1f/2f,1f/3f),new Vector2(5f/8f,1f/3f),new Vector2(3f/4f,1f/3f)};
@@ -54,6 +60,11 @@ public class LevelSelectMode implements Screen, InputProcessor {
     /** The current state of whether any level buttons are being hovered over */
     private int[] hoverState;
 
+    private static final int BACK_BTN_WIDTH = 60;
+    private static final int BACK_BTN_HEIGHT = 30;
+    private static final int BACK_BTN_X = 10;
+    private static final int BACK_BTN_Y = 10;
+
     /** Level selected by the player */
     private int levelSelected;
 
@@ -63,12 +74,31 @@ public class LevelSelectMode implements Screen, InputProcessor {
     {
         this.canvas  = canvas;
         pressState = 0;
-        numberUnlocked = 8;
         posVec = new Vector2[posVecRel.length];
-        hoverState = new int[posVecRel.length];
+        hoverState = new int[posVecRel.length + 1]; // Plus one for back button
         for (int i = 0; i < posVecRel.length; i++) {
             posVec[i] = new Vector2(0f,0f);
             hoverState[i] = 0;
+        }
+        hoverState[posVecRel.length] = 0;
+    }
+
+    /**
+     * Initializes levelSaves which track level unlock status
+     * and number level unlocked (assumes sequential unlocking)
+     * @param levelSaves
+     */
+    public void initialize(LevelSave[] levelSaves) {
+        this.levelSaves = levelSaves;
+        resetNumberUnlocked();
+    }
+
+    public void resetNumberUnlocked() {
+        numberUnlocked = 1;
+        while(true) {
+            if(numberUnlocked >= levelSaves.length || !levelSaves[numberUnlocked].unlocked)
+                return;
+            numberUnlocked++;
         }
     }
 
@@ -80,7 +110,7 @@ public class LevelSelectMode implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
-        canvas.begin();
+        canvas.beginWithoutCamera();
         canvas.draw(background, 0, 0);
         displayFont.setColor(Color.BLACK);
         displayFont.getData().setScale(.5f);
@@ -98,6 +128,8 @@ public class LevelSelectMode implements Screen, InputProcessor {
             }
             canvas.drawTextFromCenter("" + (i + 1), displayFont, posVec[i].x, posVec[i].y - levelButton.getHeight()/5);
         }
+        displayFont.setColor(hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE);
+        canvas.drawText("Back", displayFont,BACK_BTN_X, heightY - BACK_BTN_Y);
         displayFont.setColor(Color.WHITE);
         displayFont.getData().setScale(1f);
         canvas.end();
@@ -144,12 +176,16 @@ public class LevelSelectMode implements Screen, InputProcessor {
 
     @Override
     public void hide() {
-        BGMController.stopBGMIfPlaying("menu-music");
+        if (levelSelected >= 0) BGMController.stopBGMIfPlaying("menu-music");
+        this.pressState = 0;
+        for (int i = 0, j = hoverState.length; i < j; i++ ) {
+            hoverState[i] = 0;
+        }
     }
 
     @Override
     public void dispose() {
-        BGMController.stopBGMIfPlaying("menu-music");
+        if (levelSelected >= 0) BGMController.stopBGMIfPlaying("menu-music");
     }
 
     /**
@@ -174,6 +210,11 @@ public class LevelSelectMode implements Screen, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
+        if (keycode == Input.Keys.ESCAPE) {
+            pressState = 1;
+            levelSelected = -1;
+            return true;
+        }
         return false;
     }
 
@@ -193,6 +234,7 @@ public class LevelSelectMode implements Screen, InputProcessor {
             return true;
         }
 
+        int origScreenY = screenY;
         // Flip to match graphics coordinates
         screenY = heightY-screenY;
 
@@ -201,12 +243,16 @@ public class LevelSelectMode implements Screen, InputProcessor {
 
         for (int i = 0; i < posVec.length; i++) {
             if ((Math.pow(screenX-posVec[i].x,2) / (w*w)) + (Math.pow(screenY-posVec[i].y,2) / (h*h)) <= 1) {
-                //TODO: temporary disable of levels 6-10
                 if(i < numberUnlocked) {
                     pressState = 1;
                     levelSelected = i;
                 }
             }
+        }
+        if (screenX >= BACK_BTN_X && screenX <= BACK_BTN_X + BACK_BTN_WIDTH &&
+                origScreenY >= BACK_BTN_Y && origScreenY <= BACK_BTN_Y + BACK_BTN_HEIGHT) {
+            pressState = 1;
+            levelSelected = -1;
         }
         return false;
 
@@ -220,6 +266,7 @@ public class LevelSelectMode implements Screen, InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+        int origScreenY = screenY;
         // Flip to match graphics coordinates
         screenY = heightY-screenY;
 
@@ -233,6 +280,9 @@ public class LevelSelectMode implements Screen, InputProcessor {
                 hoverState[i] = 0;
             }
         }
+        hoverState[posVec.length] =
+                (screenX >= BACK_BTN_X && screenX <= BACK_BTN_X + BACK_BTN_WIDTH &&
+                        origScreenY >= BACK_BTN_Y && origScreenY <= BACK_BTN_Y + BACK_BTN_HEIGHT) ? 1 : 0;
         return false;
     }
 

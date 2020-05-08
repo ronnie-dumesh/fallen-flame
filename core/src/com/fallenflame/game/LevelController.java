@@ -2,17 +2,21 @@ package com.fallenflame.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.JsonValue;
 import com.fallenflame.game.enemies.*;
 import com.fallenflame.game.physics.obstacle.Obstacle;
 import com.fallenflame.game.util.BGMController;
 import com.fallenflame.game.util.JsonAssetManager;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /** Credit to Walker White for some code reused from B2LightsDemo */
@@ -128,6 +132,7 @@ public class LevelController implements ContactListener {
     private final LightController lightController;
     private final List<AIController> AIControllers;
     private final FogController fogController;
+    private final TextController textController;
 
     // BGM
     private String bgm;
@@ -336,6 +341,7 @@ public class LevelController implements ContactListener {
         lightController = new LightController();
         AIControllers = new LinkedList<>();
         fogController = new FogController();
+        textController = new TextController();
         // Models
         walls = new LinkedList<>();
         enemies = new LinkedList<>();
@@ -493,6 +499,8 @@ public class LevelController implements ContactListener {
             }
         }
 
+        textController.initialize(levelJson.has("texts") ? levelJson.get("texts") : null);
+
         // Set background music
         bgm = levelJson.has("bgm") ? levelJson.get("bgm").asString() : null;
 
@@ -514,6 +522,7 @@ public class LevelController implements ContactListener {
             return;
 
         lightController.dispose();
+        textController.dispose();
 
         for(WallModel wall : walls) {
             wall.deactivatePhysics(world);
@@ -544,6 +553,8 @@ public class LevelController implements ContactListener {
         items.clear();
         exit.deactivatePhysics(world);
         exit.dispose();
+        player.getWalkSound().stop();
+        player.setPlayingSound(false);
         player.deactivatePhysics(world);
         player.dispose();
 
@@ -582,6 +593,8 @@ public class LevelController implements ContactListener {
             // Update player and exit
             player.update(dt);
             assert inBounds(player);
+
+            textController.update(player);
 
             // Decrement sneak value if player is sneaking
             if(player.isSneaking()){
@@ -701,7 +714,10 @@ public class LevelController implements ContactListener {
     }
 
     public void stopAllSounds(){
+        player.getWalkSound().stop();
+        player.setPlayingSound(false);
         for(EnemyModel e : enemies){
+            e.getConstantSound().stop();
             e.getActiveSound().stop();
         }
     }
@@ -845,7 +861,7 @@ public class LevelController implements ContactListener {
         //draw background
         if (background != null) {
             canvas.draw(background, Color.WHITE, 0,0,
-                    bounds.width * scale.x, bounds.width * scale.y);
+                    bounds.width * scale.x, bounds.height * scale.y);
         }
 
         // Draw all objects
@@ -874,6 +890,7 @@ public class LevelController implements ContactListener {
 
         drawSneakMeter(canvas);
         drawFlares(canvas);
+        textController.draw(canvas);
 
         // Draw debugging on top of everything.
         if (debug == 1) {
@@ -899,7 +916,7 @@ public class LevelController implements ContactListener {
             if(ticks % 10 == 0){
                 fps = 1/delta;
             }
-            displayFont.setColor(Color.YELLOW);
+            displayFont.setColor(Color.CYAN);
             canvas.begin();
             canvas.drawText(Float.toString(fps), displayFont, 0, canvas.getHeight()/2);
             canvas.end();
