@@ -219,8 +219,30 @@ public class InputBindings {
         }
         return null;
     }
-    public static Control idToControl(String c) {
+    public static String[] controlToIDs(Control c) {
         switch (c) {
+            case GO_UP: return new String[]{"up"};
+            case GO_DOWN: return new String[]{"down"};
+            case GO_LEFT: return new String[]{"left"};
+            case GO_RIGHT: return new String[]{"right"};
+            case RESET_LEVEL: return new String[]{"reset"};
+            case SNEAKING: return new String[]{"sneak"};
+            case SPRINTING: return new String[]{"sprint"};
+            case INCREASE_LIGHT:
+                return new String[]{
+                        "incLightRad", "incLightrad", "inclightrad",
+                        "increaseLightRad", "increaseLightrad", "increaselightrad"
+                };
+            case DECREASE_LIGHT:
+                return new String[]{
+                        "decLightRad", "decLightrad", "declightrad",
+                        "decreaseLightRad", "decreaseLightrad", "decreaselightrad"
+                };
+        }
+        return null;
+    }
+    public static Control idToControl(String c) {
+        switch (c.toLowerCase()) {
             case "up": return Control.GO_UP;
             case "down": return Control.GO_DOWN;
             case "left": return Control.GO_LEFT;
@@ -228,8 +250,8 @@ public class InputBindings {
             case "reset": return Control.RESET_LEVEL;
             case "sneak": return Control.SNEAKING;
             case "sprint": return Control.SPRINTING;
-            case "incLightrad": return Control.INCREASE_LIGHT;
-            case "decLightRad": return Control.DECREASE_LIGHT;
+            case "inclightrad": case "increaselightrad": return Control.INCREASE_LIGHT;
+            case "declightrad": case "decreaselightrad": return Control.DECREASE_LIGHT;
         }
         return null;
     }
