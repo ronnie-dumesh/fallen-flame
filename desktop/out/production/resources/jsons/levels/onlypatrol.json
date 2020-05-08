@@ -1,0 +1,139 @@
+{
+  "name": "onlypatrol",
+  "physicsSize": [
+    30.72,
+    23.04
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    3,
+    3
+  ],
+  "exitpos": [
+    15.28,
+    20.13
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        17.58,
+        11.9
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          12.36,
+          12.02
+        ],
+        [
+          12.44,
+          7.9
+        ],
+        [
+          28.42,
+          7.94
+        ],
+        [
+          28.28,
+          11.88
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        11.96,
+        17.3
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          16.4,
+          17.36
+        ],
+        [
+          16.34,
+          14.16
+        ],
+        [
+          2.9,
+          13.9
+        ],
+        [
+          3,
+          17.26
+        ]
+      ]
+    }
+  ],
+  "items": [],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        15.36,
+        22.4
+      ],
+      "size": [
+        30.72,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.64,
+        11.52
+      ],
+      "size": [
+        1.28,
+        23.04
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        30.08,
+        11.52
+      ],
+      "size": [
+        1.28,
+        23.04
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        15.36,
+        0.64
+      ],
+      "size": [
+        30.72,
+        1.28
+      ],
+      "texture": "wall-side"
+    }
+  ],
+  "startSneakVal": 348,
+  "graphicSize": [
+    800,
+    600
+  ]
+}

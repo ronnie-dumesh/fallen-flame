@@ -1,12 +1,9 @@
 {
+  "bgm": "menu-music",
   "name": "medium",
   "physicsSize": [
     16,
     12
-  ],
-  "graphicSize": [
-    800,
-    600
   ],
   "fpsRange": [
     20,

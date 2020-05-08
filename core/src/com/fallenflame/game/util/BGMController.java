@@ -28,17 +28,25 @@ public class BGMController {
     private static Sound getFromSoundMap(String assetName) {
         if (soundMap.containsKey(assetName)) return soundMap.get(assetName);
         Sound n = JsonAssetManager.getInstance().getEntry(assetName, Sound.class);
+        if (n == null) return null;
         soundMap.put(assetName, n);
         return n;
     }
 
-    public static void startBGM(String assetName) {
+    public static void startBGM(String assetName, boolean allowFail) {
         if (assetName.equals(currentAssetName)) return;
         if (activeBGM != null) stopBGM();
-        currentAssetName = assetName;
         activeBGM = getFromSoundMap(assetName);
+        if (activeBGM == null && allowFail) {
+            return;
+        }
+        currentAssetName = assetName;
         activeBGMID = -1;
         resumeBGM();
+    }
+
+    public static void startBGM(String assetName) {
+        startBGM(assetName, false);
     }
 
     public static void pauseBGM() {
