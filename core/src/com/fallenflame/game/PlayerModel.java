@@ -224,11 +224,8 @@ public class PlayerModel extends CharacterModel {
      * @return True if player is able to pick it up, else false
      */
     public boolean incFlareCount() {
-        if(flareCount < maxFlareCount){
-            flareCount++;
-            return true;
-        }
-        return false;
+        flareCount++;
+        return true;
     }
 
     /**
