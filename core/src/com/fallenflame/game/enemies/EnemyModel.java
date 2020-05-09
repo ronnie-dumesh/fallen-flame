@@ -138,7 +138,7 @@ public abstract class EnemyModel extends CharacterModel {
      * @return light radius
      */
     public float getLightRadius() {
-        return isActivated() ? 1.0f : 0.0f;
+        return isActivated() ? 1.5f : 0.0f;
     }
 
     /**
@@ -146,7 +146,7 @@ public abstract class EnemyModel extends CharacterModel {
      * @return light color
      */
     public Color getLightColor() {
-        return stateTints.get(state);
+        return new Color(255,255,255,1);
     }
 
     /**

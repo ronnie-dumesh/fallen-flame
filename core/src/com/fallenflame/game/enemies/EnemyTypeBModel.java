@@ -87,6 +87,15 @@ public class EnemyTypeBModel extends EnemyModel{
     }
 
     /**
+     * Gets light radius for enemy
+     * Overrides method in EnemyModel
+     * @return light radius
+     */
+    public float getLightRadius() {
+        return isActivated() ? 4.5f : 0.0f;
+    }
+
+    /**
      * Updates the object's physics state (NOT GAME LOGIC).
      *
      * We use this method to reset cooldowns.
