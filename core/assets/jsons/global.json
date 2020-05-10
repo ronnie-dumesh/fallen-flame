@@ -209,7 +209,9 @@
   },
   "sneakbar": {
     "texture": {
-      "meterbackground": "sneak-meter-background",
+      "meterleft": "sneak-meter-background-left",
+      "meterright": "sneak-meter-background-right",
+      "metermiddle": "sneak-meter-background-middle",
       "meterforeground": "sneak-meter-foreground",
       "active": "ghost-active-icon",
       "inactive": "ghost-inactive-icon"
@@ -224,7 +226,7 @@
         "y": -0.15
       },
       "foregroundfrombackground": {
-        "x": 0.30,
+        "x": 0.0,
         "y": 0.30
       }
     },

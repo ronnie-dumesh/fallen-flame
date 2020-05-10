@@ -232,8 +232,16 @@
 			"file": "textures/r_inactive_flare.png",
 			"wrap": false
 		},
-		"sneak-meter-background": {
-			"file": "textures/r_sneak_meter.png",
+		"sneak-meter-background-left": {
+			"file": "textures/r_sneak_meter_left.png",
+			"wrap": false
+		},
+		"sneak-meter-background-middle": {
+			"file": "textures/r_sneak_meter_middle.png",
+			"wrap": false
+		},
+		"sneak-meter-background-right": {
+			"file": "textures/r_sneak_meter_right.png",
 			"wrap": false
 		},
 		"sneak-meter-foreground": {

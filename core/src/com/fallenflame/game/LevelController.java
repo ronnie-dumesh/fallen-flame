@@ -102,7 +102,11 @@ public class LevelController implements ContactListener {
 
     // Sneak Bar
     /** The texture used for the sneakbar background*/
-    protected TextureRegion sneakBarBackground;
+    protected TextureRegion sneakBarLeft;
+    /** The texture used for the sneakbar background*/
+    protected TextureRegion sneakBarMiddle;
+    /** The texture used for the sneakbar background*/
+    protected TextureRegion sneakBarRight;
     /** The texture used for the sneakbar foreground*/
     protected TextureRegion sneakBarForeground;
     /** The texture used for the sneakbar ghost active indicator*/
@@ -110,7 +114,7 @@ public class LevelController implements ContactListener {
     /** The texture used for the sneakbar ghost inactive indicator */
     protected TextureRegion sneakBarInactive;
     /** The maximum sneak value allowed in the game */
-    protected float maxSneakValue;
+    protected float globalMaxSneakValue;
     /** The offset of the sneakbar ghost from the player*/
     protected Vector2 sneakBarOffset;
     /** The offset of the sneakbar background from the ghost*/
@@ -374,9 +378,13 @@ public class LevelController implements ContactListener {
 
 
         JsonValue sneakBarJSON = globalJson.get("sneakbar");
-        maxSneakValue = sneakBarJSON.get("maxsneak").asFloat();
-        key = sneakBarJSON.get("texture").get("meterbackground").asString();
-        sneakBarBackground = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        globalMaxSneakValue = sneakBarJSON.get("maxsneak").asFloat();
+        key = sneakBarJSON.get("texture").get("meterleft").asString();
+        sneakBarLeft = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        key = sneakBarJSON.get("texture").get("metermiddle").asString();
+        sneakBarMiddle = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        key = sneakBarJSON.get("texture").get("meterright").asString();
+        sneakBarRight = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
         key = sneakBarJSON.get("texture").get("meterforeground").asString();
         sneakBarForeground = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
         key = sneakBarJSON.get("texture").get("active").asString();
@@ -945,12 +953,14 @@ public class LevelController implements ContactListener {
         float flareWidth = activeFlareCountTexture.getRegionWidth() + flareCountSplit * scale.x;
 
         if (activeFlareCountTexture != null && inactiveFlareCountTexture != null) {
-            for (int i = 0; i <= player.getFlareCount()  - 1; i++) {
-                float activeFlareX = ox + i * flareWidth;
+            int flaresUsed = player.getMaxFlareCount() - player.getFlareCount();
+
+            for(int i = flaresUsed; i < player.getMaxFlareCount(); i++){
+                float activeFlareX = ox - i * flareWidth;
                 canvas.draw(activeFlareCountTexture, activeFlareX, oy);
             }
-            for (int j = player.getFlareCount() ; j < player.getMaxFlareCount(); j++){
-                float inactiveFlareX = ox + j * flareWidth;
+            for(int j = 0; j < flaresUsed; j++){
+                float inactiveFlareX = ox - j * flareWidth;
                 canvas.draw(inactiveFlareCountTexture, inactiveFlareX, oy);
             }
         }
@@ -968,28 +978,44 @@ public class LevelController implements ContactListener {
     private void drawSneakMeter(GameCanvas canvas){
         canvas.begin();
 
+        if(sneakBarLeft == null && sneakBarRight == null && sneakBarMiddle == null
+                && sneakBarActive == null && sneakBarInactive == null && sneakBarForeground == null){
+            canvas.end();
+            return;
+        }
+
         float ox = scale.x * (player.getX() + sneakBarOffset.x);
         float oy = scale.y * (player.getY() + sneakBarOffset.y);
-        float oxBack = ox + sneakBarBackgroundOffset.x * scale.x;
-        float oyBack = oy + sneakBarBackgroundOffset.y * scale.y;
-        float oxFront = oxBack + sneakBarForegroundOffset.x * scale.x;
-        float oyFront = oyBack + sneakBarForegroundOffset.y * scale.y;
 
-        if(sneakBarBackground != null && sneakBarForeground != null
-                && sneakBarActive != null && sneakBarInactive != null) {
-            canvas.draw(sneakBarBackground, oxBack, oyBack);
-            if(player.getSneakVal() > 0) {
-                canvas.draw(sneakBarInactive, ox, oy);
+        float oxLeft = ox + sneakBarBackgroundOffset.x * scale.x;
+        float oyLeft = oy + sneakBarBackgroundOffset.y * scale.y;
+        canvas.draw(sneakBarLeft, oxLeft, oyLeft);
 
-                float percentFilled = player.getSneakVal() / maxSneakValue;
-                float barLength = percentFilled * sneakBarForeground.getRegionWidth();
-                float barHeight = sneakBarForeground.getRegionHeight();
-                //white chosen as dummy color (no tint)
-                canvas.draw(sneakBarForeground, Color.WHITE, oxFront, oyFront, barLength, barHeight);
-            } else {
-                canvas.draw(sneakBarActive, ox, oy);
-            }
+        float oxMiddle = oxLeft + sneakBarLeft.getRegionWidth();
+        float oyMiddle = oyLeft;
+        float middleWidth = sneakBarMiddle.getRegionWidth() * (player.getMaxSneakVal() / globalMaxSneakValue);
+        canvas.draw(sneakBarMiddle, Color.WHITE, oxMiddle, oyMiddle, middleWidth, sneakBarMiddle.getRegionHeight());
+
+        float oxRight = oxMiddle + middleWidth;
+        float oyRight = oyMiddle;
+        canvas.draw(sneakBarRight, oxRight, oyRight);
+
+        if(player.getSneakVal() > 0) {
+            canvas.draw(sneakBarInactive, ox, oy);
+
+            float oxFront = oxMiddle + sneakBarForegroundOffset.x * scale.x;
+            float oyFront = oyMiddle + sneakBarForegroundOffset.y * scale.y;
+            float percentFilled = player.getSneakVal() / globalMaxSneakValue;
+            float barLength = percentFilled * sneakBarMiddle.getRegionWidth();
+            float barHeight = sneakBarForeground.getRegionHeight();
+
+            //white chosen as dummy color (no tint)
+            canvas.draw(sneakBarForeground, Color.WHITE, oxFront, oyFront, barLength, barHeight);
+
+        } else {
+            canvas.draw(sneakBarActive, ox, oy);
         }
+
         canvas.end();
     }
 
