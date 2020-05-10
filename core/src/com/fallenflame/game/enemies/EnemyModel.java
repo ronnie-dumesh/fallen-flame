@@ -2,31 +2,48 @@ package com.fallenflame.game.enemies;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.fallenflame.game.CharacterModel;
+import com.fallenflame.game.GameCanvas;
 import com.fallenflame.game.util.JsonAssetManager;
 
 public abstract class EnemyModel extends CharacterModel {
 
+    /**
+     * Calm: enemy is not activated (will patrol if subtype pathing)
+     * Alert: investigating (either flare or player last known position)
+     * Pause: just activated, about to transition to aggressive
+     * Aggressive: actively chasing player
+     */
     private enum ActivationStates {
         Calm,
         Alert,
+        Pause,
         Aggressive
     }
+
+    /** Time left pausing */
+    private float pauseTime;
+    /** Time enemy will pause before chasing h*/
+    private float totalPauseTime;
+    /** Exclamation mark texture */
+    private TextureRegion exclamationMark;
+    /** Exclamation mark origin x value */
+    private float excOriginX;
+    /** Exclamation mark origin y value */
+    private float excOriginY;
 
     private ObjectMap<ActivationStates, Color> stateTints = new ObjectMap<>();
 
     /**Enemy active sound (Acquired from https://freesound.org/people/000600/sounds/180015/)*/
     private Sound activeSound;
-
     /**Enemy constant sound (Acquired from https://freesound.org/people/ecfike/sounds/132865/)*/
     private Sound constantSound;
-
     /**ID of enemy active sound*/
     protected long activeSoundID;
-
     /**ID of enemy constant sound*/
     protected long constantSoundID;
 
@@ -81,7 +98,31 @@ public abstract class EnemyModel extends CharacterModel {
             Color tint = new Color(tintValues[0], tintValues[1], tintValues[2], tintValues[3]);
             stateTints.put(state, tint);
         }
+
+        // Get the exclamation mark texture (in an if statement because of an implicit promise that an enemy
+        // will have this json field if it is to use PAUSE state and pauseTime)
+        if(json.has("exclamationTexture")){
+            totalPauseTime = json.get("totalPauseTime").asInt();
+            pauseTime = totalPauseTime;
+            String key = json.get("exclamationTexture").asString();
+            exclamationMark = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+            float offsetX = json.get("exclamationTextureOffset").get("x").asFloat();
+            excOriginX = exclamationMark.getRegionWidth()/2.0f + offsetX * drawScale.x;
+            float offsetY = json.get("exclamationTextureOffset").get("y").asFloat();
+            excOriginY = exclamationMark.getRegionHeight()/2.0f + offsetY * drawScale.x;
+        }
+
     }
+
+    /**
+     * @return decrements pausetime and returns true if it is less than 0
+     */
+    public boolean isFinishedPausing() { return pauseTime-- <= 0; }
+
+    /**
+     * Resets pause time for next potential pause
+     */
+    public void resetPause() { pauseTime = totalPauseTime; }
 
     /**
      * @return whether enemy is aggressive
@@ -132,12 +173,18 @@ public abstract class EnemyModel extends CharacterModel {
         this.state = ActivationStates.Aggressive;
     }
 
+    /**
+     * Sets the enemy's activation status to paused
+     */
+    public void makePause(){ this.state = ActivationStates.Pause; }
 
     /**
      * Gets light radius for enemy. MAY BE OVERWRITTEN BY CHILD for different light behavior
      * @return light radius
      */
     public float getLightRadius() {
+        if(state == ActivationStates.Pause)
+            return 4.0f; // larger light radius to see exclamation mark
         return isActivated() ? 1.5f : 0.0f;
     }
 
@@ -212,5 +259,19 @@ public abstract class EnemyModel extends CharacterModel {
 
         move(tempAngle);
         return ctrlCode != CONTROL_NO_ACTION; // Return false if no action.
+    }
+
+    /**
+     * Draws explanation mark over enemy if in "pause" state
+     * @param canvas Drawing context
+     */
+    @Override
+    public void draw(GameCanvas canvas) {
+        if(state == ActivationStates.Pause){
+            // Draw exclamation mark
+            canvas.draw(exclamationMark, Color.WHITE, excOriginX, excOriginY,
+                    getX()*drawScale.x,getY()*drawScale.y,0 ,1,1);
+        }
+        super.draw(canvas);
     }
 }

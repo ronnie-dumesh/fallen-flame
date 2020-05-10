@@ -1,7 +1,6 @@
 package com.fallenflame.game.enemies;
 
 import com.badlogic.gdx.math.Vector2;
-import com.fallenflame.game.CharacterModel;
 import com.fallenflame.game.FlareModel;
 
 public class EnemyTypeAModel extends EnemyModel {

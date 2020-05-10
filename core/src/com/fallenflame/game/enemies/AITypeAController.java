@@ -26,6 +26,9 @@ public class AITypeAController extends AIController {
         CHASE,
         /** The enemy is moving towards the player's last known location or a flare */
         INVESTIGATE,
+        /** Transitioning from IDLE to CHASE state (ie pausing having just seen player)
+         * DOES NOT OCCUR when transitioning from INVESTIGATE to CHASE */
+        PAUSE,
     }
 
     // Constants
@@ -105,7 +108,9 @@ public class AITypeAController extends AIController {
                 checkFlares();
                 // Check for player in range
                 if(withinPlayerLight()){
-                    state = FSMState.CHASE;
+                    // reset pause time and enter pause state
+                    enemy.resetPause();
+                    state = FSMState.PAUSE;
                     break;
                 }
                 // If enemy is of subtype pathing
@@ -116,6 +121,12 @@ public class AITypeAController extends AIController {
                         enemy.setInvestigatePosition(pathCoors[pathPoint]);
                     }
                 }
+                break;
+
+            case PAUSE:
+                enemy.makePause();
+                if(enemy.isFinishedPausing())
+                    state = FSMState.CHASE;
                 break;
 
             case CHASE:
@@ -193,6 +204,9 @@ public class AITypeAController extends AIController {
                     level.setGoal(level.screenToTile(enemy.getInvestigatePositionX()),
                             level.screenToTile(enemy.getInvestigatePositionY()));
                 }
+                break; // no goal tile
+
+            case PAUSE:
                 break; // no goal tile
 
             case CHASE:
