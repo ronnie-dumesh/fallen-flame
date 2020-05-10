@@ -56,7 +56,7 @@
       "walkspeed": 	  5.0,
       "sneakspeed":   2.0,
       "sprintspeed":  6.0,
-      "totalPauseTime": 15,
+      "totalPauseTime": 11,
       "startframe": 0,
       "walklimit": 4,
       "texture":     	{

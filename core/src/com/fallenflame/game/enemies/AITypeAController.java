@@ -207,6 +207,10 @@ public class AITypeAController extends AIController {
                 break; // no goal tile
 
             case PAUSE:
+                // Turn enemy towards player
+                Vector2 posDif = new Vector2(player.getX() - enemy.getX(), player.getY() - enemy.getY());
+                float angle = posDif.angle();
+                enemy.setAngle(angle);
                 break; // no goal tile
 
             case CHASE:
