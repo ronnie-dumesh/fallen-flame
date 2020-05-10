@@ -16,7 +16,6 @@ import com.fallenflame.game.util.ScreenListener;
 import java.util.Arrays;
 
 public class PauseMode implements Screen, InputProcessor {
-    private TextureRegion backgroundTexture;
     private static final String MODAL = "textures/modal.png";
     private final Texture modal = new Texture(MODAL);
     private final GameCanvas canvas;
@@ -40,7 +39,6 @@ public class PauseMode implements Screen, InputProcessor {
     @Override
     public void render(float delta) {
         canvas.beginWithoutCamera();
-        if (getBackgroundTexture() != null) canvas.draw(getBackgroundTexture(), 0, 0);
         canvas.draw(new TextureRegion(modal, screenWidth, screenHeight), 0, 0);
         displayFont.getData().setScale(1);
         GlyphLayout gl = new GlyphLayout(displayFont, "Resume");
@@ -115,16 +113,11 @@ public class PauseMode implements Screen, InputProcessor {
         return true;
     }
 
-    private TextureRegion getBackgroundTexture() {
-        return backgroundTexture;
-    }
-
     public void screenshot() {
         if (screenWidth == 0 || screenHeight == 0) {
             screenWidth = Gdx.graphics.getWidth();
             screenHeight = Gdx.graphics.getHeight();
         }
-        backgroundTexture = ScreenUtils.getFrameBufferTexture();
     }
 
     @Override

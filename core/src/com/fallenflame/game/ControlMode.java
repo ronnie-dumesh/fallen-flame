@@ -23,7 +23,6 @@ public class ControlMode implements Screen, InputProcessor {
     private final Texture background = new Texture(BACKGROUND_FILE);
     private static final String MODAL = "textures/modal.png";
     private final Texture modal = new Texture(MODAL);
-    private TextureRegion screenshotTexture;
     private final GameCanvas canvas;
     private final int[] controlStates;
     private final Rectangle[][] controlRects;
@@ -41,6 +40,7 @@ public class ControlMode implements Screen, InputProcessor {
     private static final int RESET_BTN_HEIGHT = 30;
     private static final int RESET_BTN_RIGHT = 10;
     private static final int RESET_BTN_Y = 10;
+    private boolean inScreenshot = false;
 
     public ControlMode(GameCanvas canvas)
     {
@@ -58,7 +58,6 @@ public class ControlMode implements Screen, InputProcessor {
     public void render(float delta) {
         canvas.beginWithoutCamera();
         if (hasScreenshot()) {
-            canvas.draw(screenshotTexture, 0, 0);
             canvas.draw(new TextureRegion(modal, screenWidth, screenHeight), 0, 0);
         } else {
             canvas.draw(background, 0, 0);
@@ -132,11 +131,11 @@ public class ControlMode implements Screen, InputProcessor {
     }
 
     public void screenshot() {
-        screenshotTexture = ScreenUtils.getFrameBufferTexture();
+        inScreenshot = true;
     }
 
     public boolean hasScreenshot() {
-        return screenshotTexture != null;
+        return inScreenshot;
     }
 
     @Override
@@ -262,7 +261,7 @@ public class ControlMode implements Screen, InputProcessor {
 
     @Override
     public void hide() {
-        screenshotTexture = null;
+        inScreenshot = false;
     }
 
     @Override

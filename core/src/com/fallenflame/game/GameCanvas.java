@@ -2,14 +2,12 @@ package com.fallenflame.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
-import org.w3c.dom.css.Rect;
 
 public class GameCanvas {
     /**@author: Professor White */
@@ -1178,8 +1176,8 @@ public class GameCanvas {
         local.translate(-ox,-oy);
     }
 
-    private static FrameBuffer m_fbo = null;
-    private static TextureRegion m_fboRegion = null;
+    private static FrameBuffer fbo = null;
+    private static TextureRegion fboRegion = null;
     private static SpriteBatch globalSpriteBatch;
     private static float lastScale = 1;
     private static float lastX = 0;
@@ -1192,11 +1190,11 @@ public class GameCanvas {
     }
 
     public static void globalBegin() {
-        m_fbo = new FrameBuffer(Pixmap.Format.RGBA8888, STANDARD_WIDTH, STANDARD_HEIGHT, false);
-        m_fboRegion = new TextureRegion(m_fbo.getColorBufferTexture());
-        m_fboRegion.flip(false, true);
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, STANDARD_WIDTH, STANDARD_HEIGHT, false);
+        fboRegion = new TextureRegion(fbo.getColorBufferTexture());
+        fboRegion.flip(false, true);
 
-        m_fbo.begin();
+        fbo.begin();
         clear();
     }
 
@@ -1207,7 +1205,7 @@ public class GameCanvas {
     }
 
     public static void globalEnd() {
-        m_fbo.end();
+        fbo.end();
 
         if (globalSpriteBatch == null) {
             globalSpriteBatch = new SpriteBatch();
@@ -1233,7 +1231,8 @@ public class GameCanvas {
             scale = (float) w / STANDARD_WIDTH;
         }
         globalSpriteBatch.begin();
-        globalSpriteBatch.draw(m_fboRegion, x, y, w, h);
+        globalSpriteBatch.setColor(new Color(1, 1, 1, 1));
+        globalSpriteBatch.draw(fboRegion, x, y, w, h);
         globalSpriteBatch.end();
         lastX = x;
         lastY = y;

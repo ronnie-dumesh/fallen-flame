@@ -887,6 +887,7 @@ public class LevelController implements ContactListener {
         lightController.setDebug(debug2);
         lightController.draw();
         fogController.updateFogAndDraw(canvas, scale, delta);
+        fogController.updateFogAndDraw(canvas, scale, delta);
 
         drawSneakMeter(canvas);
         drawFlares(canvas);

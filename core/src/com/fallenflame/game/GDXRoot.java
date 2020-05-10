@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.fallenflame.game.util.ScreenListener;
 
@@ -44,7 +45,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private LevelSelectMode levelSelect;
 	/** Pause for the game */
 	private PauseMode pauseMode;
-	private Transition transition;
+//	private Transition transition;
 
 
 	/**
@@ -72,7 +73,7 @@ public class GDXRoot extends Game implements ScreenListener {
 //		multiplexer.addProcessor(levelSelect);
 //		multiplexer.addProcessor(engine);
 		Gdx.input.setInputProcessor(getInputWrapperOf(loading));
-		transition = new Transition();
+//		transition = new Transition();
 
 		// Initialize the three game worlds
 		engine.preLoadContent();
@@ -95,7 +96,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		levelCanvas.dispose();
 		control.dispose();
 		canvas = null;
-		transition.dispose();
+//		transition.dispose();
 
 		// Unload all of the resources
 		super.dispose();
@@ -107,7 +108,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		GameCanvas.globalBegin();
 		if (screen != null) screen.render(Gdx.graphics.getDeltaTime());
 		GameCanvas.globalEnd();
-		transition.draw();
+//		transition.draw();
 	}
 
 	/**
@@ -132,7 +133,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	}
 
 	public void setScreen (Screen screen, boolean doTransition) {
-		if (doTransition) transition.screenshot();
+//		if (doTransition) transition.screenshot();
 		if (this.screen != null) this.screen.hide();
 		this.screen = screen;
 		if (this.screen != null) {
@@ -246,71 +247,75 @@ public class GDXRoot extends Game implements ScreenListener {
 	}
 
 }
-
-/**
- * Transition adds a fade-in fade-out effect when switching between screens. It renders to the screen directly and does
- * NOT use GameCanvas.
- */
-class Transition {
-	/** A map of screenshots to alpha value. A screenshot is a texture region of the previous screen. */
-	private Map<TextureRegion, Float> screenshots = new HashMap<>();
-
-	/** The sprite batch to draw on. */
-	private SpriteBatch spriteBatch;
-	Transition() {
-		spriteBatch = new SpriteBatch();
-	}
-
-	/**
-	 * Dispose this instance.
-	 */
-	void dispose() {
-		spriteBatch.dispose();
-		screenshots.clear();
-		screenshots = null;
-		spriteBatch = null;
-	}
-
-	/**
-	 * Draw screenshots if necessary. Call this after the main rendering logic.
-	 */
-	void draw() {
-		// If no screenshots, skip.
-		if (screenshots.isEmpty()) return;
-
-		// Make sure blend is enabled.
-		boolean glBlendEnabled = Gdx.gl.glIsEnabled(GL20.GL_BLEND);
-		if (!glBlendEnabled) Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-		spriteBatch.begin();
-		Color c = spriteBatch.getColor();
-
-		for (Iterator<Map.Entry<TextureRegion, Float>> it = screenshots.entrySet().iterator(); it.hasNext();) {
-			Map.Entry<TextureRegion, Float> item = it.next();
-			// If alpha <= 0, remove it.
-			if (item.getValue() <= 0) {
-				it.remove();
-				continue;
-			}
-			// Set colour to enable alpha.
-			spriteBatch.setColor(c.r, c.g, c.b, item.getValue());
-			spriteBatch.draw(item.getKey(), 0, 0);
-
-			item.setValue(item.getValue() - .05f);
-		}
-
-		spriteBatch.end();
-
-		// Disable blend if it wasn't enabled before.
-		if (!glBlendEnabled) Gdx.gl.glDisable(GL20.GL_BLEND);
-	}
-
-	/**
-	 * Take a screenshot of the current screen so that the next time draw is called a fade out effect will happen. Call
-	 * this right before screen-switching.
-	 */
-	void screenshot() {
-		screenshots.put(ScreenUtils.getFrameBufferTexture(), 1f);
-	}
-}
+//
+///**
+// * Transition adds a fade-in fade-out effect when switching between screens. It renders to the screen directly and does
+// * NOT use GameCanvas.
+// */
+//class Transition {
+//	/** A map of screenshots to alpha value. A screenshot is a texture region of the previous screen. */
+//	private Map<TextureRegion, Float> screenshots = new HashMap<>();
+//
+//	/** The sprite batch to draw on. */
+//	private SpriteBatch spriteBatch;
+//	Transition() {
+//		spriteBatch = new SpriteBatch();
+//	}
+//
+//	/**
+//	 * Dispose this instance.
+//	 */
+//	void dispose() {
+//		spriteBatch.dispose();
+//		screenshots.clear();
+//		screenshots = null;
+//		spriteBatch = null;
+//	}
+//
+//	/**
+//	 * Draw screenshots if necessary. Call this after the main rendering logic.
+//	 */
+//	void draw() {
+//		// If no screenshots, skip.
+//		if (screenshots.isEmpty()) return;
+//
+//		// Make sure blend is enabled.
+//		boolean glBlendEnabled = Gdx.gl.glIsEnabled(GL20.GL_BLEND);
+//		if (!glBlendEnabled) Gdx.gl.glEnable(GL20.GL_BLEND);
+//		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+//
+//		spriteBatch.begin();
+//		Color c = spriteBatch.getColor();
+//
+//		Rectangle vp = GameCanvas.getViewport();
+//
+//		for (Iterator<Map.Entry<TextureRegion, Float>> it = screenshots.entrySet().iterator(); it.hasNext();) {
+//			Map.Entry<TextureRegion, Float> item = it.next();
+//			// If alpha <= 0, remove it.
+//			if (item.getValue() <= 0) {
+//				it.remove();
+//				continue;
+//			}
+//			// Set colour to enable alpha.
+//			spriteBatch.setColor(c.r, c.g, c.b, item.getValue());
+//			spriteBatch.draw(item.getKey(), vp.x, vp.y * 0.75f, vp.width, vp.height);
+//
+//			item.setValue(item.getValue() - .05f);
+//		}
+//
+//		spriteBatch.end();
+//
+//		// Disable blend if it wasn't enabled before.
+//		if (!glBlendEnabled) Gdx.gl.glDisable(GL20.GL_BLEND);
+//	}
+//
+//	/**
+//	 * Take a screenshot of the current screen so that the next time draw is called a fade out effect will happen. Call
+//	 * this right before screen-switching.
+//	 */
+//	void screenshot() {
+////		Rectangle vp = GameCanvas.getViewport();
+//		screenshots.put(
+//				ScreenUtils.getFrameBufferTexture(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), 1f);
+//	}
+//}
