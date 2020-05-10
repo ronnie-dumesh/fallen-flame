@@ -160,6 +160,8 @@ public class ControlMode implements Screen, InputProcessor {
         for (int i = 0, j = controlRects.length; i < j; i++) {
             controlStates[i] = 0;
         }
+        backHover = false;
+        resetHover = false;
         return true;
     }
 
@@ -183,6 +185,7 @@ public class ControlMode implements Screen, InputProcessor {
         } else {
             for (int i = 0, j = controlRects.length; i < j; i++) {
                 for (Rectangle rec: controlRects[i]) {
+                    if (rec == null) continue;
                     if (rec.contains(screenX, screenY) && i < j - 2) {
                         controlStates[i] = 2;
                         return true;
@@ -214,6 +217,7 @@ public class ControlMode implements Screen, InputProcessor {
         if (Arrays.stream(controlStates).anyMatch(i -> i == 2)) return false;
         for (int i = 0, j = controlRects.length; i < j; i++) {
             for (Rectangle rec: controlRects[i]) {
+                if (rec == null) continue;
                 if (rec.contains(screenX, screenY)) {
                     controlStates[i] = 1;
                     return true;

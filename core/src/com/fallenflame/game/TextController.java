@@ -6,20 +6,24 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.JsonValue;
+import com.fallenflame.game.util.InputBindings;
 import com.fallenflame.game.util.JsonAssetManager;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TextController {
     private Map<Rectangle, String> texts;
-    private List<String> nextMessage = null;
+    private String nextMessage = null;
     private float nextMessageAlpha;
-    private List<String> prevMessage = null;
+    private String prevMessage = null;
     private Rectangle nextMessageRect;
     private float prevMessageAlpha;
     private BitmapFont displayFont;
     private int screenWidth;
 //    private int screenHeight;
+    private static final List<String[]> controlIDs =
+        Arrays.stream(InputBindings.Control.values()).map(InputBindings::controlToIDs).collect(Collectors.toList());
 
     public void initialize(JsonValue jsonValue) {
         if (jsonValue == null) return;
@@ -42,10 +46,7 @@ public class TextController {
             texts.clear();
             texts = null;
         }
-        if (nextMessage != null) {
-            nextMessage.clear();
-            nextMessage = null;
-        }
+        nextMessage = null;
         nextMessageRect = null;
     }
 
@@ -53,7 +54,7 @@ public class TextController {
         if (texts == null) return;
         nextMessageAlpha = Math.min(nextMessageAlpha + .05f, 1);
         prevMessageAlpha = Math.max(prevMessageAlpha - .05f, 0);
-        List<String> current = nextMessage;
+        String current = nextMessage;
         Rectangle currentRect = nextMessageRect;
         nextMessage = null;
         nextMessageRect = null;
@@ -64,7 +65,7 @@ public class TextController {
                     nextMessageRect = currentRect;
                 } else {
                     prevMessage = current;
-                    nextMessage = splitLines(ele.getValue());
+                    nextMessage = ele.getValue();
                     nextMessageRect = ele.getKey();
                     prevMessageAlpha = nextMessageAlpha;
                     nextMessageAlpha = 0;
@@ -79,22 +80,35 @@ public class TextController {
             nextMessageAlpha = 0;
         }
         if (prevMessage != null && prevMessageAlpha < 0.0001f) {
-            prevMessage.clear();
             prevMessage = null;
         }
     }
 
-    private void renderText(GameCanvas canvas, Iterable<String> msg, float alpha) {
+    private void renderText(GameCanvas canvas, String msg, float alpha) {
         if (msg != null) {
             displayFont.getData().setScale(.5f);
             int i = 0;
             displayFont.setColor(new Color(1,1,1, alpha));
-            for (String str : msg) {
+            for (String str : splitLines(replaceBindings(msg))) {
                 canvas.drawTextFromCenter(str, displayFont, screenWidth / 2, 120 - i * 30);
                 i++;
             }
             displayFont.getData().setScale(1);
         }
+    }
+
+    private String replaceBindings(String s) {
+        String ns = s;
+        for (String[] c2 : controlIDs) {
+            for (String c : c2) {
+                String toBeReplaced = "{" + c + "}";
+                InputBindings.Control n1 = InputBindings.idToControl(c);
+                int n2 = InputBindings.getBindingOf(n1);
+                String n3 = InputBindings.keyToString(n2);
+                ns = ns.replace(toBeReplaced, n3);
+            }
+        }
+        return ns;
     }
 
     public void draw(GameCanvas canvas) {
@@ -112,11 +126,9 @@ public class TextController {
         int start = 0;
         int end = 0;
         int all = texts.length;
-        displayFont.getData().setScale(.5f);
         while (true) {
             end++;
             if (end > all) {
-                displayFont.getData().setScale(1);
                 return result;
             }
             String[] currentLine = Arrays.copyOfRange(texts, start, end);

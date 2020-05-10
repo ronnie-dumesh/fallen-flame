@@ -95,6 +95,8 @@ public class LightController {
     protected Map<PointSource, Float> animateOut;
     protected int animateTicks;
 
+    private float targetPlayerRadius;
+
     protected boolean debug;
 
     protected float scale;
@@ -135,6 +137,7 @@ public class LightController {
 
         // Create player light.
         playerLight = createPointLight(player.getLightRadius(), player.getTextureX(), player.getTextureY());
+        targetPlayerRadius = player.getLightRadius();
 
         // Create exit light.
         exitLight = createPointLight(exit.getLightRadius(), exit.getX(), exit.getY());
@@ -249,6 +252,16 @@ public class LightController {
             }
             return false;
         });
+       float pLightCurrDist = playerLight.getDistance();
+       if (pLightCurrDist != targetPlayerRadius) {
+           if (Math.abs(pLightCurrDist - targetPlayerRadius) < 0.05) {
+               playerLight.setDistance(targetPlayerRadius);
+           } else if (pLightCurrDist < targetPlayerRadius) {
+               playerLight.setDistance(pLightCurrDist + (targetPlayerRadius - pLightCurrDist) * 0.5f);
+           } else {
+               playerLight.setDistance(pLightCurrDist - (pLightCurrDist - targetPlayerRadius) * 0.5f);
+           }
+       }
     }
 
     private void updateCamera() {
@@ -275,7 +288,7 @@ public class LightController {
         updateCamera();
 
         // Update player light.
-        playerLight.setDistance(player.getLightRadius());
+        targetPlayerRadius = player.getLightRadius();
         playerLight.setPosition(player.getTextureX(), player.getTextureY());
 
         // Update flare lights.
