@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.fallenflame.game.enemies.EnemyModel;
 import com.fallenflame.game.physics.lights.PointSource;
 import com.fallenflame.game.physics.obstacle.Obstacle;
+import org.w3c.dom.css.Rect;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -124,7 +125,7 @@ public class LightController {
         // set up ray handler.
         RayHandler.setGammaCorrection(true);
         RayHandler.useDiffuseLight(true);
-        rayhandler = new RayHandler(world, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        rayhandler = new RayHandler(world, GameCanvas.STANDARD_WIDTH, GameCanvas.STANDARD_HEIGHT);
         rayhandler.setAmbientLight(0, 0, 0, AMBIENT_LIGHT);
         rayhandler.setBlur(true);
         rayhandler.setBlurNum(3);
@@ -315,7 +316,11 @@ public class LightController {
                     "Have you initialised this controller yet? Or have you disposed it already?");
             return;
         }
+        GameCanvas.globalEnd();
+        Rectangle viewport = GameCanvas.getViewport();
+        rayhandler.useCustomViewport((int) viewport.x, (int) viewport.y, (int) viewport.width, (int) viewport.height);
         rayhandler.render();
+        GameCanvas.globalBegin();
     }
 
 }

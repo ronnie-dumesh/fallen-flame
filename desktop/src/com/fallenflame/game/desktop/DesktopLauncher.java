@@ -10,7 +10,8 @@ public class DesktopLauncher {
 		config.width  = 1260;
 		config.height = 720;
 		config.title = "Fallen Flame";
-		config.resizable = false;
+		config.resizable = true;
+		config.fullscreen = false;
 		new LwjglApplication(new GDXRoot(), config);
 	}
 }

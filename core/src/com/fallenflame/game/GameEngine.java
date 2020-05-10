@@ -379,7 +379,7 @@ public class GameEngine implements Screen, InputProcessor {
             return;
 
         if (flarePressed && !flarePrevious) {
-            level.createFlare(getMousePosition(), getScreenDimensions());
+            level.createFlare(GameCanvas.translateScreenPos(getMousePosition()), getScreenDimensions());
         }
         // Rotate the avatar to face the direction of movement
         moveAngle.set(horizontal,vertical);
@@ -445,7 +445,7 @@ public class GameEngine implements Screen, InputProcessor {
      * @param delta  Number of seconds since last animation frame
      */
     public void draw(float delta) {
-        canvas.clear();
+//        canvas.clear();
 
         level.draw(canvas, delta, debugFont);
 

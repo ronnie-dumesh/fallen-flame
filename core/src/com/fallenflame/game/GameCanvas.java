@@ -1,12 +1,15 @@
 package com.fallenflame.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import org.w3c.dom.css.Rect;
 
 public class GameCanvas {
     /**@author: Professor White */
@@ -72,6 +75,9 @@ public class GameCanvas {
     /** Cache object to handle raw textures */
     private TextureRegion holder;
 
+    public static int STANDARD_WIDTH = 1260;
+    public static int STANDARD_HEIGHT = 720;
+
     /**
      * Creates a new GameCanvas determined by the application configuration.
      *
@@ -125,27 +131,7 @@ public class GameCanvas {
      * @return the width of this canvas
      */
     public int getWidth() {
-        return Gdx.graphics.getWidth();
-    }
-
-    /**
-     * Changes the width of this canvas
-     *
-     * This method raises an IllegalStateException if called while drawing is
-     * active (e.g. in-between a begin-end pair).
-     *
-     * @param width the canvas width
-     */
-    public void setWidth(int width) {
-        if (active != DrawPass.INACTIVE) {
-            Gdx.app.error("GameCanvas", "Cannot alter property while drawing active", new IllegalStateException());
-            return;
-        }
-        this.width = width;
-        if (!isFullscreen()) {
-            Gdx.graphics.setWindowedMode(width, getHeight());
-        }
-        resize();
+        return STANDARD_WIDTH;
     }
 
     /**
@@ -156,59 +142,7 @@ public class GameCanvas {
      * @return the height of this canvas
      */
     public int getHeight() {
-        return Gdx.graphics.getHeight();
-    }
-
-    /**
-     * Changes the height of this canvas
-     *
-     * This method raises an IllegalStateException if called while drawing is
-     * active (e.g. in-between a begin-end pair).
-     *
-     * @param height the canvas height
-     */
-    public void setHeight(int height) {
-        if (active != DrawPass.INACTIVE) {
-            Gdx.app.error("GameCanvas", "Cannot alter property while drawing active", new IllegalStateException());
-            return;
-        }
-        this.height = height;
-        if (!isFullscreen()) {
-            Gdx.graphics.setWindowedMode(getWidth(), height);
-        }
-        resize();
-    }
-
-    /**
-     * Returns the dimensions of this canvas
-     *
-     * @return the dimensions of this canvas
-     */
-    public Vector2 getSize() {
-        return new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-    }
-
-    /**
-     * Changes the width and height of this canvas
-     *
-     * This method raises an IllegalStateException if called while drawing is
-     * active (e.g. in-between a begin-end pair).
-     *
-     * @param width the canvas width
-     * @param height the canvas height
-     */
-    public void setSize(int width, int height) {
-        if (active != DrawPass.INACTIVE) {
-            Gdx.app.error("GameCanvas", "Cannot alter property while drawing active", new IllegalStateException());
-            return;
-        }
-        this.width = width;
-        this.height = height;
-        if (!isFullscreen()) {
-            Gdx.graphics.setWindowedMode(width, height);
-        }
-        resize();
-
+        return STANDARD_HEIGHT;
     }
 
     /**
@@ -257,17 +191,6 @@ public class GameCanvas {
     }
 
     /**
-     * Resets the SpriteBatch camera when this canvas is resized.
-     *
-     * If you do not call this when the window is resized, you will get
-     * weird scaling issues.
-     */
-    public void resize() {
-        // Resizing screws up the spriteBatch projection matrix
-        spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
-    }
-
-    /**
      * Returns the current color blending state for this canvas.
      *
      * Textures draw to this canvas will be composited according
@@ -312,15 +235,6 @@ public class GameCanvas {
 
     public OrthographicCamera getCamera() {
         return camera;
-    }
-
-    /**
-     * Clear the screen so we can start a new animation frame
-     */
-    public void clear() {
-        // Clear the screen
-        Gdx.gl.glClearColor(0, 0, 0, 1.0f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
     /**
@@ -1262,6 +1176,140 @@ public class GameCanvas {
         local.rotate(180.0f*angle/(float)Math.PI);
         local.scale(sx,sy);
         local.translate(-ox,-oy);
+    }
+
+    private static FrameBuffer m_fbo = null;
+    private static TextureRegion m_fboRegion = null;
+    private static SpriteBatch globalSpriteBatch;
+    private static float lastScale = 1;
+    private static float lastX = 0;
+    private static float lastY = 0;
+    private static Rectangle viewport;
+
+    public static void clear() {
+        Gdx.gl.glClearColor(0, 0, 0, 1.0f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    }
+
+    public static void globalBegin() {
+        m_fbo = new FrameBuffer(Pixmap.Format.RGBA8888, STANDARD_WIDTH, STANDARD_HEIGHT, false);
+        m_fboRegion = new TextureRegion(m_fbo.getColorBufferTexture());
+        m_fboRegion.flip(false, true);
+
+        m_fbo.begin();
+        clear();
+    }
+
+    public static void resize() {
+        if (globalSpriteBatch == null) return;
+        globalSpriteBatch.getProjectionMatrix()
+                .setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    public static void globalEnd() {
+        m_fbo.end();
+
+        if (globalSpriteBatch == null) {
+            globalSpriteBatch = new SpriteBatch();
+            globalSpriteBatch.setBlendFunction(
+                    GL20.GL_SRC_ALPHA, GL20.GL_ONE
+            );
+        }
+        int sw = Gdx.graphics.getWidth(), sh = Gdx.graphics.getHeight();
+        float sp = (float) sw / sh;
+        float tp = (float) STANDARD_WIDTH / STANDARD_HEIGHT;
+        int x = 0, y = 0;
+        int w, h;
+        float scale;
+        if (sp > tp) {
+            h = sh;
+            w = (int) Math.ceil(h * tp);
+            x = (sw - w) / 2;
+            scale = (float) h / STANDARD_HEIGHT;
+        } else {
+            w = sw;
+            h = (int) Math.ceil(w / tp);
+            y = (sh - h) / 2;
+            scale = (float) w / STANDARD_WIDTH;
+        }
+        globalSpriteBatch.begin();
+        globalSpriteBatch.draw(m_fboRegion, x, y, w, h);
+        globalSpriteBatch.end();
+        lastX = x;
+        lastY = y;
+        viewport = new Rectangle(x, y, w, h);
+        lastScale = scale;
+    }
+
+    public static Rectangle getViewport() {
+        return viewport;
+    }
+
+    public static int translateScreenX(int x) {
+        return Math.max(Math.min((int) ((x - lastX) / lastScale), STANDARD_WIDTH), 0);
+    }
+
+    public static int translateScreenY(int y) {
+        return Math.max(Math.min((int) ((y - lastY) / lastScale), STANDARD_HEIGHT), 0);
+    }
+
+    public static Vector2 translateScreenPos(Vector2 pos) {
+        return new Vector2(translateScreenX((int) pos.x), translateScreenY((int) pos.y));
+    }
+
+    public static class InputProcessorWrapper implements InputProcessor {
+        private InputProcessor real;
+
+        public InputProcessorWrapper(InputProcessor real) {
+            this.real = real;
+        }
+
+        public void dispose() {
+            this.real = null;
+        }
+
+        @Override
+        public boolean keyDown(int keycode) {
+            return real.keyDown(keycode);
+        }
+
+        @Override
+        public boolean keyUp(int keycode) {
+            return real.keyUp(keycode);
+        }
+
+        @Override
+        public boolean keyTyped(char character) {
+            return real.keyTyped(character);
+        }
+
+        @Override
+        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            return real.touchDown(GameCanvas.translateScreenX(screenX), GameCanvas.translateScreenY(screenY),
+                    pointer, button);
+        }
+
+        @Override
+        public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+            return real.touchUp(GameCanvas.translateScreenX(screenX), GameCanvas.translateScreenY(screenY),
+                    pointer, button);
+        }
+
+        @Override
+        public boolean touchDragged(int screenX, int screenY, int pointer) {
+            return real.touchDragged(GameCanvas.translateScreenX(screenX), GameCanvas.translateScreenY(screenY),
+                    pointer);
+        }
+
+        @Override
+        public boolean mouseMoved(int screenX, int screenY) {
+            return real.mouseMoved(GameCanvas.translateScreenX(screenX), GameCanvas.translateScreenY(screenY));
+        }
+
+        @Override
+        public boolean scrolled(int amount) {
+            return real.scrolled(amount);
+        }
     }
 
 

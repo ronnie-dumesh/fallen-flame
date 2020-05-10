@@ -1,9 +1,6 @@
 package com.fallenflame.game;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -69,12 +66,12 @@ public class GDXRoot extends Game implements ScreenListener {
 		levelSelect = new LevelSelectMode(levelCanvas);
 		pauseMode = new PauseMode(levelCanvas);
 		engine = new GameEngine(levelSelect);
-		InputMultiplexer multiplexer = new InputMultiplexer(); //Allows for multiple InputProcessors
-		//Multiplexer is an ordered list, so when an event occurs, it'll check loadingMode first, and then GameEngine
-		multiplexer.addProcessor(loading);
-		multiplexer.addProcessor(levelSelect);
-		multiplexer.addProcessor(engine);
-		Gdx.input.setInputProcessor(multiplexer);
+//		InputMultiplexer multiplexer = new InputMultiplexer(); //Allows for multiple InputProcessors
+//		//Multiplexer is an ordered list, so when an event occurs, it'll check loadingMode first, and then GameEngine
+//		multiplexer.addProcessor(loading);
+//		multiplexer.addProcessor(levelSelect);
+//		multiplexer.addProcessor(engine);
+		Gdx.input.setInputProcessor(getInputWrapperOf(loading));
 		transition = new Transition();
 
 		// Initialize the three game worlds
@@ -106,7 +103,10 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	@Override
 	public void render () {
+		GameCanvas.clear();
+		GameCanvas.globalBegin();
 		if (screen != null) screen.render(Gdx.graphics.getDeltaTime());
+		GameCanvas.globalEnd();
 		transition.draw();
 	}
 
@@ -120,15 +120,10 @@ public class GDXRoot extends Game implements ScreenListener {
 	 * @param height The new height in pixels
 	 */
 	public void resize(int width, int height) {
-		if (engine != null) {
-			engine.resize(width,height);
-		}
-		if(loading != null){
-			loading.resize(width, height);
-		}
 		// Canvas knows the size, but not that it changed
-		canvas.resize();
-		super.resize(width,height);
+		GameCanvas.resize();
+		Gdx.graphics.setTitle("Fallen Flame (" + width + "," + height + ")");
+		if (screen != null) screen.resize(GameCanvas.STANDARD_WIDTH, GameCanvas.STANDARD_HEIGHT);
 	}
 
 	@Override
@@ -138,7 +133,12 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	public void setScreen (Screen screen, boolean doTransition) {
 		if (doTransition) transition.screenshot();
-		super.setScreen(screen);
+		if (this.screen != null) this.screen.hide();
+		this.screen = screen;
+		if (this.screen != null) {
+			this.screen.show();
+			this.screen.resize(GameCanvas.STANDARD_WIDTH, GameCanvas.STANDARD_HEIGHT);
+		}
 	}
 
 	/**
@@ -155,11 +155,11 @@ public class GDXRoot extends Game implements ScreenListener {
 				engine.loadContent();
 			} else {
 				if (loading.toControl) {
-					Gdx.input.setInputProcessor(control);
+					Gdx.input.setInputProcessor(getInputWrapperOf(control));
 					control.setScreenListener(this);
 					setScreen(control);
 				} else {
-					Gdx.input.setInputProcessor(levelSelect);
+					Gdx.input.setInputProcessor(getInputWrapperOf(levelSelect));
 					levelSelect.setScreenListener(this);
 					setScreen(levelSelect);
 				}
@@ -169,20 +169,20 @@ public class GDXRoot extends Game implements ScreenListener {
 //			loading = null;
 		} else if (screen == levelSelect) {
 			if (levelSelect.getLevelSelected() >= 0) {
-				Gdx.input.setInputProcessor(engine);
+				Gdx.input.setInputProcessor(getInputWrapperOf(engine));
 				engine.setScreenListener(this);
 				engine.setCanvas(canvas);
 				engine.reset(levelSelect.getLevelSelected());
 				engine.resume();
 				setScreen(engine);
 			} else { // Level select = -1 means go back.
-				Gdx.input.setInputProcessor(loading);
+				Gdx.input.setInputProcessor(getInputWrapperOf(loading));
 				loading.setScreenListener(this);
 				loading.setScreenListener(this);
 				setScreen(loading);
 			}
 		} else if (screen == engine) {
-			Gdx.input.setInputProcessor(pauseMode);
+			Gdx.input.setInputProcessor(getInputWrapperOf(pauseMode));
 			pauseMode.setScreenListener(this);
 			pauseMode.screenshot();
 			setScreen(pauseMode);
@@ -191,26 +191,26 @@ public class GDXRoot extends Game implements ScreenListener {
 		} else if (screen == pauseMode) {
 			switch (exitCode) {
 				case 0:
-					Gdx.input.setInputProcessor(engine);
+					Gdx.input.setInputProcessor(getInputWrapperOf(engine));
 					engine.setScreenListener(this);
 					setScreen(engine);
 					engine.resume();
 					break;
 				case 1:
-					Gdx.input.setInputProcessor(engine);
+					Gdx.input.setInputProcessor(getInputWrapperOf(engine));
 					engine.setScreenListener(this);
 					engine.reset();
 					setScreen(engine);
 					engine.resume();
 					break;
 				case 2:
-					Gdx.input.setInputProcessor(levelSelect);
+					Gdx.input.setInputProcessor(getInputWrapperOf(levelSelect));
 					levelSelect.setScreenListener(this);
 					setScreen(levelSelect);
 					engine.pause();
 					break;
 				case 3:
-					Gdx.input.setInputProcessor(control);
+					Gdx.input.setInputProcessor(getInputWrapperOf(control));
 					control.setScreenListener(this);
 					control.screenshot();
 					setScreen(control);
@@ -219,12 +219,12 @@ public class GDXRoot extends Game implements ScreenListener {
 			}
 		} else if (screen == control) {
 			if (control.hasScreenshot()) {
-				Gdx.input.setInputProcessor(pauseMode);
+				Gdx.input.setInputProcessor(getInputWrapperOf(pauseMode));
 				pauseMode.setScreenListener(this);
 				setScreen(pauseMode);
 				engine.pause();
 			} else {
-				Gdx.input.setInputProcessor(loading);
+				Gdx.input.setInputProcessor(getInputWrapperOf(loading));
 				loading.setScreenListener(this);
 				loading.setScreenListener(this);
 				setScreen(loading);
@@ -233,6 +233,16 @@ public class GDXRoot extends Game implements ScreenListener {
 			// We quit the main application
 			Gdx.app.exit();
 		}
+	}
+
+	private GameCanvas.InputProcessorWrapper wrapper;
+
+	private InputProcessor getInputWrapperOf(InputProcessor p) {
+		if (wrapper != null) {
+			wrapper.dispose();
+		}
+		wrapper = new GameCanvas.InputProcessorWrapper(p);
+		return wrapper;
 	}
 
 }
