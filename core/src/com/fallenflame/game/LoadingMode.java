@@ -63,7 +63,7 @@ import com.fallenflame.game.util.ScreenListener;
  */
 public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     // Textures necessary to support the loading screen
-    private static final String BACKGROUND_FILE = "textures/loading_new.png";
+    private static final String BACKGROUND_FILE = "textures/s_loading_background.png";
     private static final String MENU_BACKGROUND_FILE = "textures/m_background.png";
     private static final String FIRE_BUDDY_FILE = "textures/firebuddy_light.png";
     private static final String PROGRESS_FILE = "textures/progressbar.png";
@@ -436,7 +436,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         canvas.beginWithoutCamera();
         if (playButton == null) {
             canvas.draw(background, 0, 0);
-            canvas.draw(fireBuddy, centerX / 1.20f, centerY / .15f);
+            canvas.draw(fireBuddy, centerX / 1.10f, centerY / .15f);
             drawProgress(canvas);
         } else {
             canvas.draw(menu, 0, 0);

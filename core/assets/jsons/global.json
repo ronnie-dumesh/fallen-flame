@@ -218,8 +218,8 @@
     },
     "textureoffsets": {
       "ghostfromplayer": {
-        "x": -7.50,
-        "y": 4.875
+        "x": -11.8,
+        "y": 6
       },
       "backgroundfromghost": {
         "x": 0.70,
@@ -238,8 +238,8 @@
       "inactive": "inactiveflarecounter"
     },
     "textureoffset": {
-      "x": 7.375,
-      "y": 4.875
+      "x": 9
+      "y": 5.875
     },
     "flare-split": 0.15
   },
