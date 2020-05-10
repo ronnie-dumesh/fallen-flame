@@ -7,8 +7,8 @@ import com.fallenflame.game.GDXRoot;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width  = 1260 / 3 * 2;
-		config.height = 720 / 3 * 2;
+		config.width  = 1260;
+		config.height = 720;
 		config.title = "Fallen Flame";
 		config.resizable = true;
 		config.fullscreen = false;

@@ -1,17 +1,10 @@
 package com.fallenflame.game;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.fallenflame.game.util.ScreenListener;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /*
  * GDXRoot.java
@@ -123,7 +116,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void resize(int width, int height) {
 		// Canvas knows the size, but not that it changed
 		GameCanvas.resize();
-		Gdx.graphics.setTitle("Fallen Flame (" + width + "," + height + ")");
+//		Gdx.graphics.setTitle("Fallen Flame (" + width + "," + height + ")");
 		if (screen != null) screen.resize(GameCanvas.STANDARD_WIDTH, GameCanvas.STANDARD_HEIGHT);
 	}
 
