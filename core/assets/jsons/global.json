@@ -11,7 +11,7 @@
     "startframe":       0,
     "walklimit":		4,
     "standardflarecount": 5,
-    "sprintlightrad":  10,
+    "sprintlightrad":  7,
     "sneaklightrad":    1,
     "minlightradius":   2,
     "defaultStartSneakVal":   300,
