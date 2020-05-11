@@ -108,26 +108,26 @@ public class LevelController implements ContactListener {
     protected TextureRegion background;
 
     // Sneak Bar
-    /** The texture used for the sneakbar background*/
-    protected TextureRegion sneakBarLeft;
-    /** The texture used for the sneakbar background*/
-    protected TextureRegion sneakBarMiddle;
-    /** The texture used for the sneakbar background*/
-    protected TextureRegion sneakBarRight;
-    /** The texture used for the sneakbar foreground*/
-    protected TextureRegion sneakBarForeground;
-    /** The texture used for the sneakbar ghost active indicator*/
-    protected TextureRegion sneakBarActive;
-    /** The texture used for the sneakbar ghost inactive indicator */
-    protected TextureRegion sneakBarInactive;
-    /** The maximum sneak value allowed in the game */
-    protected float globalMaxSneakValue;
-    /** The offset of the sneakbar ghost from the player*/
-    protected Vector2 sneakBarOffset;
-    /** The offset of the sneakbar background from the ghost*/
-    protected Vector2 sneakBarBackgroundOffset;
-    /** The offset of the sneakbar foreground from the background */
-    protected Vector2 sneakBarForegroundOffset;
+    /** The texture used for the powerbar background*/
+    protected TextureRegion powerBarLeft;
+    /** The texture used for the powerbar background*/
+    protected TextureRegion powerBarMiddle;
+    /** The texture used for the powerbar background*/
+    protected TextureRegion powerBarRight;
+    /** The texture used for the powerbar foreground*/
+    protected TextureRegion powerBarForeground;
+    /** The texture used for the powerbar ghost active indicator*/
+    protected TextureRegion powerBarActive;
+    /** The texture used for the powerbar ghost inactive indicator */
+    protected TextureRegion powerBarInactive;
+    /** The maximum power value allowed in the game */
+    protected float globalMaxPowerValue;
+    /** The offset of the powerbar ghost from the player*/
+    protected Vector2 powerBarOffset;
+    /** The offset of the powerbar background from the ghost*/
+    protected Vector2 powerBarBackgroundOffset;
+    /** The offset of the powerbar foreground from the background */
+    protected Vector2 powerBarForegroundOffset;
 
     //flare counter
     /** The texture used for the flarecount when you have available flares */
@@ -384,27 +384,27 @@ public class LevelController implements ContactListener {
         background = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
 
 
-        JsonValue sneakBarJSON = globalJson.get("sneakbar");
-        globalMaxSneakValue = sneakBarJSON.get("maxsneak").asFloat();
-        key = sneakBarJSON.get("texture").get("meterleft").asString();
-        sneakBarLeft = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-        key = sneakBarJSON.get("texture").get("metermiddle").asString();
-        sneakBarMiddle = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-        key = sneakBarJSON.get("texture").get("meterright").asString();
-        sneakBarRight = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-        key = sneakBarJSON.get("texture").get("meterforeground").asString();
-        sneakBarForeground = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-        key = sneakBarJSON.get("texture").get("active").asString();
-        sneakBarActive = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-        key = sneakBarJSON.get("texture").get("inactive").asString();
-        sneakBarInactive = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        JsonValue powerBarJSON = globalJson.get("powerbar");
+        globalMaxPowerValue = powerBarJSON.get("maxsneak").asFloat();
+        key = powerBarJSON.get("texture").get("meterleft").asString();
+        powerBarLeft = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        key = powerBarJSON.get("texture").get("metermiddle").asString();
+        powerBarMiddle = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        key = powerBarJSON.get("texture").get("meterright").asString();
+        powerBarRight = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        key = powerBarJSON.get("texture").get("meterforeground").asString();
+        powerBarForeground = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        key = powerBarJSON.get("texture").get("active").asString();
+        powerBarActive = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        key = powerBarJSON.get("texture").get("inactive").asString();
+        powerBarInactive = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
 
-        JsonValue textureOffsets = sneakBarJSON.get("textureoffsets");
-        sneakBarOffset = new Vector2 (textureOffsets.get("ghostfromplayer").get("x").asFloat(),
+        JsonValue textureOffsets = powerBarJSON.get("textureoffsets");
+        powerBarOffset = new Vector2 (textureOffsets.get("ghostfromplayer").get("x").asFloat(),
                                          textureOffsets.get("ghostfromplayer").get("y").asFloat());
-        sneakBarBackgroundOffset =   new Vector2 (textureOffsets.get("backgroundfromghost").get("x").asFloat(),
+        powerBarBackgroundOffset =   new Vector2 (textureOffsets.get("backgroundfromghost").get("x").asFloat(),
                                                     textureOffsets.get("backgroundfromghost").get("y").asFloat());
-        sneakBarForegroundOffset =  new Vector2 (textureOffsets.get("foregroundfrombackground").get("x").asFloat(),
+        powerBarForegroundOffset =  new Vector2 (textureOffsets.get("foregroundfrombackground").get("x").asFloat(),
                                                     textureOffsets.get("foregroundfrombackground").get("y").asFloat());
 
         JsonValue flareCountJSON = globalJson.get("flarecount");
@@ -604,129 +604,143 @@ public class LevelController implements ContactListener {
      * @param dt the time passed since the last frame
      */
     public void update(float dt) {
-        if(fixedStep(dt)){
-            // Update player and exit
-            player.update(dt);
-            assert inBounds(player);
+        // If the player is alive, update the Box2D world.
+        // If updating fails for whatever reason (which it should never)
+        // just give up already.
+        if(player.isAlive() && !fixedStep(dt)) return;
 
-            textController.update(player);
+        // Update player. This is always necessary even if dying cos it
+        // updates the texture.
+        player.update(dt);
 
-            // Decrement sneak value if player is sneaking
-            if(player.isSneaking()){
-                if(player.getSneakVal() > 0){
-                    player.decSneakVal();
-                }
-                // Add ghost enemy if player has used all their sneak
-                else if(player.getSneakVal() == 0 && ghostAdded == false) {
-                    addGhost();
-                    ghostAdded = true;
-                }
-            }
+        // Update text controller (even if dead), this allows the text to finish the animation.
+        textController.update(player);
 
-            // Get Enemy Actions
-            Iterator<AIController> ctrlI = AIControllers.iterator();
-            LinkedList<Integer> ctrlCodes = new LinkedList();
-            while(ctrlI.hasNext()){
-                AIController ctrl = ctrlI.next();
-                ctrlCodes.add(ctrl.getAction());
-            }
-            // Execute Enemy Actions
-            Iterator<EnemyModel> enemyI = enemies.iterator();
-            Iterator<Integer> actionI = ctrlCodes.iterator();
-            while(enemyI.hasNext()){
-                EnemyModel enemy = enemyI.next();
-                int action = actionI.next();
-                enemy.executeMovementAction(action);
-                // Check if enemy is firing, for now only supports EnemyTypeBModel. TODO: Will need to rework if more firing enemies
-                boolean firing = (action & EnemyModel.CONTROL_FIRE) != 0;
-                if (enemy.getClass() == EnemyTypeBModel.class) {
-                    if(firing && ((EnemyTypeBModel) enemy).canFire()) {
-                        fireWeapon((EnemyTypeBModel) enemy);
-                    } else {
-                        ((EnemyTypeBModel) enemy).coolDown(true);
-                    }
-                }
-                enemy.update(dt);
-                // Play enemy sounds
-                float pan = (enemy.getX() - player.getX()) * PAN_SCL;
-                if (enemy.isActivated() && (enemy.getActiveSoundID() == -1)) {
-                    //start sound
-                    enemy.setActiveSoundID(enemy.getActiveSound().loop(ENEMY_MOV_BASE_VOL, ENEMY_MOV_PITCH, pan));
-                } else if (!enemy.isActivated()) {
-                    //end sound
-                    enemy.getActiveSound().stop();
-                    enemy.setActiveSoundID(-1);
-                } else {
-                    //modify sound
-                    enemy.getActiveSound().setPan(enemy.getActiveSoundID(), pan, ENEMY_MOV_BASE_VOL * ((1/enemy.getDistanceBetween(player) * ENEMY_MOVE_VOL_SCL)));
-                }
-                enemy.getConstantSound().setPan(enemy.getConstantSoundID(), pan, (ENEMY_CONS_BASE_VOL * ((1/enemy.getDistanceBetween(player) * ENEMY_CONS_VOL_SCL))) - ENEMY_CONS_VOL_THR);
-                assert inBounds(enemy);
-            }
+        // If dead, mark dead.
+        if (player.isDead()) setLevelState(LevelState.LOSS);
 
-            // Update flares
-            Iterator<FlareModel> i = flares.iterator();
-            while(i.hasNext()){
-                FlareModel flare = i.next();
-                if(!(Float.compare(flare.timeToBurnout(), 0.0f) > 0)){
-                    flare.deactivatePhysics(world);
-                    flare.dispose();
-                    i.remove();
-                }
-                else {
-                    flare.update(dt);
-                }
-            }
-            // Remove old fireballs
-            Iterator<FireballModel> ii = fireballs.iterator();
-            while(ii.hasNext()){
-                FireballModel f = ii.next();
-                if(!f.isActive()){
-                    f.deactivatePhysics(world);
-                    f.dispose();
-                    ii.remove();
-                }
-            }
+        // If dying or dead, that's it. Don't update anything else.
+        // (such as light, fog, enemies, etc)
+        if (player.isDead() || player.isDying()) return;
 
-            // Check for contact items' usability
-            Iterator<ItemModel> i3 = itemContacts.iterator();
-            while(i3.hasNext()){
-                ItemModel item = i3.next();
-                // If item is a flare try to increment flare count (will return false if player is at max)
-                if(item.isFlare() && player.incFlareCount()) {
-                    item.deactivate();
-                    i3.remove();
-                }
-            }
-            // Remove old items
-            Iterator<ItemModel> iii = items.iterator();
-            while(iii.hasNext()){
-                ItemModel it = iii.next();
-                if(!it.isActive()){
-                    it.deactivatePhysics(world);
-                    it.dispose();
-                    iii.remove();
-                }
-            }
+        assert inBounds(player);
 
-            // Update background music
-            if (player.getSneakVal() > 0 || !ghostJSON.has("bgm") || ghostJSON.get("bgm").asString().equals("")) {
-                if (bgm != null && !bgm.equals("")) {
-                    BGMController.startBGM(bgm);
-                } else {
-                    BGMController.stopBGM();
-                }
-            } else {
-                BGMController.startBGM(ghostJSON.get("bgm").asString());
+        // Decrement power value if player is sneaking or sprinting
+        if((player.isSneaking() || player.isSprinting()) && player.isAlive()){
+            if(player.getPowerVal() > 0){
+                player.decPowerVal();
             }
-
-            // Update level model.
-            levelModel.update(player, enemies);
-
-            // Update lights
-            lightController.updateLights(flares, enemies, fireballs, items);
+            // Add ghost enemy if player has used all their power
+            else if(player.getPowerVal() == 0 && ghostAdded == false) {
+                addGhost();
+                ghostAdded = true;
+            }
         }
+
+        // Get Enemy Actions
+        Iterator<AIController> ctrlI = AIControllers.iterator();
+        LinkedList<Integer> ctrlCodes = new LinkedList();
+        while(ctrlI.hasNext()){
+            AIController ctrl = ctrlI.next();
+            ctrlCodes.add(ctrl.getAction());
+        }
+        // Execute Enemy Actions
+        Iterator<EnemyModel> enemyI = enemies.iterator();
+        Iterator<Integer> actionI = ctrlCodes.iterator();
+        while(enemyI.hasNext()){
+            EnemyModel enemy = enemyI.next();
+            int action = actionI.next();
+            enemy.executeMovementAction(action);
+            // Check if enemy is firing, for now only supports EnemyTypeBModel. TODO: Will need to rework if more firing enemies
+            boolean firing = (action & EnemyModel.CONTROL_FIRE) != 0;
+            if (enemy.getClass() == EnemyTypeBModel.class) {
+                if(firing && ((EnemyTypeBModel) enemy).canFire()) {
+                    fireWeapon((EnemyTypeBModel) enemy);
+                } else {
+                    ((EnemyTypeBModel) enemy).coolDown(true);
+                }
+            }
+            enemy.update(dt);
+            // Play enemy sounds
+            float pan = (enemy.getX() - player.getX()) * PAN_SCL;
+            if (enemy.isActivated() && (enemy.getActiveSoundID() == -1)) {
+                //start sound
+                enemy.setActiveSoundID(enemy.getActiveSound().loop(ENEMY_MOV_BASE_VOL, ENEMY_MOV_PITCH, pan));
+            } else if (!enemy.isActivated()) {
+                //end sound
+                enemy.getActiveSound().stop();
+                enemy.setActiveSoundID(-1);
+            } else {
+                //modify sound
+                enemy.getActiveSound().setPan(enemy.getActiveSoundID(), pan, ENEMY_MOV_BASE_VOL * ((1/enemy.getDistanceBetween(player) * ENEMY_MOVE_VOL_SCL)));
+            }
+            enemy.getConstantSound().setPan(enemy.getConstantSoundID(), pan, ENEMY_CONS_BASE_VOL * ((1/enemy.getDistanceBetween(player) * ENEMY_CONS_VOL_SCL)));
+            assert inBounds(enemy);
+        }
+
+        // Update flares
+        Iterator<FlareModel> i = flares.iterator();
+        while(i.hasNext()){
+            FlareModel flare = i.next();
+            if(!(Float.compare(flare.timeToBurnout(), 0.0f) > 0)){
+                flare.deactivatePhysics(world);
+                flare.dispose();
+                i.remove();
+            }
+            else {
+                flare.update(dt);
+            }
+        }
+        // Remove old fireballs
+        Iterator<FireballModel> ii = fireballs.iterator();
+        while(ii.hasNext()){
+            FireballModel f = ii.next();
+            if(!f.isActive()){
+                f.deactivatePhysics(world);
+                f.dispose();
+                ii.remove();
+            }
+        }
+
+        // Check for contact items' usability
+        Iterator<ItemModel> i3 = itemContacts.iterator();
+        while(i3.hasNext()){
+            ItemModel item = i3.next();
+            // If item is a flare try to increment flare count (will return false if player is at max)
+            if(item.isFlare() && player.incFlareCount()) {
+                item.deactivate();
+                i3.remove();
+            }
+        }
+        // Remove old items
+        Iterator<ItemModel> iii = items.iterator();
+        while(iii.hasNext()){
+            ItemModel it = iii.next();
+            if(!it.isActive()){
+                it.deactivatePhysics(world);
+                it.dispose();
+                iii.remove();
+            }
+        }
+
+        // Update background music
+        if (player.getPowerVal() > 0 || !ghostJSON.has("bgm") || ghostJSON.get("bgm").asString().equals("")) {
+            if (bgm != null && !bgm.equals("")) {
+                BGMController.startBGM(bgm);
+            } else {
+                BGMController.stopBGM();
+            }
+        } else {
+            BGMController.startBGM(ghostJSON.get("bgm").asString());
+        }
+
+        // Update level model.
+        levelModel.update(player, enemies);
+
+        // Update lights
+        lightController.updateLights(flares, enemies, fireballs, items);
     }
+
 
     public void stopAllSounds(){
         player.getWalkSound().stop();
@@ -904,7 +918,7 @@ public class LevelController implements ContactListener {
         lightController.draw();
         fogController.updateFogAndDraw(canvas, scale, delta);
 
-        drawSneakMeter(canvas);
+        drawPowerMeter(canvas);
         drawFlares(canvas);
         textController.draw(canvas);
 
@@ -977,51 +991,51 @@ public class LevelController implements ContactListener {
     }
 
     /**
-     * Draws sneak meter, a helper method for LevelController.draw()
+     * Draws power meter, a helper method for LevelController.draw()
      *
      * PlayerModel player and Vector2 scale must not be null
      *
      * @param canvas the drawing context
      */
-    private void drawSneakMeter(GameCanvas canvas){
+    private void drawPowerMeter(GameCanvas canvas){
         canvas.begin();
 
-        if(sneakBarLeft == null && sneakBarRight == null && sneakBarMiddle == null
-                && sneakBarActive == null && sneakBarInactive == null && sneakBarForeground == null){
+        if(powerBarLeft == null && powerBarRight == null && powerBarMiddle == null
+                && powerBarActive == null && powerBarInactive == null && powerBarForeground == null){
             canvas.end();
             return;
         }
 
-        float ox = scale.x * (player.getX() + sneakBarOffset.x);
-        float oy = scale.y * (player.getY() + sneakBarOffset.y);
+        float ox = scale.x * (player.getX() + powerBarOffset.x);
+        float oy = scale.y * (player.getY() + powerBarOffset.y);
 
-        float oxLeft = ox + sneakBarBackgroundOffset.x * scale.x;
-        float oyLeft = oy + sneakBarBackgroundOffset.y * scale.y;
-        canvas.draw(sneakBarLeft, oxLeft, oyLeft);
+        float oxLeft = ox + powerBarBackgroundOffset.x * scale.x;
+        float oyLeft = oy + powerBarBackgroundOffset.y * scale.y;
+        canvas.draw(powerBarLeft, oxLeft, oyLeft);
 
-        float oxMiddle = oxLeft + sneakBarLeft.getRegionWidth();
+        float oxMiddle = oxLeft + powerBarLeft.getRegionWidth();
         float oyMiddle = oyLeft;
-        float middleWidth = sneakBarMiddle.getRegionWidth() * (player.getMaxSneakVal() / globalMaxSneakValue);
-        canvas.draw(sneakBarMiddle, Color.WHITE, oxMiddle, oyMiddle, middleWidth, sneakBarMiddle.getRegionHeight());
+        float middleWidth = powerBarMiddle.getRegionWidth() * (player.getMaxPowerVal() / globalMaxPowerValue);
+        canvas.draw(powerBarMiddle, Color.WHITE, oxMiddle, oyMiddle, middleWidth, powerBarMiddle.getRegionHeight());
 
         float oxRight = oxMiddle + middleWidth;
         float oyRight = oyMiddle;
-        canvas.draw(sneakBarRight, oxRight, oyRight);
+        canvas.draw(powerBarRight, oxRight, oyRight);
 
-        if(player.getSneakVal() > 0) {
-            canvas.draw(sneakBarInactive, ox, oy);
+        if(player.getPowerVal() > 0) {
+            canvas.draw(powerBarInactive, ox, oy);
 
-            float oxFront = oxMiddle + sneakBarForegroundOffset.x * scale.x;
-            float oyFront = oyMiddle + sneakBarForegroundOffset.y * scale.y;
-            float percentFilled = player.getSneakVal() / globalMaxSneakValue;
-            float barLength = percentFilled * sneakBarMiddle.getRegionWidth();
-            float barHeight = sneakBarForeground.getRegionHeight();
+            float oxFront = oxMiddle + powerBarForegroundOffset.x * scale.x;
+            float oyFront = oyMiddle + powerBarForegroundOffset.y * scale.y;
+            float percentFilled = player.getPowerVal() / globalMaxPowerValue;
+            float barLength = percentFilled * powerBarMiddle.getRegionWidth();
+            float barHeight = powerBarForeground.getRegionHeight();
 
             //white chosen as dummy color (no tint)
-            canvas.draw(sneakBarForeground, Color.WHITE, oxFront, oyFront, barLength, barHeight);
+            canvas.draw(powerBarForeground, Color.WHITE, oxFront, oyFront, barLength, barHeight);
 
         } else {
-            canvas.draw(sneakBarActive, ox, oy);
+            canvas.draw(powerBarActive, ox, oy);
         }
 
         canvas.end();
@@ -1058,7 +1072,7 @@ public class LevelController implements ContactListener {
             // Check for loss condition 1 (player runs into enemy)
             if((bd1 == player && bd2 instanceof EnemyModel)
                     || (bd1 instanceof  EnemyModel && bd2 == player)){
-                setLevelState(LevelState.LOSS);
+                player.die();
                 return;
             }
             // Check if flare collides with wall and if so stop it
@@ -1072,7 +1086,7 @@ public class LevelController implements ContactListener {
             // Check for loss condition 2 (fireball hits player)
             if((bd1 instanceof FireballModel && bd2 instanceof PlayerModel
                     || bd1 instanceof  PlayerModel && bd2 instanceof FireballModel)) {
-                setLevelState(LevelState.LOSS);
+                player.die();
                 return;
             }
             // Check for fireball-wall collision and if so remove fireball

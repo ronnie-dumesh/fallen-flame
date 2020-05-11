@@ -414,8 +414,11 @@ public class GameEngine implements Screen, InputProcessor {
      */
     public void update(float delta) {
         // If the player won or lost, don't update
-        if(prevSuccess || prevFailed)
+        if(prevSuccess || prevFailed) return;
+        if(level.getPlayer().isDying()){
+            level.update(delta);
             return;
+        }
 
         if (flarePressed && !flarePrevious) {
             level.createFlare(getMousePosition(), getScreenDimensions());

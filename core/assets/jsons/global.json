@@ -19,7 +19,9 @@
       "left": "player-left",
       "right": "player-right",
       "up": "player-up",
-      "down": "player-down"
+      "down": "player-down",
+      "death-left": "player-death-left",
+      "death-right": "player-death-right"
     },
     "walksound":    "new-walk",
     "firebuddy": {
@@ -88,7 +90,7 @@
     },
     "typeB":  {
       "cooldown": 20,
-      "radius": 0.4,
+      "radius": 1.2,
       "bodytype": "dynamic",
       "density": 1.0,
       "friction": 0.0,
@@ -113,7 +115,7 @@
       },
       "textureoffset" : {
         "x": 0.1,
-        "y": -0.2
+        "y": -0.9
       },
       "tintOpacity": 192
     },
@@ -187,7 +189,7 @@
     "density":        1.0,
     "friction":       0.0,
     "restitution":    0.0,
-    "texture":        "fireball",
+    "texture":        "slime",
     "speed":    10.0,
     "tint": [1.0, 1.0, 1.0, 1.0],
     "startframe":       0
@@ -215,7 +217,7 @@
   "background": {
     "texture":      "floor-tile"
   },
-  "sneakbar": {
+  "powerbar": {
     "texture": {
       "meterleft": "sneak-meter-background-left",
       "meterright": "sneak-meter-background-right",
@@ -246,7 +248,7 @@
       "inactive": "inactiveflarecounter"
     },
     "textureoffset": {
-      "x": 9
+      "x": 9,
       "y": 5.875
     },
     "flare-split": 0.15

@@ -2,7 +2,6 @@ package com.fallenflame.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.Array;
 import com.fallenflame.game.enemies.EnemyModel;
 import com.fallenflame.game.physics.obstacle.BoxObstacle;
 import com.fallenflame.game.physics.obstacle.WheelObstacle;

@@ -60,6 +60,26 @@
 				"first": 0
 			}
 		},
+		"player-death-left": {
+			"file": "textures/player-death-left.png",
+			"wrap": false,
+			"strip": {
+				"size":12,
+				"rows": 1,
+				"cols": 12,
+				"first": 0
+			}
+		},
+		"player-death-right": {
+			"file": "textures/player-death-right.png",
+			"wrap": false,
+			"strip": {
+				"size":12,
+				"rows": 1,
+				"cols": 12,
+				"first": 0
+			}
+		},
 		"enemy-a-left": {
 			"file": "textures/enemy-a-walk-left.png",
 			"wrap": false,
@@ -220,8 +240,8 @@
 			"file": "textures/floor-tile.png",
 			"wrap": true
 		},
-		"fireball": {
-			"file": "textures/fireball.png",
+		"slime": {
+			"file": "textures/slime.png",
 			"wrap": false
 		},
 		"flare": {
@@ -277,7 +297,7 @@
 		"debug": {
 			"file": "fonts/RetroGame.ttf",
 			"size": 20
-		},
+		}
 	},
 	"sounds": {
 		"flareout": {

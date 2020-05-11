@@ -69,6 +69,12 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     public boolean isSneaking() { return move == MovementState.SNEAK; }
 
     /**
+     * Return True if player is sprinting
+     * @return True if sprinting, False if sneaking or walking
+     */
+    public boolean isSprinting() { return move == MovementState.SPRINT; }
+
+    /**
      * Sets the directional movement of this character.
      *
      * This is the result of input times character force.

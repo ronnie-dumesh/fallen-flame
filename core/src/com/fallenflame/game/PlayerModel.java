@@ -15,6 +15,14 @@ import com.fallenflame.game.util.JsonAssetManager;
  * by reading the JSON value.
  */
 public class PlayerModel extends CharacterModel {
+    /** Player Life types enum */
+    protected enum LifeState {
+        ALIVE,
+        DYING,
+        DEAD
+    }
+    private LifeState life;
+
     /** Max flares player can hold. Also determines UI flare indicators */
     private int maxFlareCount;
     /** Number of flares the player has left */
@@ -26,10 +34,11 @@ public class PlayerModel extends CharacterModel {
     protected float lightRadiusSaved;
     protected float lightRadiusSprint;
     protected float lightRadiusSneak;
-    /** Player sneak left (once hits 0, a ghost is deployed on the map) Sneakval must be greater than or equal to 0 */
-    protected int sneakVal;
-    /** Max sneak player can have at a given level */
-    protected int maxSneakVal;
+    /** Player sneak and spring left (once hits 0, a ghost is deployed on the map)
+     *  powerVal must be greater than or equal to 0 */
+    protected int powerVal;
+    /** Max sneak and spring player can have at a given level */
+    protected int maxPowerVal;
 
     /**Tint of player light */
     protected Color tint;
@@ -46,12 +55,17 @@ public class PlayerModel extends CharacterModel {
     private FilmStrip fireBuddyRight;
     private FilmStrip fireBuddyUp;
     private FilmStrip fireBuddyDown;
+    private FilmStrip fireBuddyThrow;
 
     /** Origin of fire buddy when drawing not in sneak mode */
     protected Vector2 fireBuddyOrigin;
 
     /** Origin of drawing for fire buddy when player is in sneak mode */
     protected Vector2 fireBuddySneak;
+
+    /** Filmstrip of player death */
+    private FilmStrip deathFilmstripRight;
+    private FilmStrip deathFilmstripLeft;
 
     /**
      * Initializes the character via the given JSON value
@@ -72,24 +86,46 @@ public class PlayerModel extends CharacterModel {
         // Level json data
         flareCount = levelJson.has("startFlareCount") ?
                 levelJson.get("startFlareCount").asInt() : globalJson.get("standardflarecount").asInt();
-        maxFlareCount = flareCount;
-        sneakVal = levelJson.has("startSneakVal") ?
+        maxFlareCount = levelJson.has("maxFlareCount") ?
+                levelJson.get("maxFlareCount").asInt() : flareCount;
+        powerVal = levelJson.has("startSneakVal") ?
                 levelJson.get("startSneakVal").asInt() : globalJson.get("defaultStartSneakVal").asInt();
-        maxSneakVal = sneakVal;
+        maxPowerVal = powerVal;
 
         String walkSoundKey = globalJson.get("walksound").asString();
         walkSound = JsonAssetManager.getInstance().getEntry(walkSoundKey, Sound.class);
+
+        life = LifeState.ALIVE;
     }
 
     @Override
     public void initializeTextures(JsonValue json){
         super.initializeTextures(json);
 
+        JsonValue textureJson = json.get("texture");
+
+        String key = textureJson.get("death-left").asString();
+        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        try {
+            deathFilmstripLeft = (FilmStrip) texture;
+            deathFilmstripLeft.setFrame(0); //reset filmstrips in cases where the player dies and the level resets
+        } catch (Exception e){
+            deathFilmstripLeft = null;
+        }
+
+        key = textureJson.get("death-right").asString();
+        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        try {
+            deathFilmstripRight = (FilmStrip) texture;
+            deathFilmstripRight.setFrame(0); //reset filmstrips in cases where the player dies and the level resets
+        } catch (Exception e){
+            deathFilmstripRight = null;
+        }
+
         JsonValue firebuddy = json.get("firebuddy");
+        textureJson = firebuddy.get("texture");
 
-        JsonValue textureJson = firebuddy.get("texture");
-
-        String key = textureJson.get("left").asString();
+        key = textureJson.get("left").asString();
         texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
         try {
             fireBuddyLeft = (FilmStrip) texture;
@@ -239,14 +275,14 @@ public class PlayerModel extends CharacterModel {
         return lightRadius;
     }
 
-    /** Get amount of sneak updates left for player */
-    public int getSneakVal() { return sneakVal; }
+    /** Get amount of sneak and spring updates left for player */
+    public int getPowerVal() { return powerVal; }
 
-    /** Get maximum amount of sneak updates left for player on this level*/
-    public int getMaxSneakVal() { return maxSneakVal; }
+    /** Get maximum amount of sneak and spring updates left for player on this level*/
+    public int getMaxPowerVal() { return maxPowerVal; }
 
-    /** Decrement sneak value by 1 (for 1 update of sneaking) */
-    public void decSneakVal() { sneakVal--; }
+    /** Decrement sneak and spring value by 1 (for 1 update of sneaking) */
+    public void decPowerVal() { powerVal--; }
 
     /**
      * Gets player color tint
@@ -268,6 +304,30 @@ public class PlayerModel extends CharacterModel {
      * Sets player to sneak light radius (not reachable by scrolling)
      */
     public void setLightRadiusSneak() { lightRadius = lightRadiusSneak; }
+
+    /**
+     * Sets the player's life state to dying. Once the dying animation
+     * concludes the player is then set as dead.
+     */
+    public void die() { life = LifeState.DYING; }
+
+    /**
+     * Returns whether the player is dead.
+     * @return true if the player is dead and false if player is alive or dying
+     */
+    public boolean isDead() { return life == LifeState.DEAD; }
+
+    /**
+     * Returns whether the player is dying
+     * @return true if the player is dying and false if player is alive or dead
+     */
+    public boolean isDying() { return life == LifeState.DYING; }
+
+    /**
+     * Returns whether the player is alive
+     * @return true if the player is alive and false if player is dead or dying
+     */
+    public boolean isAlive() { return life == LifeState.ALIVE; }
 
     /**
      * Returns the walk sound
@@ -326,25 +386,58 @@ public class PlayerModel extends CharacterModel {
         if(angle < 0) angle = angle + 2 * Math.PI;
         int angle100 = (int) (angle * 100);
 
-        if(angle100 == 0){
-            fireBuddyFilmstrip = fireBuddyUp;
-        } else if (angle100 > 0 && angle100 < 314){
-            fireBuddyFilmstrip = fireBuddyLeft;
-        } else if (angle100 == 314){
-            fireBuddyFilmstrip = fireBuddyDown;
-        } else {
-            fireBuddyFilmstrip = fireBuddyRight;
-        }
+        animateFireBuddy(angle100);
 
-        // Animate if necessary
-        // Do not change values of walkCool and animate, to be done in parent.
-        if (animate && walkCool == 0 && fireBuddyFilmstrip != null ) {
-            int next = (fireBuddyFilmstrip.getFrame()+1) % fireBuddyFilmstrip.getSize();
-            fireBuddyFilmstrip.setFrame(next);
-        } else if (!animate && fireBuddyFilmstrip != null) {
-            fireBuddyFilmstrip.setFrame(startFrame);
+        if(isDying()) {
+            if (angle100 > 0 && angle100 < 314 && deathFilmstripLeft != null) {
+                filmstrip = deathFilmstripLeft;
+            } else if (deathFilmstripRight != null) { //angle between pi and 2pi/0 (inclusive)
+                filmstrip = deathFilmstripRight;
+            }
+
+            setTexture(filmstrip, textureOffset.x, textureOffset.y);
+
+            int frame = filmstrip.getFrame();
+            if (walkCool == 0 && frame < filmstrip.getSize() - 1) {
+                walkCool = walkLimit;
+                filmstrip.setFrame(frame + 1);
+            } else if (walkCool > 0) {
+                walkCool--;
+            } else if (frame == filmstrip.getSize() - 1){
+                life = LifeState.DEAD;
+            }
+        } else if (isAlive()) {
+            super.update(dt);
         }
-        super.update(dt);
+    }
+
+    /**
+     * A helper method for drawing the fire buddy
+     * @param angle100 the angle which the player is facing rounded down to the nearest int
+     */
+    protected void animateFireBuddy(int angle100){
+        if(true) { //temporary placeholder for whether the fire buddy is throwing or not
+            if (angle100 == 0) {
+                fireBuddyFilmstrip = fireBuddyUp;
+            } else if (angle100 > 0 && angle100 < 314) {
+                fireBuddyFilmstrip = fireBuddyLeft;
+            } else if (angle100 == 314) {
+                fireBuddyFilmstrip = fireBuddyDown;
+            } else {
+                fireBuddyFilmstrip = fireBuddyRight;
+            }
+
+            // Animate if necessary
+            // Do not change values of walkCool and animate, to be done in parent.
+            if (animate && walkCool == 0 && fireBuddyFilmstrip != null) {
+                int next = (fireBuddyFilmstrip.getFrame() + 1) % fireBuddyFilmstrip.getSize();
+                fireBuddyFilmstrip.setFrame(next);
+            } else if (!animate && fireBuddyFilmstrip != null) {
+                fireBuddyFilmstrip.setFrame(startFrame);
+            }
+        } else {
+
+        }
     }
 
     public void draw(GameCanvas canvas) {
