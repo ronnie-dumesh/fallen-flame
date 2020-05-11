@@ -1,5 +1,6 @@
 {
   "name": "exEasyLevel",
+  "texts": [],
   "physicsSize": [
     16.64,
     12.8
@@ -9,8 +10,8 @@
     60
   ],
   "playerpos": [
-    2.18,
-    4.26
+    2.78,
+    3.38
   ],
   "exitpos": [
     14.3,
@@ -19,7 +20,16 @@
   "background": {
     "texture": "floor-tile"
   },
-  "enemies": [],
+  "enemies": [
+    {
+      "enemypos": [
+        8.84,
+        7.88
+      ],
+      "enemytype": "typeA"
+    }
+  ],
+  "items": [],
   "lighting": {
     "color": [
       0,
@@ -78,72 +88,6 @@
     },
     {
       "pos": [
-        13.44,
-        8.32
-      ],
-      "size": [
-        3.84,
-        1.28
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        8.32,
-        5.76
-      ],
-      "size": [
-        6.4,
-        1.28
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        1.92,
-        5.76
-      ],
-      "size": [
-        1.28,
-        1.28
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        5.12,
-        10.88
-      ],
-      "size": [
-        5.12,
-        1.28
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        10.88,
-        7.68
-      ],
-      "size": [
-        1.28,
-        2.56
-      ],
-      "texture": "wall-top"
-    },
-    {
-      "pos": [
-        1.92,
-        8.96
-      ],
-      "size": [
-        1.28,
-        5.12
-      ],
-      "texture": "wall-top"
-    },
-    {
-      "pos": [
         4.48,
         12.16
       ],
@@ -151,15 +95,37 @@
         6.4,
         1.28
       ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        9.6,
+        3.84
+      ],
+      "size": [
+        11.52,
+        5.12
+      ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        6.4,
+        5.12,
         7.68
       ],
       "size": [
         2.56,
+        2.56
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        13.44,
+        7.68
+      ],
+      "size": [
+        3.84,
         2.56
       ],
       "texture": "wall-top"
