@@ -182,11 +182,19 @@ public class GDXRoot extends Game implements ScreenListener {
 				setScreen(loading);
 			}
 		} else if (screen == engine) {
-			Gdx.input.setInputProcessor(pauseMode);
-			pauseMode.setScreenListener(this);
-			pauseMode.screenshot();
-			setScreen(pauseMode);
-			engine.pause();
+			if(exitCode == 1){
+				Gdx.input.setInputProcessor(levelSelect);
+				levelSelect.setScreenListener(this);
+				setScreen(levelSelect);
+				engine.pause();
+			}
+			else {
+				Gdx.input.setInputProcessor(pauseMode);
+				pauseMode.setScreenListener(this);
+				pauseMode.screenshot();
+				setScreen(pauseMode);
+				engine.pause();
+			}
 //			levelSelect.reset();
 		} else if (screen == pauseMode) {
 			switch (exitCode) {

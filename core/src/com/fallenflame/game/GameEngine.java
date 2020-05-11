@@ -7,7 +7,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
@@ -68,6 +71,8 @@ public class GameEngine implements Screen, InputProcessor {
     private AssetState currentAssetState = AssetState.EMPTY;
     /** The font for giving messages to the player */
     protected BitmapFont displayFont;
+    /** The smaller version of displayFont, to be used for the win/lose screen*/
+    protected BitmapFont menuOptionsFont;
     /** The font for giving messages when in debug mode */
     protected BitmapFont debugFont;
 
@@ -93,7 +98,18 @@ public class GameEngine implements Screen, InputProcessor {
     private Rectangle canvasBounds;
     /** Countdown active for winning or losing */
     private int countdown;
-
+    /**Textures for win/lose border. Win border is for the last level in the game*/
+    private TextureRegion border;
+    private TextureRegion winBorder;
+    /**Information to keep track of where the user is hovered/where they are clicked */
+    private Rectangle[] hoverRects;
+    private int[] hoverStates;
+    private GlyphLayout gl;
+    private boolean retrySelected;
+    private boolean menuSelected;
+    //To make the smaller font for the win/lose screen.
+    private FreeTypeFontGenerator generator;
+    private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     //Fog-related parameters
     /**ParticleEffect that will be used as a template for the ParticleEffectPool. This is in GameEngine because it needs
      * to load in the .p file, and file loading is done here*/
@@ -188,6 +204,16 @@ public class GameEngine implements Screen, InputProcessor {
         JsonAssetManager.getInstance().allocateDirectory();
         displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
         debugFont = JsonAssetManager.getInstance().getEntry("debug", BitmapFont.class);
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/chp-fire.ttf"));
+        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 44;
+        parameter.shadowOffsetX = 0;
+        parameter.shadowOffsetY = 4;
+        parameter.color = Color.WHITE;
+        menuOptionsFont = generator.generateFont(parameter);
+        generator.dispose();
+        border = JsonAssetManager.getInstance().getEntry("border", TextureRegion.class);
+        winBorder = border = JsonAssetManager.getInstance().getEntry("winborder", TextureRegion.class);
         currentAssetState = AssetState.COMPLETE;
     }
 
@@ -269,6 +295,9 @@ public class GameEngine implements Screen, InputProcessor {
         countdown = -1;
         json = new Json();
         this.levelSelect = levelSelect;
+        hoverStates = new int[2];
+        hoverRects = new Rectangle[2];
+        gl = new GlyphLayout();
     }
 
     /**
@@ -299,7 +328,12 @@ public class GameEngine implements Screen, InputProcessor {
         isFailed = false;
         prevFailed = false;
         prevSuccess = false;
+        menuSelected = false;
+        retrySelected = false;
          countdown = -1;
+         hoverStates = new int[2];
+         hoverRects = new Rectangle[2];
+
 
         // Reload the json each time
         String currentLevelPath = "jsons/" + saveJson.get(lid).getString("path"); // Currently just gets first level
@@ -354,15 +388,20 @@ public class GameEngine implements Screen, InputProcessor {
             listener.exitScreen(this, 0);
             return false;
         }
-        //If countdown is > -1, then the player must have won or lost. Either continue to show the win condition message
-        //Or if the countdown is up: reset on loss and progress to next level on victory
-        else if (countdown > 0) {
-            countdown--;
-        } else if (countdown == 0) {
-//            if(isSuccess && lastLevelPlayed < saveJson.size)
-//                reset(lastLevelPlayed+1);
-//            else
-                reset(lastLevelPlayed);
+      else if (countdown == 0) {
+            if(isSuccess && lastLevelPlayed +1 < saveJson.size)
+                reset(lastLevelPlayed+1);
+            else if(isFailed){
+                if(retrySelected){
+                    reset(lastLevelPlayed);
+                }
+                else if(menuSelected){
+                    listener.exitScreen(this, 1);
+                }
+            }
+            else{
+                listener.exitScreen(this, 1);
+            }
         }
 
         return true;
@@ -453,13 +492,37 @@ public class GameEngine implements Screen, InputProcessor {
         if (isSuccess) {
             displayFont.setColor(Color.CYAN);
             canvas.beginWithoutCamera(); // DO NOT SCALE
-            canvas.drawTextCentered("VICTORY!", displayFont, 0.0f);
+            canvas.draw(lastLevelPlayed+1 > saveJson.size ? winBorder : border, canvas.getWidth()/2-(border.getRegionWidth()/2), canvas.getHeight()/2-(border.getRegionHeight()/2));
+            String titleText = lastLevelPlayed +1 < saveJson.size ? "Success!" : "You Won the Game!";
+            canvas.drawTextCentered(titleText, displayFont, +border.getRegionHeight()/6);
+            menuOptionsFont.setColor(hoverStates[0] == 1 ? Color.CYAN : Color.WHITE);
+            canvas.drawTextCentered("Continue", menuOptionsFont, -border.getRegionHeight()/6);
+            gl.setText(menuOptionsFont, "Continue");
+            hoverRects[0] = new Rectangle(
+                    (canvas.getWidth() - gl.width) / 2, (canvas.getHeight() - gl.height) / 2 -border.getRegionHeight()/6,
+                    gl.width, gl.height);
             canvas.end();
+            level.stopAllSounds();
         } else if (isFailed) {
-            displayFont.setColor(Color.RED);
             canvas.beginWithoutCamera(); // DO NOT SCALE
-            canvas.drawTextCentered("YOU DIED!", displayFont, 0.0f);
+            canvas.draw(border, canvas.getWidth()/2-(border.getRegionWidth()/2), canvas.getHeight()/2-(border.getRegionHeight()/2));
+            canvas.drawTextCentered("Game Over!", displayFont, border.getRegionHeight()/6);
+            menuOptionsFont.setColor(hoverStates[0] == 1 ? Color.CYAN : Color.WHITE);
+            gl.setText(menuOptionsFont, "Retry");
+            canvas.drawText("Retry", menuOptionsFont, (canvas.getWidth()/2-gl.width/2)-border.getRegionWidth()/6,
+                    (canvas.getHeight()/2 + gl.height/2)-border.getRegionHeight()/6);
+            hoverRects[0] = new Rectangle(
+                    ((canvas.getWidth()/2-gl.width/2)-border.getRegionWidth()/6), (canvas.getHeight() - gl.height) / 2 -border.getRegionHeight()/6,
+                    gl.width, gl.height);
+            menuOptionsFont.setColor(hoverStates[1] == 1 ? Color.CYAN : Color.WHITE);
+            gl.setText(menuOptionsFont, "Menu");
+            canvas.drawText("Menu", menuOptionsFont, (canvas.getWidth()/2-gl.width/2)+border.getRegionWidth()/6,
+                    (canvas.getHeight()/2 + gl.height/2)-border.getRegionHeight()/6);
+            hoverRects[1] = new Rectangle(
+                    ((canvas.getWidth()/2-gl.width/2)+border.getRegionWidth()/6), (canvas.getHeight() - gl.height) / 2 -border.getRegionHeight()/6,
+                    gl.width, gl.height);
             canvas.end();
+            level.stopAllSounds();
         }
 
     }
@@ -674,7 +737,22 @@ public class GameEngine implements Screen, InputProcessor {
      * @param pointer, button representing what where and what was released
      * @return boolean saying if the event was handled*/
     public boolean touchUp (int x, int y, int pointer, int button) {
-        return false;
+        if(!isSuccess && !isFailed){return false;}
+        if (Arrays.stream(hoverStates).noneMatch(i -> i == 1)) {
+            return false;
+        } else {
+            for (int i = 0, j = hoverRects.length; i < j; i++) {
+                if (hoverRects[i] == null) continue;
+                if (hoverRects[i].contains(x, (canvas.getHeight() - y))) {
+                    retrySelected = isFailed && i == 0;
+                    menuSelected = isFailed && i == 1;
+                    countdown = 0;
+                }
+            }
+            return true;
+        }
+
+
     }
 
     /**What happens when a screen is dragged with a finger (for phone) or mouse
@@ -687,8 +765,13 @@ public class GameEngine implements Screen, InputProcessor {
     /**What happens when the mouse is moved
      * @param x, y representing where the mouse moved
      * @return boolean saying if the event was handled*/
-    public boolean mouseMoved (int x, int y) {
-        return false;
+    public boolean mouseMoved (int x, int y){
+        if(!isSuccess && !isFailed){return false;}
+        for (int i = 0, j = hoverRects.length; i < j; i++) {
+            if (hoverRects[i] == null) continue;
+            hoverStates[i] = (hoverRects[i].contains(x, (canvas.getHeight()-y))) ? 1 : 0;
+        }
+        return true;
     }
 
     /**What happens when the mouse is scrolling. Should take O(1).
