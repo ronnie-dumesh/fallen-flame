@@ -179,8 +179,7 @@
     "friction":       0.0,
     "restitution":    0.0,
     "texture":        "fireball",
-    "initialforce":   17.0,
-    "damping": 		 0.0,
+    "speed":    10.0,
     "tint": [1.0, 1.0, 1.0, 1.0],
     "startframe":       0
   },

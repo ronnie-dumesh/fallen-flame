@@ -12,10 +12,8 @@ import com.fallenflame.game.util.JsonAssetManager;
 
 public class FireballModel extends WheelObstacle implements ILight {
     // Physics constants
-    /** The force with which flare is originally thrown */
-    private float initialForce;
-    /** The amount to slow the character down */
-    private float damping;
+    /** The speed with which fireball is thrown */
+    private float speed;
     // Graphic constants
     /** FilmStrip pointer to the texture region */
     private FilmStrip filmstrip;
@@ -54,13 +52,9 @@ public class FireballModel extends WheelObstacle implements ILight {
     public Color getLightColor() {return tint;}
 
     /**
-     * Returns how much force to apply to get the flare moving
-     *
-     * @return how much force to apply to get the flare moving
+     * @return fireball speed
      */
-    public float getInitialForce() {
-        return initialForce;
-    }
+    public float getSpeed() { return speed; }
 
     public FireballModel(Vector2 pos) {
         super(pos.x,pos.y,1.0f);
@@ -84,8 +78,7 @@ public class FireballModel extends WheelObstacle implements ILight {
         setFriction(json.get("friction").asFloat());
         setRestitution(json.get("restitution").asFloat());
         lightRadius = json.get("lightradius").asFloat();
-        initialForce = json.get("initialforce").asFloat();
-        damping = json.get("damping").asFloat();
+        speed = json.get("speed").asFloat();
         startFrame = json.get("startframe").asInt();
         float[] tintValues = json.get("tint").asFloatArray();//RGBA
         tint = new Color(tintValues[0], tintValues[1], tintValues[2], tintValues[3]);
@@ -98,24 +91,6 @@ public class FireballModel extends WheelObstacle implements ILight {
             filmstrip = null;
         }
         setTexture(texture);
-    }
-
-    /**
-     * Applies the force to the body of this dude
-     *
-     * This method should be called after the force attribute is set.
-     */
-    public void applyInitialForce(Vector2 tempAngle) {
-        if (!isActive()) {
-            return;
-        }
-
-        // Apply force for movement
-        tempAngle.scl(initialForce);
-        body.applyForce(tempAngle, getPosition(),true);
-        setAngle(tempAngle.angle());
-        // TODO: when we have animated fireball
-        // filmstrip.setFrame(startFrame);
     }
 
     /**
