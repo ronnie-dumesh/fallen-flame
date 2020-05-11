@@ -56,6 +56,7 @@
       "walkspeed": 	  5.0,
       "sneakspeed":   2.0,
       "sprintspeed":  6.0,
+      "totalPauseTime": 11,
       "startframe": 0,
       "walklimit": 4,
       "texture":     	{
@@ -64,12 +65,18 @@
         "up": "enemy-a-up",
         "down": "enemy-a-down"
       },
+      "exclamationTexture": "exclamationpoint",
+      "exclamationTextureOffset": {
+        "x": -0,
+        "y": -1.8
+      },
       "activesound": "new-monster-high",
       "constantsound": "new-monster-low",
       "debugcolor": "white",
       "debugopacity": 192,
       "statetints": {
           "calm": [1.0, 1.0, 1.0, 1.0],
+          "pause": [0.0, 1.0, 0.0, 1.0],
           "alert": [0.0, 1.0, 0.0, 1.0],
           "aggressive": [1.0, 0.0, 0.0, 1.0]
         },
@@ -100,6 +107,7 @@
       "debugopacity": 192,
       "stateTints": {
         "calm": [1.0, 1.0, 1.0, 1.0],
+        "pause": [0.0, 1.0, 0.0, 1.0],
         "alert": [0.0, 1.0, 0.0, 1.0],
         "aggressive": [1.0, 0.0, 0.0, 1.0]
       },
@@ -134,6 +142,7 @@
       "stateTints": {
         "calm": [1.0, 1.0, 1.0, 1.0],
         "alert": [0.0, 1.0, 0.0, 1.0],
+        "pause": [0.0, 1.0, 0.0, 1.0],
         "aggressive": [1.0, 0.0, 0.0, 1.0]
       },
       "textureoffset" : {

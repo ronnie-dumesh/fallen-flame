@@ -26,6 +26,9 @@ public class AITypeAController extends AIController {
         CHASE,
         /** The enemy is moving towards the player's last known location or a flare */
         INVESTIGATE,
+        /** Transitioning from IDLE to CHASE state (ie pausing having just seen player)
+         * DOES NOT OCCUR when transitioning from INVESTIGATE to CHASE */
+        PAUSE,
     }
 
     // Constants
@@ -102,20 +105,31 @@ public class AITypeAController extends AIController {
                 enemy.setSneaking(); // walk slower when pathing
                 enemy.makeCalm();
                 // Check for flares in range
-                checkFlares();
+                if(checkFlares());
                 // Check for player in range
-                if(withinPlayerLight()){
-                    state = FSMState.CHASE;
+                else if(withinPlayerLight()){
+                    // reset pause time and enter pause state
+                    enemy.resetPause();
+                    state = FSMState.PAUSE;
+                    enemy.setInvestigatePosition(new Vector2(player.getX(), player.getY()));
                     break;
                 }
                 // If enemy is of subtype pathing
-                if(pathCoors != null) {
+                else if(pathCoors != null) {
                     // update investigation position
                     if(investigateReached()) {
                         pathPoint = (pathPoint + 1) % pathCoors.length;
                         enemy.setInvestigatePosition(pathCoors[pathPoint]);
                     }
                 }
+                break;
+
+            case PAUSE:
+                enemy.makePause();
+                if(withinPlayerLight())
+                    enemy.setInvestigatePosition(new Vector2(player.getX(), player.getY())); // set in case we later loose player
+                if(!checkFlares() && enemy.isFinishedPausing())
+                    state = FSMState.CHASE;
                 break;
 
             case CHASE:
@@ -126,8 +140,9 @@ public class AITypeAController extends AIController {
                 // If no longer in player light, go to last known position
                 if(!withinPlayerLight()){
                     state = FSMState.INVESTIGATE;
-                    enemy.setInvestigatePosition(new Vector2(player.getX(), player.getY()));
                 }
+                else
+                    enemy.setInvestigatePosition(new Vector2(player.getX(), player.getY()));
                 break;
 
             case INVESTIGATE:
@@ -166,8 +181,9 @@ public class AITypeAController extends AIController {
 
     /**
      * Helper function for checking for flares and investigating those that are within range
+     * @return true if chasing flare
      */
-    private void checkFlares(){
+    private boolean checkFlares(){
         // Check for flares in range
         for(FlareModel f : flares){
             // If flare found, chase flare
@@ -175,9 +191,10 @@ public class AITypeAController extends AIController {
                 state = FSMState.INVESTIGATE;
                 enemy.setInvestigatePosition(new Vector2(f.getX(), f.getY()));
                 enemy.setInvestigateFlare(f);
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -193,6 +210,13 @@ public class AITypeAController extends AIController {
                     level.setGoal(level.screenToTile(enemy.getInvestigatePositionX()),
                             level.screenToTile(enemy.getInvestigatePositionY()));
                 }
+                break; // no goal tile
+
+            case PAUSE:
+                // Turn enemy towards player
+                Vector2 posDif = new Vector2(player.getX() - enemy.getX(), player.getY() - enemy.getY());
+                float angle = posDif.angle();
+                enemy.setAngle(angle);
                 break; // no goal tile
 
             case CHASE:

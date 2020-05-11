@@ -190,6 +190,10 @@
 				"first": 0
 			}
 		},
+		"exclamationpoint": {
+			"file": "textures/exclamationpoint2.png",
+			"wrap": false
+		},
 		"goal": {
 			"file": "textures/exit.png",
 			"wrap": false
