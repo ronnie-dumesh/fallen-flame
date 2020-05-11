@@ -1,7 +1,31 @@
 [
   {
+    "name":       "tutorial 1",
+    "unlocked":   true,
+    "completed":  false,
+    "path":       "levels/t1.json"
+  },
+  {
+    "name":       "tutorial 2",
+    "unlocked":   false,
+    "completed":  false,
+    "path":       "levels/t2.json"
+  },
+  {
+    "name":       "tutorial 3",
+    "unlocked":   false,
+    "completed":  false,
+    "path":       "levels/t3.json"
+  },
+  {
+    "name":       "tutorial 4",
+    "unlocked":   false,
+    "completed":  false,
+    "path":       "levels/t4.json"
+  },
+  {
     "name": "easyLevel",
-    "unlocked": true,
+    "unlocked": false,
     "completed": false,
     "path": "levels/easyLevel.json"
   },

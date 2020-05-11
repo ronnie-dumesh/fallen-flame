@@ -1,0 +1,204 @@
+{
+  "name": "t4",
+  "physicsSize": [
+    24.32,
+    19.2
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    2.86,
+    9.2
+  ],
+  "exitpos": [
+    21.1,
+    9.45
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        9.5,
+        4.64
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          13.5,
+          4.64
+        ],
+        [
+          13.44,
+          7.88
+        ],
+        [
+          9.98,
+          7.86
+        ],
+        [
+          9.98,
+          6.76
+        ],
+        [
+          8.1,
+          6.76
+        ],
+        [
+          8.08,
+          4.62
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        13.06,
+        14.84
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          17.06,
+          14.84
+        ],
+        [
+          17.08,
+          13.68
+        ],
+        [
+          15.68,
+          13.68
+        ],
+        [
+          15.68,
+          12.54
+        ],
+        [
+          10.8,
+          12.58
+        ],
+        [
+          10.82,
+          13.92
+        ],
+        [
+          10.82,
+          14.94
+        ]
+      ]
+    }
+  ],
+  "items": [],
+  "texts": [
+    {
+      "pos": [
+        15.86,
+        10.88
+      ],
+      "size": [
+        7.56,
+        16.36
+      ],
+      "text": "Hold {sprint} to sprint and escape them all!"
+    },
+    {
+      "pos": [
+        6.65,
+        10.31
+      ],
+      "size": [
+        10.34,
+        16.02
+      ],
+      "text": "Brighter fog means there's an enemy near"
+    }
+  ],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        12.16,
+        18.56
+      ],
+      "size": [
+        24.32,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.64,
+        9.6
+      ],
+      "size": [
+        1.28,
+        19.2
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        23.68,
+        9.6
+      ],
+      "size": [
+        1.28,
+        19.2
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        12.16,
+        0.64
+      ],
+      "size": [
+        24.32,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        12.16,
+        1.92
+      ],
+      "size": [
+        21.76,
+        1.28
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        12.16,
+        17.92
+      ],
+      "size": [
+        21.76,
+        1.28
+      ],
+      "texture": "wall-side"
+    }
+  ],
+  "graphicSize": [
+    800,
+    600
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "name": "t2",
+  "texts": [
+    {
+      "pos": [
+        6.3,
+        11
+      ],
+      "size": [
+        6.36,
+        7.88
+      ],
+      "text": "Aim with the mouse and click to throw a flare"
+    },
+    {
+      "pos": [
+        11.28,
+        11.02
+      ],
+      "size": [
+        3.2,
+        7.52
+      ],
+      "text": "Enemies are attracted to the light! "
+    },
+    {
+      "pos": [
+        15.48,
+        11.02
+      ],
+      "size": [
+        4.8,
+        7.72
+      ],
+      "text": "Your remaining flare count is on the right side of the screen"
+    },
+    {
+      "pos": [
+        19.26,
+        10.98
+      ],
+      "size": [
+        2.36,
+        7.48
+      ],
+      "text": "Walk to the exit"
+    }
+  ],
+  "physicsSize": [
+    23.04,
+    21.76
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    2.22,
+    11.28
+  ],
+  "exitpos": [
+    20.86,
+    11.37
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        11.64,
+        10.96
+      ],
+      "enemytype": "typeA"
+    }
+  ],
+  "items": [],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        10.88,
+        21.12
+      ],
+      "size": [
+        21.76,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.64,
+        10.88
+      ],
+      "size": [
+        1.28,
+        21.76
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        22.4,
+        10.88
+      ],
+      "size": [
+        1.28,
+        21.76
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        10.88,
+        0.64
+      ],
+      "size": [
+        21.76,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        11.52,
+        18.56
+      ],
+      "size": [
+        20.48,
+        5.12
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        11.52,
+        3.84
+      ],
+      "size": [
+        20.48,
+        5.12
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        11.52,
+        15.36
+      ],
+      "size": [
+        20.48,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        11.52,
+        7.04
+      ],
+      "size": [
+        20.48,
+        1.28
+      ],
+      "texture": "wall-top"
+    }
+  ],
+  "graphicSize": [
+    800,
+    600
+  ]
+}
