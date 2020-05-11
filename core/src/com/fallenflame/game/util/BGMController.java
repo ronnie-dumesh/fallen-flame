@@ -56,6 +56,6 @@ public class BGMController {
 
     public static void resumeBGM() {
         if (activeBGMID >= 0) return;
-        activeBGMID = activeBGM.loop(0.2f);
+        activeBGMID = activeBGM.loop(0.06f);
     }
 }
