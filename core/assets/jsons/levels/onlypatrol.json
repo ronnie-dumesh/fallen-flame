@@ -1,5 +1,6 @@
 {
   "name": "onlypatrol",
+  "startFlareCount": 0,
   "physicsSize": [
     30.72,
     23.04

@@ -1,6 +1,7 @@
 {
   "name": "t3",
-  "startFlareCount": 1,
+  "startFlareCount": 0,
+  "startSneakVal": 80,
   "texts": [
     {
       "pos": [
@@ -22,7 +23,7 @@
         11.84,
         8.76
       ],
-      "text": "Hold {sprint} to increase your light, then move to distract the enemy. Once it's distracted, hold {sneak} to sneak past it"
+      "text": "Hold {sprint} to increase your light, then move to distract the enemy. Once it's distracted, hold {sneaksn} to sneak past it"
     },
     {
       "pos": [
