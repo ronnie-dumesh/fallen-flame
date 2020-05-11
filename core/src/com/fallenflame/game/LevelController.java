@@ -800,7 +800,8 @@ public class LevelController implements ContactListener {
      */
     public void createFlare(Vector2 mousePosition, Vector2 screenDimensions){
         if (player.getFlareCount() > 0) {
-            FlareModel flare = new FlareModel(player.getPosition());
+            player.throwFlare();
+            FlareModel flare = new FlareModel(player.getFireBuddyPosition());
             flare.setDrawScale(scale);
             flare.initialize(flareJSON);
             flare.activatePhysics(world);

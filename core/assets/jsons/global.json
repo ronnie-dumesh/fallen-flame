@@ -29,7 +29,8 @@
         "left": "fire-buddy-left",
         "right": "fire-buddy-right",
         "up": "fire-buddy-up",
-        "down": "fire-buddy-down"
+        "down": "fire-buddy-down",
+        "throw": "fire-buddy-throw"
       },
       "textureoffset": {
         "x": -0.62,

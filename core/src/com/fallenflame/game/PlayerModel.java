@@ -57,11 +57,17 @@ public class PlayerModel extends CharacterModel {
     private FilmStrip fireBuddyDown;
     private FilmStrip fireBuddyThrow;
 
+    /** Offset of firebuddy texture from center of player in meters */
+    protected Vector2 fireBuddyTextureOffset;
+
     /** Origin of fire buddy when drawing not in sneak mode */
     protected Vector2 fireBuddyOrigin;
 
     /** Origin of drawing for fire buddy when player is in sneak mode */
     protected Vector2 fireBuddySneak;
+
+    /** Whether or not the fire buddy is throwing a flare */
+    protected boolean throwing;
 
     /** Filmstrip of player death */
     private FilmStrip deathFilmstripRight;
@@ -96,6 +102,8 @@ public class PlayerModel extends CharacterModel {
         walkSound = JsonAssetManager.getInstance().getEntry(walkSoundKey, Sound.class);
 
         life = LifeState.ALIVE;
+
+        throwing = false;
     }
 
     @Override
@@ -157,14 +165,24 @@ public class PlayerModel extends CharacterModel {
             fireBuddyUp = null;
         }
 
+        key = textureJson.get("throw").asString();
+        texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        try {
+            fireBuddyThrow = (FilmStrip) texture;
+        } catch (Exception e) {
+            fireBuddyThrow = null;
+        }
+
         //pick default direction
         fireBuddyFilmstrip = fireBuddyRight;
 
         float offsetX = firebuddy.get("textureoffset").get("x").asFloat();
         float offsetY = firebuddy.get("textureoffset").get("y").asFloat();
         //set fire buddy origin;
+        fireBuddyTextureOffset = new Vector2(offsetX, offsetY);
+
         setFireBuddyOrigin (((TextureRegion)fireBuddyFilmstrip).getRegionWidth()/2.0f + offsetX * drawScale.x,
-                                ((TextureRegion)fireBuddyFilmstrip).getRegionHeight()/2.0f + offsetY * drawScale.y);
+                ((TextureRegion)fireBuddyFilmstrip).getRegionHeight()/2.0f + offsetY * drawScale.y);
 
         offsetX = firebuddy.get("sneaktextureoffset").get("x").asFloat();
         offsetY = firebuddy.get("sneaktextureoffset").get("y").asFloat();
@@ -186,13 +204,13 @@ public class PlayerModel extends CharacterModel {
     protected float getFireBuddyOriginX() { return fireBuddyOrigin.x; }
 
     /**
-     * @return the origin of the firebuddy texture
+     * @return the origin of the firebuddy texture in pixels
      * along the y-axis
      */
     protected float getFireBuddyOriginY() {return fireBuddyOrigin.y; }
 
     /**
-     * Sets the origin of the fire buddy to be (x, y)
+     * Sets the origin of the fire buddy to be offset (x, y) relative to the player
      * The y-axis is positive downwards, and the x-axis is positive rightwards
      *
      * @param x the offset of the texture on the x-axis
@@ -203,10 +221,17 @@ public class PlayerModel extends CharacterModel {
     }
 
     /**
-     * @return the origin of the firebuddy texture when sneaking
+     * @return the origin of the firebuddy texture when sneaking in pixels
      * as a Vector 2
      */
     protected Vector2 getFireBuddySneak() { return new Vector2(fireBuddySneak); }
+
+    /**
+     * Get the position of the firebuddy on the screen in meters
+     */
+    public Vector2 getFireBuddyPosition() { return new
+            Vector2(getPosition().x + (getFireBuddyOriginX() + fireBuddyFilmstrip.getRegionWidth()) / drawScale.x / 2.0f,
+            getPosition().y - (getFireBuddyOriginY() / drawScale.y) + fireBuddyFilmstrip.getRegionHeight() / drawScale.y / 2.0f);}
 
     /**
      * @return the origin of the firebuddy texture when sneaking
@@ -304,6 +329,11 @@ public class PlayerModel extends CharacterModel {
      * Sets player to sneak light radius (not reachable by scrolling)
      */
     public void setLightRadiusSneak() { lightRadius = lightRadiusSneak; }
+
+    /**
+     * Make the firebuddy begin the flare throwing animation.
+     */
+    public void throwFlare() { throwing = true; }
 
     /**
      * Sets the player's life state to dying. Once the dying animation
@@ -416,7 +446,7 @@ public class PlayerModel extends CharacterModel {
      * @param angle100 the angle which the player is facing rounded down to the nearest int
      */
     protected void animateFireBuddy(int angle100){
-        if(true) { //temporary placeholder for whether the fire buddy is throwing or not
+        if(!throwing) {
             if (angle100 == 0) {
                 fireBuddyFilmstrip = fireBuddyUp;
             } else if (angle100 > 0 && angle100 < 314) {
@@ -428,7 +458,7 @@ public class PlayerModel extends CharacterModel {
             }
 
             // Animate if necessary
-            // Do not change values of walkCool and animate, to be done in parent.
+            // Do not change values of walkCool and animate, to be done in PlayerModel.update();
             if (animate && walkCool == 0 && fireBuddyFilmstrip != null) {
                 int next = (fireBuddyFilmstrip.getFrame() + 1) % fireBuddyFilmstrip.getSize();
                 fireBuddyFilmstrip.setFrame(next);
@@ -436,7 +466,17 @@ public class PlayerModel extends CharacterModel {
                 fireBuddyFilmstrip.setFrame(startFrame);
             }
         } else {
+            fireBuddyFilmstrip = fireBuddyThrow;
 
+            // Do not change values of walkCool and animate, to be done in PlayerModel.update();
+            int frame = fireBuddyFilmstrip.getFrame();
+            if (walkCool == 0 && frame < fireBuddyFilmstrip.getSize() - 1) {
+                walkCool = walkLimit;
+                fireBuddyFilmstrip.setFrame(frame + 1);
+            } else if (frame == fireBuddyFilmstrip.getSize() - 1){
+                throwing = false;
+                fireBuddyFilmstrip.setFrame(0);
+            }
         }
     }
 

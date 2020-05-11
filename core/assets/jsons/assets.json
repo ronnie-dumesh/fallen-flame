@@ -170,6 +170,16 @@
 				"first": 0
 			}
 		},
+		"fire-buddy-throw": {
+			"file": "textures/firebuddythrow.png",
+			"wrap": false,
+			"strip": {
+				"size": 12,
+				"rows": 1,
+				"cols": 12,
+				"first": 0
+			}
+		},
 		"ghost-left": {
 			"file": "textures/ghost-left.png",
 			"wrap": false,
