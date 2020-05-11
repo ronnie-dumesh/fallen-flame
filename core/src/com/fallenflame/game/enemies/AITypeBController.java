@@ -142,7 +142,7 @@ public class AITypeBController extends AIController {
      *
      * This method implements pathfinding through the use of goal tiles.
      */
-    protected void markGoalTiles() { }
+    protected boolean markGoalTiles() { return false; }
 
     /**
      * Get enemy movement toward goal

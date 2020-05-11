@@ -84,8 +84,9 @@ public class AIGhostController extends AIController {
      *
      * This method implements pathfinding through the use of goal tiles.
      */
-    protected void markGoalTiles() {
+    protected boolean markGoalTiles() {
         // Would be required if we switch to normal pathfinding:
         // level.setGoal(level.screenToTile(player.getX()), level.screenToTile(player.getY()));
+        return true;
     }
 }

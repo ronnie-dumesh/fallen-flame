@@ -57,8 +57,8 @@ public abstract class AIController {
             // Process the FSM
             changeStateIfApplicable();
             // Pathfinding
-            markGoalTiles();
-            move = getMoveAlongPathToGoalTile();
+            if(markGoalTiles())
+                move = getMoveAlongPathToGoalTile();
         }
 
         int action = move;
@@ -82,10 +82,10 @@ public abstract class AIController {
 
     /**
      * Mark all desirable tiles to move to.
-     *
      * This method implements pathfinding through the use of goal tiles.
+     * @return false if no tiles marked
      */
-    protected abstract void markGoalTiles();
+    protected abstract boolean markGoalTiles();
 
     /**
      * Get enemy movement toward goal

@@ -26,10 +26,11 @@ public class AITypeAController extends AIController {
         CHASE,
         /** The enemy is moving towards the player's last known location or a flare */
         INVESTIGATE,
-        /** Transitioning from IDLE to CHASE state (ie pausing having just seen player)
-         * DOES NOT OCCUR when transitioning from INVESTIGATE to CHASE */
+        /** Boolean indicating transitioning from IDLE to CHASE or INVESTIGATE state */
         PAUSE,
     }
+    /** If true means paused by player, if false means paused by flare */
+    private boolean pauseForChase;
 
     // Constants
     /** The radius from which an enemy could have considered to have finished its investigation
@@ -104,17 +105,22 @@ public class AITypeAController extends AIController {
             case IDLE:
                 enemy.setSneaking(); // walk slower when pathing
                 enemy.makeCalm();
-                // Check for flares in range
-                checkFlares();
+                // Check for flares
+                if(checkFlares()){
+                    enemy.resetPause();
+                    state = FSMState.PAUSE;
+                    pauseForChase = false;
+                }
                 // Check for player in range
-                if(withinPlayerLight()){
+                else if(withinPlayerLight()){
                     // reset pause time and enter pause state
                     enemy.resetPause();
                     state = FSMState.PAUSE;
+                    pauseForChase = true;
                     break;
                 }
                 // If enemy is of subtype pathing
-                if(pathCoors != null) {
+                else if(pathCoors != null) {
                     // update investigation position
                     if(investigateReached()) {
                         pathPoint = (pathPoint + 1) % pathCoors.length;
@@ -125,15 +131,34 @@ public class AITypeAController extends AIController {
 
             case PAUSE:
                 enemy.makePause();
-                if(enemy.isFinishedPausing())
-                    state = FSMState.CHASE;
+                // If paused before chasing
+                if(pauseForChase) {
+                    // If flare passes by, chase that instead (but continue pause)
+                    if(checkFlares()){
+                        pauseForChase = false;
+                    }
+                    // If player has moved far enough way, transition to investigating last known position, but still stay paused
+                    else if(!withinPlayerLight()){
+                        enemy.setInvestigatePosition(new Vector2(player.getX(), player.getY()));
+                        pauseForChase = false;
+                    }
+                    else if(enemy.isFinishedPausing())
+                        state = FSMState.CHASE;
+                }
+                // if paused before investigating
+                else {
+                    if(enemy.isFinishedPausing())
+                        state = FSMState.INVESTIGATE;
+                }
                 break;
 
             case CHASE:
                 enemy.setWalking(); // walk normally when chasing
                 enemy.makeAggressive();
                 // Check for flares in range <-- we check this here because the enemy can be "distracted" by flares
-                checkFlares();
+                if(checkFlares()){
+                    state = FSMState.INVESTIGATE;
+                }
                 // If no longer in player light, go to last known position
                 if(!withinPlayerLight()){
                     state = FSMState.INVESTIGATE;
@@ -176,19 +201,20 @@ public class AITypeAController extends AIController {
     }
 
     /**
-     * Helper function for checking for flares and investigating those that are within range
+     * Helper function that sets investigation to a flare if one is in range and if so returns true
+     * else returns false
      */
-    private void checkFlares(){
+    private boolean checkFlares(){
         // Check for flares in range
         for(FlareModel f : flares){
-            // If flare found, chase flare
+            // If flare found, investigate flare
             if(withinFlareRange(f)){
-                state = FSMState.INVESTIGATE;
                 enemy.setInvestigatePosition(new Vector2(f.getX(), f.getY()));
                 enemy.setInvestigateFlare(f);
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -196,7 +222,7 @@ public class AITypeAController extends AIController {
      *
      * This method implements pathfinding through the use of goal tiles.
      */
-    protected void markGoalTiles() {
+    protected boolean markGoalTiles() {
         switch(state) {
             case IDLE:
                 // If enemy is of subtype pathing
@@ -204,27 +230,28 @@ public class AITypeAController extends AIController {
                     level.setGoal(level.screenToTile(enemy.getInvestigatePositionX()),
                             level.screenToTile(enemy.getInvestigatePositionY()));
                 }
-                break; // no goal tile
+                return false; // no goal tile
 
             case PAUSE:
                 // Turn enemy towards player
                 Vector2 posDif = new Vector2(player.getX() - enemy.getX(), player.getY() - enemy.getY());
                 float angle = posDif.angle();
                 enemy.setAngle(angle);
-                break; // no goal tile
+                return false; // no goal tile
 
             case CHASE:
                 level.setGoal(level.screenToTile(player.getX()), level.screenToTile(player.getY()));
-                break;
+                return true;
 
             case INVESTIGATE:
                 level.setGoal(level.screenToTile(enemy.getInvestigatePositionX()),
                         level.screenToTile(enemy.getInvestigatePositionY()));
-                break;
+                return true;
 
             default:
                 Gdx.app.error("AITypeAController", "Impossible state reached", new IllegalArgumentException());
                 assert false;
+                return false;
         }
     }
 
