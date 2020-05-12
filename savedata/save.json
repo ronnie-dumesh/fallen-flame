@@ -59,6 +59,12 @@
 	"completed": true,
 	"path": "levels/onlypatrol.json"
 },
+	{
+		"name": "bryansfirstlevel",
+		"unlocked": true,
+		"completed": true,
+		"path": "levels/bryansfirstlevel.json"
+	},
 {
 	"name": "easyTest",
 	"unlocked": true,
@@ -70,5 +76,5 @@
 	"unlocked": true,
 	"completed": true,
 	"path": "levels/medium.json"
-}
+},
 ]

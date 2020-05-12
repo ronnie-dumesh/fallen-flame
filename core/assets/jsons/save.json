@@ -70,5 +70,11 @@
     "unlocked": false,
     "completed": false,
     "path": "levels/medium.json"
+  },
+  {
+    "name": "bryansfirstlevel",
+    "unlocked": false,
+    "completed": false,
+    "path": "levels/bryansfirstlevel.json"
   }
 ]
