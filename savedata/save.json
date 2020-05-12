@@ -83,6 +83,12 @@
 	"completed": true,
 	"path": "levels/medium.json"
 },
+{
+	"name": "level7",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/ronnie-level.json"
+},
 	{
 		"name": "forcesneak",
 		"unlocked": true,

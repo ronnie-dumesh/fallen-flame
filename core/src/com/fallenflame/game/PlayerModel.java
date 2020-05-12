@@ -94,6 +94,8 @@ public class PlayerModel extends CharacterModel {
                 levelJson.get("startFlareCount").asInt() : globalJson.get("standardflarecount").asInt();
         maxFlareCount = levelJson.has("maxFlareCount") ?
                 levelJson.get("maxFlareCount").asInt() : flareCount;
+        maxFlareCount = levelJson.has("maxFlareCount") ?
+                levelJson.get("maxFlareCount").asInt() : flareCount;
         powerVal = levelJson.has("startSneakVal") ?
                 levelJson.get("startSneakVal").asInt() : globalJson.get("defaultStartSneakVal").asInt();
         maxPowerVal = powerVal;

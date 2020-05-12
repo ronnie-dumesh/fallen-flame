@@ -241,7 +241,7 @@
         "y": 0.30
       }
     },
-    "maxsneak": 1000
+    "maxsneak": 500
   },
   "flarecount": {
     "texture": {

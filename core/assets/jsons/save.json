@@ -66,6 +66,12 @@
     "path": "levels/onlypatrol.json"
   },
   {
+    "name": "level7",
+    "unlocked": false,
+    "completed": false,
+    "path": "levels/ronnie-level.json"
+  },
+  {
     "name":       "maxLevel",
     "unlocked":   false,
     "completed":  false,
