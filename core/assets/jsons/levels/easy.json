@@ -28,7 +28,7 @@
   "maxFlareCount": 4,
   "exitpos": [
     1.5,
-    5.35
+    10.35
   ],
   "background": {
     "texture": "floor-tile"

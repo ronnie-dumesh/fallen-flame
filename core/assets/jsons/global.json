@@ -191,7 +191,7 @@
     "friction":       0.0,
     "restitution":    0.0,
     "texture":        "slime",
-    "speed":    10.0,
+    "speed":    11.5,
     "tint": [1.0, 1.0, 1.0, 1.0],
     "startframe":       0
   },
