@@ -1,0 +1,242 @@
+{
+  "name": "forceSneak",
+  "physicsSize": [
+    23.04,
+    23.04
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    10.8,
+    2.26
+  ],
+  "exitpos": [
+    19.18,
+    19.83
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        14.76,
+        20.82
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          17.66,
+          20.82
+        ],
+        [
+          17.66,
+          18.28
+        ],
+        [
+          14.8,
+          18.24
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        20.32,
+        16.52
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          16.4,
+          16.52
+        ],
+        [
+          16.36,
+          14.08
+        ],
+        [
+          20.46,
+          14.06
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        3.64,
+        15.38
+      ],
+      "enemytype": "typeB"
+    },
+    {
+      "enemypos": [
+        9.16,
+        5.76
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        9.12,
+        8.2
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        12.66,
+        8.14
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        12.68,
+        5.78
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        5.42,
+        19.98
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          9.42,
+          19.98
+        ],
+        [
+          9.3,
+          12.6
+        ],
+        [
+          5.26,
+          12.5
+        ]
+      ]
+    }
+  ],
+  "items": [
+    {
+      "itemPos": [
+        2.78,
+        18.76
+      ],
+      "itemType": "flare"
+    }
+  ],
+  "texts": [],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        11.52,
+        22.4
+      ],
+      "size": [
+        23.04,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.64,
+        11.52
+      ],
+      "size": [
+        1.28,
+        23.04
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        22.4,
+        11.52
+      ],
+      "size": [
+        1.28,
+        23.04
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        11.52,
+        0.64
+      ],
+      "size": [
+        23.04,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        5.12,
+        3.2
+      ],
+      "size": [
+        7.68,
+        3.84
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        17.28,
+        3.2
+      ],
+      "size": [
+        8.96,
+        3.84
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        4.48,
+        7.68
+      ],
+      "size": [
+        6.4,
+        5.12
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        17.92,
+        7.68
+      ],
+      "size": [
+        7.68,
+        5.12
+      ],
+      "texture": "wall-top"
+    }
+  ],
+  "startFlareCount": 4,
+  "maxFlareCount": 5,
+  "graphicSize": [
+    800,
+    600
+  ]
+}

@@ -48,6 +48,12 @@
     "path": "levels/enemySurroundingPlayer.json"
   },
   {
+    "name": "forcesneak",
+    "unlocked": false,
+    "completed": false,
+    "path": "levels/forceSneak.json"
+  },
+  {
     "name": "level5",
     "unlocked": false,
     "completed": false,
