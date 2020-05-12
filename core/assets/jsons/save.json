@@ -66,6 +66,12 @@
     "path": "levels/onlypatrol.json"
   },
   {
+    "name":       "maxLevel",
+    "unlocked":   false,
+    "completed":  false,
+    "path":       "levels/maxLevel.json"
+  },
+  {
     "name": "easyTest",
     "unlocked": false,
     "completed": false,

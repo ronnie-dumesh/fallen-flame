@@ -65,6 +65,12 @@
 	"completed": true,
 	"path": "levels/easy.json"
 },
+	{
+		"name": "maxLevel",
+		"unlocked": true,
+		"completed": true,
+		"path": "levels/maxLevel.json"
+	},
 {
 	"name": "mediumTest",
 	"unlocked": true,
