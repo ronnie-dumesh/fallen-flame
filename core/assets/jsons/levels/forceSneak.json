@@ -1,5 +1,6 @@
 {
   "name": "forceSneak",
+  "texts": [],
   "physicsSize": [
     23.04,
     23.04
@@ -129,9 +130,15 @@
         18.76
       ],
       "itemType": "flare"
+    },
+    {
+      "itemPos": [
+        19.5,
+        13.48
+      ],
+      "itemType": "flare"
     }
   ],
-  "texts": [],
   "lighting": {
     "color": [
       0,
@@ -233,8 +240,9 @@
       "texture": "wall-top"
     }
   ],
-  "startFlareCount": 4,
-  "maxFlareCount": 5,
+  "startFlareCount": 0,
+  "maxFlareCount": 2,
+  "startSneakVal": 500,
   "graphicSize": [
     800,
     600
