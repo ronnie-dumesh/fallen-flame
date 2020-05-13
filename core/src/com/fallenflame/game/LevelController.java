@@ -781,7 +781,7 @@ public class LevelController implements ContactListener {
     public void addGhost() {
         // Create ghost model
         EnemyModel ghost = new EnemyGhostModel();
-        ghost.initialize(ghostJSON, startPos);
+        ghost.initialize(ghostJSON, getGhostStart());
         ghost.initializeTextures(ghostJSON);
         ghost.setConstantSoundID(ghost.getConstantSound().loop(0, ENEMY_CONS_PITCH, 0));
         ghost.setDrawScale(scale);
@@ -789,6 +789,42 @@ public class LevelController implements ContactListener {
         enemies.add(ghost);
         // Create ghost controller
         AIControllers.add(new AIGhostController(enemies.size()-1, levelModel, enemies, player));
+    }
+
+    /**
+     * This method provides the coordinates of the boundary wall tile cardinally closest to the player
+     * and spawns the ghost from there
+     * @return The coordinates where the ghost should be spawned
+     */
+    private float[] getGhostStart() {
+
+        Vector2 playerPos = player.getPosition();
+        float playerX = playerPos.x;
+        float playerY = playerPos.y;
+        float recWidth = bounds.getWidth();
+        float recHeight = bounds.getHeight();
+
+        float distLeft = playerPos.dst(0, playerY);
+        float distRight = playerPos.dst(recWidth, playerY);
+        float distUp = playerPos.dst(playerX, recHeight);
+        float distDown = playerPos.dst(playerX, 0);
+
+        float[] retFloatArr = new float[2];
+        if(distLeft < distRight && distLeft < distUp && distLeft < distDown){
+            retFloatArr[0] = 0;
+            retFloatArr[1] = playerY;
+        } else if(distRight < distUp && distRight < distDown){
+            retFloatArr[0] = recWidth;
+            retFloatArr[1] = playerY;
+        } else if(distUp < distDown) {
+            retFloatArr[0] = playerX;
+            retFloatArr[1] = recHeight;
+        } else {
+            retFloatArr[0] = playerX;
+            retFloatArr[1] = 0;
+        }
+
+        return retFloatArr;
     }
 
     /**
