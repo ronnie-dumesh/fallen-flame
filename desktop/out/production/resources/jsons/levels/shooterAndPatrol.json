@@ -1,5 +1,7 @@
 {
   "name": "level7",
+  "startFlareCount": 3,
+  "maxFlareCount": 3,
   "physicsSize": [
     32,
     24.32

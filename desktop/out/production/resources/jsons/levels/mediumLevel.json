@@ -1,5 +1,6 @@
 {
   "name": "exMediumLevel",
+  "startSneakVal": 200,
   "physicsSize": [
     33.28,
     25.6

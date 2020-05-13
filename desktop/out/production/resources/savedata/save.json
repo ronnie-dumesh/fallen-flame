@@ -1,0 +1,98 @@
+[
+{
+	"name": "tutorial 1",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/t1.json"
+},
+{
+	"name": "tutorial 2",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/t2.json"
+},
+{
+	"name": "tutorial 3",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/t3.json"
+},
+{
+	"name": "tutorial 4",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/t4.json"
+},
+{
+	"name": "easyLevel",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/easyLevel.json"
+},
+{
+	"name": "mediumLevel",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/mediumLevel.json"
+},
+{
+	"name": "hardLevel",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/hardLevel.json"
+},
+{
+	"name": "level4",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/enemySurroundingPlayer.json"
+},
+{
+	"name": "level5",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/shooterAndPatrol.json"
+},
+{
+	"name": "level6",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/onlypatrol.json"
+},
+{
+	"name": "easyTest",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/easy.json"
+},
+	{
+		"name": "maxLevel",
+		"unlocked": true,
+		"completed": true,
+		"path": "levels/maxLevel.json"
+	},
+{
+	"name": "mediumTest",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/medium.json"
+},
+{
+	"name": "forcesneak",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/forceSneak.json"
+},
+	{
+		"name": "level7",
+		"completed": true,
+		"unlocked": true,
+		"path": "levels/ronnie-level.json"
+	},
+	{
+		"name": "level7",
+		"unlocked": true,
+		"completed": true,
+		"path": "levels/ronnie-level.json"
+	}
+]

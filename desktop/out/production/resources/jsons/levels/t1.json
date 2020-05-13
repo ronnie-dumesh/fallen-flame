@@ -1,0 +1,143 @@
+{
+  "name": "t1",
+  "startFlareCount": 0,
+  "texts": [
+    {
+      "pos": [
+        6.58,
+        11.76
+      ],
+      "size": [
+        10.92,
+        5
+      ],
+      "text": "Move with the {up}{left}{down}{right} keys"
+    },
+    {
+      "pos": [
+        16.36,
+        9.82
+      ],
+      "size": [
+        8.96,
+        8.6
+      ],
+      "text": "Walk to the exit"
+    }
+  ],
+  "physicsSize": [
+    21.76,
+    21.76
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    4.42,
+    13.32
+  ],
+  "exitpos": [
+    17.98,
+    3.53
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [],
+  "items": [],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        10.88,
+        21.12
+      ],
+      "size": [
+        21.76,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.64,
+        10.88
+      ],
+      "size": [
+        1.28,
+        21.76
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        21.12,
+        10.88
+      ],
+      "size": [
+        1.28,
+        21.76
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        10.88,
+        0.64
+      ],
+      "size": [
+        21.76,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        8.32,
+        6.4
+      ],
+      "size": [
+        14.08,
+        10.24
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        10.88,
+        19.2
+      ],
+      "size": [
+        19.2,
+        3.84
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        10.88,
+        16.64
+      ],
+      "size": [
+        19.2,
+        1.28
+      ],
+      "texture": "wall-side"
+    }
+  ],
+  "graphicSize": [
+    800,
+    600
+  ]
+}
