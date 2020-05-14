@@ -1,0 +1,17 @@
+{
+    "platform": "windows64",
+    "jdk": "jdk-9.0.4.zip",
+    "executable": "fallen-flame",
+    "classpath": [
+        "fallen-flame.jar"
+    ],
+    "mainclass": "com.fallenflame.game.desktop.DesktopLauncher",
+    "vmargs": [
+       "Xmx1G"
+    ],
+    "resources": [
+        "fallen-flame/core/assets"
+    ],
+    "minimizejre": "soft",
+    "output": "out"
+}
