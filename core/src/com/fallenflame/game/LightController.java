@@ -216,14 +216,15 @@ public class LightController {
 
         // Second step: Update light radii for lights already there.
         for (Map.Entry<T, PointSource> entry : entrySet) {
-            entry.getValue().setDistance(entry.getKey().getLightRadius());
+           flareLightOffset = (entry.getValue().getDistance()/4) + 0.5f;
+            entry.getValue().setDistance(entry.getKey().getLightRadius()+flareLightOffset);
             entry.getValue().setColor(entry.getKey().getLightColor());
             entry.getValue().setPosition(entry.getKey().getPosition());
         }
 
         // Last step: Create lights for new things in the list.
         list.stream().filter(i -> !lightMap.containsKey(i)).forEach(i -> {
-            PointSource f = createPointLight(i.getLightRadius(), i.getX(), i.getY());
+            PointSource f = createPointLight(i.getLightRadius()+flareLightOffset, i.getX(), i.getY());
             f.setColor(i.getLightColor());
             lightMap.put(i, f);
             animateIn.put(f, 0f);
