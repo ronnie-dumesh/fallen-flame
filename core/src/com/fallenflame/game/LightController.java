@@ -46,6 +46,9 @@ public class LightController {
      */
     protected PlayerModel player;
 
+    /**Float value to increase the actual amount seen*/
+    protected float playerLightOffset;
+    protected float flareLightOffset;
     /**
      * A cached copy of lighting config.
      */
@@ -128,15 +131,15 @@ public class LightController {
         rayhandler.setAmbientLight(0, 0, 0, AMBIENT_LIGHT);
         rayhandler.setBlur(true);
         rayhandler.setBlurNum(3);
-
         updateCamera();
 
         // Save player and config.
         this.player = player;
         this.lightingConfig = levelLighting;
-
+        playerLightOffset = (player.getLightRadius()/2) * 0.4f;
+        flareLightOffset = 0.5f;
         // Create player light.
-        playerLight = createPointLight(player.getLightRadius(), player.getTextureX(), player.getTextureY());
+        playerLight = createPointLight(player.getLightRadius()+playerLightOffset, player.getTextureX(), player.getTextureY());
         targetPlayerRadius = player.getLightRadius();
 
         // Create exit light.
@@ -253,13 +256,15 @@ public class LightController {
             return false;
         });
        float pLightCurrDist = playerLight.getDistance();
-       if (pLightCurrDist != targetPlayerRadius) {
-           if (Math.abs(pLightCurrDist - targetPlayerRadius) < 0.05) {
-               playerLight.setDistance(targetPlayerRadius);
-           } else if (pLightCurrDist < targetPlayerRadius) {
-               playerLight.setDistance(pLightCurrDist + (targetPlayerRadius - pLightCurrDist) * 0.5f);
+       if (pLightCurrDist + playerLightOffset != targetPlayerRadius) {
+           playerLightOffset = (player.getLightRadius()/2) * 0.4f;
+           playerLightOffset = playerLightOffset + (player.isSprinting() ? 1.0f : 0f);
+           if (Math.abs((pLightCurrDist+playerLightOffset) - targetPlayerRadius) < 0.05) {
+               playerLight.setDistance(targetPlayerRadius+playerLightOffset);
+           } else if (pLightCurrDist+playerLightOffset < targetPlayerRadius) {
+               playerLight.setDistance(pLightCurrDist + playerLightOffset + (targetPlayerRadius  - pLightCurrDist) * 0.5f);
            } else {
-               playerLight.setDistance(pLightCurrDist - (pLightCurrDist - targetPlayerRadius) * 0.5f);
+               playerLight.setDistance(pLightCurrDist + playerLightOffset - (pLightCurrDist  - targetPlayerRadius) * 0.5f);
            }
        }
     }

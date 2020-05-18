@@ -21,7 +21,7 @@ public class FogController {
     private int tileGridH;
     private final int NUM_FOG_ENEMIES = 4;
     private final int NUM_FOG_NORMAL = 1;
-    private final float NUM_FOG_AROUND_ENEMIES = 6.0f;
+    private final float NUM_FOG_AROUND_ENEMIES = 4.0f;
 
     private final int[] DIRECTIONS = {1, -1};
     public void initialize(ParticleEffect fogTemplate, LevelModel lm, PlayerModel pm, List<FlareModel> fm) {
@@ -72,10 +72,10 @@ public class FogController {
                 }
                 //To prevent drawing on tiles with the player or a wall as well as if its within the light radius
                 if (levelModel.hasWall(x, y)) continue;
-                float incrementFog = 0.5f*(playerModel.getLightRadius()/2) + + (playerModel.isSprinting() ? 1.5f : 0f);
+                //0.5 accounts for the aligning of the light to show the player's face over the feat.
                 boolean withinLight = (Math.pow((Math.pow((x * TILE_SIZE) - (playerModel.getX()), 2) +
                         Math.pow((y * TILE_SIZE) - (playerModel.getY()+ 0.5), 2)), 0.5))
-                        <= (playerModel.getLightRadius()-  incrementFog);
+                        <= (playerModel.getLightRadius());
                 Array<ParticleEffectPool.PooledEffect> fogArr;
                 if (withinLight || levelModel.hasPlayer(x, y)) {
                     if (fog[x][y] != null) {
@@ -125,7 +125,7 @@ public class FogController {
                             float incX = levelModel.hasEnemy(x, y) ? (float) ((Math.random() - 0.5) * NUM_FOG_AROUND_ENEMIES) : 0;
                             float incY = levelModel.hasEnemy(x, y) ? (float) ((Math.random() - 0.5) * NUM_FOG_AROUND_ENEMIES) : 0;
                             for (int i = 0; i < ((levelModel.hasEnemy(x, y) ? NUM_FOG_ENEMIES  : NUM_FOG_NORMAL)); i++) {
-                                float randomVal = levelModel.hasEnemy(x, y) ? 2.0f : 1.0f;
+                                float randomVal = levelModel.hasEnemy(x, y) ? 2f : 1.0f;
                                 float randomX = levelModel.hasEnemy(x, y) ? (float) (((Math.random() * randomVal) - 0.5f) * TILE_SIZE) : 0;
                                 float randomY = levelModel.hasEnemy(x, y) ? (float) (((Math.random() * randomVal) - 0.5f) * TILE_SIZE) : 0;
                                 effect.setPosition(((x + incX) * TILE_SIZE + randomX) * scale.x, ((y + incY) * TILE_SIZE + randomY) * scale.y);
