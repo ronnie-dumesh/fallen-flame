@@ -72,9 +72,10 @@ public class FogController {
                 }
                 //To prevent drawing on tiles with the player or a wall as well as if its within the light radius
                 if (levelModel.hasWall(x, y)) continue;
+                float incrementFog = 0.5f*(playerModel.getLightRadius()/2) + + (playerModel.isSprinting() ? 1.5f : 0f);
                 boolean withinLight = (Math.pow((Math.pow((x * TILE_SIZE) - (playerModel.getX()), 2) +
-                        Math.pow((y * TILE_SIZE) - (playerModel.getY()), 2)), 0.5))
-                        <= playerModel.getLightRadius();
+                        Math.pow((y * TILE_SIZE) - (playerModel.getY()+ 0.5), 2)), 0.5))
+                        <= (playerModel.getLightRadius()-  incrementFog);
                 Array<ParticleEffectPool.PooledEffect> fogArr;
                 if (withinLight || levelModel.hasPlayer(x, y)) {
                     if (fog[x][y] != null) {
