@@ -21,7 +21,7 @@ public class FogController {
     private int tileGridH;
     private final int NUM_FOG_ENEMIES = 4;
     private final int NUM_FOG_NORMAL = 1;
-    private final float NUM_FOG_AROUND_ENEMIES = 4.0f;
+    private final float NUM_FOG_AROUND_ENEMIES = 6.0f;
 
     private final int[] DIRECTIONS = {1, -1};
     public void initialize(ParticleEffect fogTemplate, LevelModel lm, PlayerModel pm, List<FlareModel> fm) {
