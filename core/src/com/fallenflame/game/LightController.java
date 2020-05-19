@@ -216,7 +216,7 @@ public class LightController {
 
         // Second step: Update light radii for lights already there.
         for (Map.Entry<T, PointSource> entry : entrySet) {
-           flareLightOffset = (entry.getValue().getDistance()/4) + 0.5f;
+           flareLightOffset = (entry.getValue().getDistance()/3.5f);
             entry.getValue().setDistance(entry.getKey().getLightRadius()+flareLightOffset);
             entry.getValue().setColor(entry.getKey().getLightColor());
             entry.getValue().setPosition(entry.getKey().getPosition());
