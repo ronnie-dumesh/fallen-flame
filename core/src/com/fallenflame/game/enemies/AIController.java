@@ -96,9 +96,6 @@ public abstract class AIController {
         int startX = level.screenToTile(enemy.getX());
         int startY = level.screenToTile(enemy.getY());
 
-        if(!level.isSafe(startX, startY))
-            System.out.println("start not safe");
-
         // Initialize queue with movement options
         Queue<TileIndex> queue = new LinkedList<TileIndex>();
         if(level.isSafe(startX+1, startY)){

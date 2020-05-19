@@ -9,8 +9,6 @@ import com.badlogic.gdx.utils.Array;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.fallenflame.game.LevelModel.TILE_SIZE;
-
 public class FogController {
     private ParticleEffectPool fogPool;
     private fogParticle[][] fog;
@@ -19,6 +17,7 @@ public class FogController {
     private List<FlareModel> flareModels;//Needed for flare light radius
     private int tileGridW;
     private int tileGridH;
+    private float tileSize;
     private final int NUM_FOG_ENEMIES = 4;
     private final int NUM_FOG_NORMAL = 1;
     private final float NUM_FOG_AROUND_ENEMIES = 6.0f;
@@ -38,6 +37,7 @@ public class FogController {
         * new particles versus which ones do not. This fixes the initial issue of us creating 10,000 fog particles as
         * fog particles were created whether or not the particle around that tile was complete*/
         fog = new fogParticle[tileGridW][tileGridH];
+        tileSize = levelModel.getTileSize();
     }
 
     public void updateFogAndDraw(GameCanvas canvas, Vector2 scale, float delta) {
@@ -46,7 +46,7 @@ public class FogController {
         // Camera pos:
         Vector3 cameraPos = canvas.getCamera().position;
         // These are the ratio to translate camera pos to tile pos.
-        float ratioX = scale.x * TILE_SIZE, ratioY = scale.y * TILE_SIZE;
+        float ratioX = scale.x * tileSize, ratioY = scale.y * tileSize;
         // Bounds of the camera in tile units. Could be out of bounds on tile map! (e.g. lowX could be -3)
         int lowX = (int) Math.floor((cameraPos.x - canvas.getWidth() / 2f) / ratioX),
                 highX = (int) Math.floor((cameraPos.x + canvas.getWidth() / 2f) / ratioX),
@@ -72,8 +72,8 @@ public class FogController {
                 }
                 //To prevent drawing on tiles with the player or a wall as well as if its within the light radius
                 if (levelModel.hasWall(x, y)) continue;
-                boolean withinLight = (Math.pow((Math.pow((x * TILE_SIZE) - (playerModel.getX()), 2) +
-                        Math.pow((y * TILE_SIZE) - (playerModel.getY()), 2)), 0.5))
+                boolean withinLight = (Math.pow((Math.pow((x * tileSize) - (playerModel.getX()), 2) +
+                        Math.pow((y * tileSize) - (playerModel.getY()), 2)), 0.5))
                         <= playerModel.getLightRadius();
                 Array<ParticleEffectPool.PooledEffect> fogArr;
                 if (withinLight || levelModel.hasPlayer(x, y)) {
@@ -88,8 +88,8 @@ public class FogController {
                     Iterator<FlareModel> iterator = flareModels.iterator();
                     while (iterator.hasNext() && !withinLight) {
                         FlareModel flare = iterator.next();
-                        withinLight = (Math.pow((Math.pow((x * TILE_SIZE) - (flare.getX()), 2) +
-                                Math.pow((y * TILE_SIZE) - (flare.getY()), 2)), 0.5))
+                        withinLight = (Math.pow((Math.pow((x * tileSize) - (flare.getX()), 2) +
+                                Math.pow((y * tileSize) - (flare.getY()), 2)), 0.5))
                                 <= flare.getLightRadius();
                     }
                     if (withinLight) {
@@ -125,9 +125,9 @@ public class FogController {
                             float incY = levelModel.hasEnemy(x, y) ? (float) ((Math.random() - 0.5) * NUM_FOG_AROUND_ENEMIES) : 0;
                             for (int i = 0; i < ((levelModel.hasEnemy(x, y) ? NUM_FOG_ENEMIES  : NUM_FOG_NORMAL)); i++) {
                                 float randomVal = levelModel.hasEnemy(x, y) ? 2.0f : 1.0f;
-                                float randomX = levelModel.hasEnemy(x, y) ? (float) (((Math.random() * randomVal) - 0.5f) * TILE_SIZE) : 0;
-                                float randomY = levelModel.hasEnemy(x, y) ? (float) (((Math.random() * randomVal) - 0.5f) * TILE_SIZE) : 0;
-                                effect.setPosition(((x + incX) * TILE_SIZE + randomX) * scale.x, ((y + incY) * TILE_SIZE + randomY) * scale.y);
+                                float randomX = levelModel.hasEnemy(x, y) ? (float) (((Math.random() * randomVal) - 0.5f) * tileSize) : 0;
+                                float randomY = levelModel.hasEnemy(x, y) ? (float) (((Math.random() * randomVal) - 0.5f) * tileSize) : 0;
+                                effect.setPosition(((x + incX) * tileSize + randomX) * scale.x, ((y + incY) * tileSize + randomY) * scale.y);
                                 fog[x][y].fogParticles.add(effect);
                             }
                         }

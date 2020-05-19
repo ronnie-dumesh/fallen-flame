@@ -21,7 +21,6 @@ import java.util.List;
 
 /** Credit to Walker White for some code reused from B2LightsDemo */
 public class LevelController implements ContactListener {
-    //  MAY NEED THESE:
     /** Number of velocity iterations for the constrain solvers */
     public static final int WORLD_VELOC = 6;
     /** Number of position iterations for the constrain solvers */
@@ -56,6 +55,10 @@ public class LevelController implements ContactListener {
     /** Volume for player flare sounds */
     public static final float PLAYER_FLARE_VOL = .4f;
 
+    // Level model grid constants
+    public static final float PATH_GRID_SIZE = .6f;
+    public static final float FOG_GRID_SIZE = .4f;
+
     /** Whether or not the level has been populated */
     private boolean populated;
     /** Whether ot not the ghost has been added to the level*/
@@ -79,7 +82,9 @@ public class LevelController implements ContactListener {
     /** Reference to continuing player-item contacts */
     private HashSet<ItemModel> itemContacts;
     /** Level Model for AI Pathfinding */
-    private LevelModel levelModel;
+    private LevelModel pathLevelModel;
+    /** Level Model for fog */
+    private LevelModel fogLevelModel;
 
     // JSON data (for objects created after population)
     /** Flare JSONValue */
@@ -358,7 +363,8 @@ public class LevelController implements ContactListener {
         enemies = new LinkedList<>();
         flares = new LinkedList<>();
         fireballs = new LinkedList<>();
-        levelModel = new LevelModel();
+        pathLevelModel = new LevelModel();
+        fogLevelModel = new LevelModel();
         // Not yet populated
         populated = false;
 
@@ -479,12 +485,12 @@ public class LevelController implements ContactListener {
             if(enemyType.equals("typeA")) {
                 // If subtype pathing, give pathCoors as input as well
                 if(enemyJSON.has("subtype") && enemyJSON.get("subtype").asString().equals("pathing"))
-                    AIControllers.add(new AITypeAController(enemyID, levelModel, enemies, player, flares, enemyJSON.get("pathCoors")));
+                    AIControllers.add(new AITypeAController(enemyID, pathLevelModel, enemies, player, flares, enemyJSON.get("pathCoors")));
                 else
-                    AIControllers.add(new AITypeAController(enemyID, levelModel, enemies, player, flares));
+                    AIControllers.add(new AITypeAController(enemyID, pathLevelModel, enemies, player, flares));
             }
             else if(enemyType.equals("typeB")) {
-                AIControllers.add(new AITypeBController(enemyID, levelModel, enemies, player, flares));
+                AIControllers.add(new AITypeBController(enemyID, pathLevelModel, enemies, player, flares));
             }
             else{
                 Gdx.app.error("LevelController", "Enemy type without AIController", new IllegalArgumentException());
@@ -520,9 +526,10 @@ public class LevelController implements ContactListener {
         bgm = levelJson.has("bgm") ? levelJson.get("bgm").asString() : null;
 
         // Initialize levelModel, lightController, and fogController
-        levelModel.initialize(bounds, walls, enemies);
+        pathLevelModel.initialize(bounds, walls, enemies, PATH_GRID_SIZE);
+        fogLevelModel.initialize(bounds, walls, enemies, FOG_GRID_SIZE);
         lightController.initialize(player, exit, levelJson.get("lighting"), world, bounds, scale);
-        fogController.initialize(fogTemplate, levelModel, player, flares);
+        fogController.initialize(fogTemplate, fogLevelModel, player, flares);
 
     }
 
@@ -735,7 +742,8 @@ public class LevelController implements ContactListener {
         }
 
         // Update level model.
-        levelModel.update(player, enemies);
+        pathLevelModel.update(player, enemies);
+        fogLevelModel.update(player, enemies);
 
         // Update lights
         lightController.updateLights(flares, enemies, fireballs, items);
@@ -788,7 +796,7 @@ public class LevelController implements ContactListener {
         ghost.activatePhysics(world);
         enemies.add(ghost);
         // Create ghost controller
-        AIControllers.add(new AIGhostController(enemies.size()-1, levelModel, enemies, player));
+        AIControllers.add(new AIGhostController(enemies.size()-1, pathLevelModel, enemies, player));
     }
 
     /**
@@ -954,7 +962,7 @@ public class LevelController implements ContactListener {
             ticks++;
         } else if (debug == 2) {
             canvas.beginDebugFilled();
-            levelModel.drawDebug(canvas, scale);
+            pathLevelModel.drawDebug(canvas, scale);
             canvas.endDebug();
         }
     }
