@@ -13,15 +13,42 @@ import com.fallenflame.game.util.ScreenListener;
 
 public class WorldSelectMode implements Screen, InputProcessor {
 
-    private static final String BACKGROUND_FILE = "textures/ls_background.png";
+    private static final String BACKGROUND_FILE = "textures/ws_background.png";
     private Texture background = new Texture(BACKGROUND_FILE);
 
     private static final String LEVEL_BTN_FILE = "textures/ls_unlocked_level.png";
     private Texture levelButton = new Texture(LEVEL_BTN_FILE);
 
+    private static final String FOREST_COLORED = "textures/forest-colored.png";
+    private Texture forestColored = new Texture(FOREST_COLORED);
+    private static final String FOREST_HOVER = "textures/forest-hover.png";
+    private Texture forestHover = new Texture(FOREST_HOVER);
+    private static final String FOREST_UNCOLORED = "textures/forest-uncolored.png";
+    private Texture forestUncolored = new Texture(FOREST_UNCOLORED);
+
+    private static final String CAVE_COLORED = "textures/cave-colored.png";
+    private Texture caveColored = new Texture(CAVE_COLORED);
+    private static final String CAVE_HOVER = "textures/cave-hover.png";
+    private Texture caveHover = new Texture(CAVE_HOVER);
+    private static final String CAVE_UNCOLORED = "textures/cave-uncolored.png";
+    private Texture caveUncolored = new Texture(CAVE_UNCOLORED);
+
+    private static final String VOLCANO_COLORED = "textures/volcano-colored.png";
+    private Texture volcanoColored = new Texture(VOLCANO_COLORED);
+    private static final String VOLCANO_HOVER = "textures/volcano-hover.png";
+    private Texture volcanoHover = new Texture(VOLCANO_HOVER);
+    private static final String VOLCANO_UNCOLORED = "textures/volcano-uncolored.png";
+    private Texture volcanoUncolored = new Texture(VOLCANO_UNCOLORED);
+
     /** Position vectors for all the world select buttons */
-    private Vector2[] posVecRel = {new Vector2(1f/4f,2f/3f),new Vector2(3f/8f,2f/3f),new Vector2(1f/2f,2f/3f)};
+    private Vector2[] posVecRel = {new Vector2(4f/10f,1f/4f),new Vector2(7f/10f,9f/20f),new Vector2(4f/10f,5f/8f)};
     private Vector2[] posVec;
+
+    /** Vectors for texture types */
+
+    private Texture[] coloredTextures = {forestColored,caveColored,volcanoColored};
+    private Texture[] hoverTextures = {forestHover,caveHover,volcanoHover};
+    private Texture[] uncoloredTextures = {forestUncolored,caveUncolored,volcanoUncolored};
 
     /** Reference to GameCanvas created by the root */
     private GameCanvas canvas;
@@ -125,10 +152,9 @@ public class WorldSelectMode implements Screen, InputProcessor {
         // Flip to match graphics coordinates
         screenY = heightY-screenY;
 
-        float w = scale*levelButton.getWidth()/2.0f;
-        float h = scale*levelButton.getHeight()/2.0f;
-
         for (int i = 0; i < posVec.length; i++) {
+            float w = scale*coloredTextures[i].getWidth()/2.0f;
+            float h = scale*coloredTextures[i].getHeight()/2.0f;
             if ((Math.pow(screenX-posVec[i].x,2) / (w*w)) + (Math.pow(screenY-posVec[i].y,2) / (h*h)) <= 1) {
                 hoverState[i] = 1;
             } else {
@@ -155,10 +181,10 @@ public class WorldSelectMode implements Screen, InputProcessor {
         canvas.draw(background, 0, 0);
         for (int i = 0; i < posVec.length; i++) {
             if (hoverState[i] != 1) {
-                canvas.draw(levelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                canvas.draw(hoverTextures[i], Color.WHITE, hoverTextures[i].getWidth() / 2, hoverTextures[i].getHeight() / 2,
                         posVec[i].x, posVec[i].y, 0, 1, 1);
             } else {
-                canvas.draw(levelButton, Color.valueOf("98F3FF"), levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                canvas.draw(coloredTextures[i], Color.WHITE, coloredTextures[i].getWidth() / 2, coloredTextures[i].getHeight() / 2,
                         posVec[i].x, posVec[i].y, 0, 1, 1);
             }
         }
