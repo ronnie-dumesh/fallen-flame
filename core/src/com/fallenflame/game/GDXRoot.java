@@ -75,6 +75,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		InputMultiplexer multiplexer = new InputMultiplexer(); //Allows for multiple InputProcessors
 		//Multiplexer is an ordered list, so when an event occurs, it'll check loadingMode first, and then GameEngine
 		multiplexer.addProcessor(loading);
+		multiplexer.addProcessor(worldSelect);
 		multiplexer.addProcessor(levelSelect);
 		multiplexer.addProcessor(engine);
 		Gdx.input.setInputProcessor(multiplexer);
@@ -191,10 +192,10 @@ public class GDXRoot extends Game implements ScreenListener {
 				engine.resume();
 				setScreen(engine);
 			} else { // Level select = -1 means go back.
-				Gdx.input.setInputProcessor(loading);
-				loading.setScreenListener(this);
-				loading.setScreenListener(this);
-				setScreen(loading);
+				Gdx.input.setInputProcessor(worldSelect);
+				worldSelect.setScreenListener(this);
+				worldSelect.setScreenListener(this);
+				setScreen(worldSelect);
 			}
 		} else if (screen == engine) {
 			if(exitCode == 1){
