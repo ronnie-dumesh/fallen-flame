@@ -136,19 +136,34 @@ public class LevelSelectMode implements Screen, InputProcessor {
         canvas.draw(background, 0, 0);
         displayFont.setColor(Color.BLACK);
         displayFont.getData().setScale(.5f);
-        for (int i = 0; i < posVec.length; i++) {
-            if(i + (page*10) > numberUnlocked-1){
-                canvas.draw(lockedLevelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
-                        posVec[i].x, posVec[i].y, 0, 1, 1);
-            }
-           else if (hoverState[i] != 1) {
-                canvas.draw(levelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
-                        posVec[i].x, posVec[i].y, 0, 1, 1);
-            } else {
-                canvas.draw(levelButton, Color.valueOf("98F3FF"), levelButton.getWidth() / 2, levelButton.getHeight() / 2,
-                        posVec[i].x, posVec[i].y, 0, 1, 1);
-            }
-            canvas.drawTextFromCenter("" + ((i + 1) + (page * 10)), displayFont, posVec[i].x, posVec[i].y - levelButton.getHeight()/5);
+        int numNotDrawn = 0;
+        int numDrawn = 0;
+        boolean stopDrawing = false;
+        for (int i = 0; i < levelSaves.length; i++) {
+                //only draw if it's from the correct world
+                if (levelSaves[i].world == worldSelected) {
+                    if (numNotDrawn >= page * 10 && !stopDrawing) {
+                        if (hoverState[numDrawn] != 1) {
+                            if (levelSaves[i].unlocked) {
+                                canvas.draw(levelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                                        posVec[numDrawn].x, posVec[numDrawn].y, 0, 1, 1);
+                            } else {
+                                canvas.draw(lockedLevelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                                        posVec[numDrawn].x, posVec[numDrawn].y, 0, 1, 1);
+                            }
+                        } else {
+                            canvas.draw(levelButton, Color.valueOf("98F3FF"), levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                                    posVec[numDrawn].x, posVec[numDrawn].y, 0, 1, 1);
+                        }
+                        canvas.drawTextFromCenter("" + ((numDrawn + 1) + (page * 10)), displayFont, posVec[numDrawn].x, posVec[numDrawn].y - levelButton.getHeight() / 5);
+                        numDrawn++;
+                        if (numDrawn == 10) {
+                            stopDrawing = true;
+                        }
+                    } else {
+                        numNotDrawn++;
+                    }
+                }
         }
         if (page != 0) {
             canvas.draw(pagePrev, hoverState[posVec.length + 1] == 1 ? Color.CYAN : Color.WHITE, pagePrev.getWidth() / 2, pagePrev.getHeight() / 2,
