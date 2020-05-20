@@ -107,6 +107,12 @@
       "texture":     	{
         "shoot": "enemy-b-throwing"
       },
+      "totalPauseTime": 4,
+      "exclamationTexture": "exclamationpoint",
+      "exclamationTextureOffset": {
+        "x": 0.15,
+        "y": -2
+      },
       "activesound": "new-flame",
       "constantsound": "new-monster-low",
       "debugcolor": "white",

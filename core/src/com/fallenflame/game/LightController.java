@@ -101,6 +101,8 @@ public class LightController {
 
     protected float scale;
 
+    protected static final int DEFAULT_ANIMATE_TICKS = 9;
+
     /**
      * Initialise this controller.
      *
@@ -114,7 +116,7 @@ public class LightController {
                            JsonValue levelLighting, World world, Rectangle bounds, Vector2 scale) {
         animateIn = new HashMap<>();
         animateOut = new HashMap<>();
-        animateTicks = levelLighting.has("animateTicks") ? levelLighting.get("animateTicks").asInt() : 20;
+        animateTicks = levelLighting.has("animateTicks") ? levelLighting.get("animateTicks").asInt() : DEFAULT_ANIMATE_TICKS;
 
         // Set up camera first.
         raycamera = new OrthographicCamera(
