@@ -40,7 +40,7 @@ public class LevelModel {
     /** 2D tile representation of board where TRUE indicates tile is available for movement*/
     private Tile[][] tileGrid;
     /** Constant tile size (tiles are square so this is x and y) */
-    public static final float TILE_SIZE = .4f;
+    public float tileSize;
     /** Width of screen */
     private float width;
     /** Height of screen */
@@ -49,11 +49,12 @@ public class LevelModel {
 
     public LevelModel(){ }
 
-    public void initialize(Rectangle bounds, List<WallModel> walls, List<EnemyModel> enemies) {
+    public void initialize(Rectangle bounds, List<WallModel> walls, List<EnemyModel> enemies, float tileSize) {
         width = bounds.getWidth();
         height = bounds.getHeight();
+        this.tileSize = tileSize;
 
-        tileGrid = new Tile[(int) Math.ceil(width / TILE_SIZE)][(int) Math.ceil(height / TILE_SIZE)];
+        tileGrid = new Tile[(int) Math.ceil(width / tileSize)][(int) Math.ceil(height / tileSize)];
         for(int x = 0; x < tileGrid.length; x++){
             for(int y = 0; y < tileGrid[0].length; y++){
                 tileGrid[x][y] = new Tile();
@@ -75,6 +76,9 @@ public class LevelModel {
      * @return the height of the screen
      */
     public float getHeight() {return this.height;}
+
+    /** @return tileSize for this level model */
+    public float getTileSize() { return tileSize; }
 
     /**
      * Sets tiles previously covered by player as available
@@ -165,7 +169,7 @@ public class LevelModel {
      * @return the tile cell index for a screen position.
      */
     public int screenToTile(float f) {
-        return (int)(f / TILE_SIZE);
+        return (int)(f / tileSize);
     }
 
     /**
@@ -181,7 +185,7 @@ public class LevelModel {
      * @return the screen position coordinate for a tile cell index.
      */
     public float tileToScreen(int n) {
-        return (float) (n + 0.5f) * TILE_SIZE;
+        return (float) (n + 0.5f) * tileSize;
     }
 
     /**
@@ -327,7 +331,7 @@ public class LevelModel {
     public void drawDebug(GameCanvas canvas, Vector2 drawScale) {
         for (int x = 0; x < tileGrid.length; x++) {
             for (int y = 0; y < tileGrid[0].length; y++) {
-                canvas.drawGrid(x, y, isSafe(x, y), drawScale, TILE_SIZE);
+                canvas.drawGrid(x, y, isSafe(x, y), drawScale, tileSize);
             }
         }
     }

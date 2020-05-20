@@ -24,75 +24,69 @@
 	"path": "levels/t4.json"
 },
 {
-	"name": "easyLevel",
+	"name": "level 5",
 	"unlocked": true,
 	"completed": true,
 	"path": "levels/easyLevel.json"
 },
 {
-	"name": "mediumLevel",
+	"name": "level 6",
 	"unlocked": true,
 	"completed": true,
 	"path": "levels/mediumLevel.json"
 },
 {
-	"name": "hardLevel",
+	"name": "level 7",
 	"unlocked": true,
 	"completed": true,
 	"path": "levels/hardLevel.json"
 },
 {
-	"name": "level4",
+	"name": "level 8",
 	"unlocked": true,
 	"completed": true,
 	"path": "levels/enemySurroundingPlayer.json"
 },
 {
-	"name": "level5",
+	"name": "level 9",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/forceSneak.json"
+},
+{
+	"name": "level 10",
 	"unlocked": true,
 	"completed": true,
 	"path": "levels/shooterAndPatrol.json"
 },
 {
-	"name": "level6",
+	"name": "level 11",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/maxLevel.json"
+},
+{
+	"name": "level 12",
 	"unlocked": true,
 	"completed": true,
 	"path": "levels/onlypatrol.json"
 },
 {
-	"name": "easyTest",
+	"name": "level 13",
 	"unlocked": true,
 	"completed": true,
-	"path": "levels/easy.json"
+	"path": "levels/ronnie-level.json"
 },
-	{
-		"name": "maxLevel",
-		"unlocked": true,
-		"completed": true,
-		"path": "levels/maxLevel.json"
-	},
 {
-	"name": "mediumTest",
+	"name": "level 14",
+	"unlocked": true,
+	"completed": true,
+	"path": "levels/bryansfirstlevel.json"
+},
+{
+	"name": "level 16",
 	"unlocked": true,
 	"completed": true,
 	"path": "levels/medium.json"
-},
-{
-	"name": "forcesneak",
-	"unlocked": true,
-	"completed": true,
-	"path": "levels/forceSneak.json"
-},
-	{
-		"name": "level7",
-		"completed": true,
-		"unlocked": true,
-		"path": "levels/ronnie-level.json"
-	},
-	{
-		"name": "level7",
-		"unlocked": true,
-		"completed": true,
-		"path": "levels/ronnie-level.json"
-	}
+}
 ]

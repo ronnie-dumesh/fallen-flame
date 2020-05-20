@@ -70,7 +70,7 @@ public class ControlMode implements Screen, InputProcessor {
         InputBindings.Control[] cvalues = InputBindings.Control.values();
         int totalControls = cvalues.length;
         boolean bindingInProgress = Arrays.stream(controlStates).anyMatch(i -> i == 2);
-        for (int ind = 0, j = totalControls + 2; ind < j; ind++) {
+        for (int ind = 0, j = totalControls + 1; ind < j; ind++) {
             float ry = screenHeight - (((ind + 1) / (float) totalControls) * (screenHeight - 240) + 55);
             displayFont.setColor(controlStates[ind] == 1 && ind < totalControls ? Color.CYAN :
                     (controlStates[ind] == 2 ? Color.YELLOW :
@@ -81,16 +81,8 @@ public class ControlMode implements Screen, InputProcessor {
                 str2 = InputBindings.controlToString(cvalues[ind]);
                 str = InputBindings.keyToString(InputBindings.getBindingOf(cvalues[ind]));
             } else {
-                switch (ind - totalControls) {
-                    case 1:
-                        str2 = "Change light radius (primary)";
-                        str = "Mouse wheel";
-                        break;
-                    case 0:
-                        str2 = "Flare";
-                        str = "Move mouse to aim, left click to shoot";
-                        break;
-                }
+                str2 = "Flare";
+                str = "Move mouse to aim, left click to shoot";
             }
             GlyphLayout box2 = new GlyphLayout(displayFont, str2);
             canvas.drawText(str2, displayFont,

@@ -166,14 +166,14 @@ public class GameEngine implements Screen, InputProcessor {
 
         jsonReader = new JsonReader();
         assetJson = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
-        if(Gdx.files.local("savedata/save.json").exists()){
-            saveJson = jsonReader.parse(Gdx.files.local("savedata/save.json"));
+        if(Gdx.files.external("savedata/save.json").exists()){
+            saveJson = jsonReader.parse(Gdx.files.external("savedata/save.json"));
             levelSaves = json.readValue(LevelSave[].class, saveJson);
         }
         else {
             // If local save file doesn't exist (like when jar is first opened), create it from internal template
             saveJson = jsonReader.parse(Gdx.files.internal("jsons/save.json"));
-            FileHandle file = Gdx.files.local(SAVE_PATH);
+            FileHandle file = Gdx.files.external(SAVE_PATH);
             JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
             settings.outputType = JsonWriter.OutputType.json;
             levelSaves = json.readValue(LevelSave[].class, saveJson);
@@ -464,7 +464,7 @@ public class GameEngine implements Screen, InputProcessor {
             // Write save data to local save JSON file
             JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
             settings.outputType = JsonWriter.OutputType.json;
-            FileHandle file = Gdx.files.local(SAVE_PATH);
+            FileHandle file = Gdx.files.external(SAVE_PATH);
             file.writeString(json.prettyPrint(levelSaves, settings), false);
             // Update level select
             levelSelect.resetNumberUnlocked();
@@ -510,6 +510,7 @@ public class GameEngine implements Screen, InputProcessor {
         } else if (isFailed) {
             canvas.beginWithoutCamera(); // DO NOT SCALE
             canvas.draw(border, canvas.getWidth()/2-(border.getRegionWidth()/2), canvas.getHeight()/2-(border.getRegionHeight()/2));
+            displayFont.setColor(Color.CYAN);
             canvas.drawTextCentered("Game Over!", displayFont, border.getRegionHeight()/6);
             menuOptionsFont.setColor(hoverStates[0] == 1 ? Color.CYAN : Color.WHITE);
             gl.setText(menuOptionsFont, "Retry");
@@ -689,10 +690,10 @@ public class GameEngine implements Screen, InputProcessor {
         }
 
         //#region mouse wheel alternative
-        if(Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.INCREASE_LIGHT))){
+        if(Gdx.input.isKeyPressed(Input.Keys.PERIOD) && ALLOW_DEBUG){
             level.lightFromPlayer(0.5f);
         }
-        if(Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.DECREASE_LIGHT))){
+        if(Gdx.input.isKeyPressed(Input.Keys.COMMA) && ALLOW_DEBUG){
             level.lightFromPlayer(-0.5f);
         }
         //#endregion
@@ -785,10 +786,10 @@ public class GameEngine implements Screen, InputProcessor {
         if(!isScreenActive()){
             return true;
         }
-        if(amount == 1){
+        if(amount == 1 && ALLOW_DEBUG){
             level.lightFromPlayer(-1.0f);
         }
-        if(amount == -1){
+        if(amount == -1 && ALLOW_DEBUG){
             level.lightFromPlayer(1.0f);
         }
 
