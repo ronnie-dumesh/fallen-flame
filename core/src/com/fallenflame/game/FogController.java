@@ -1,7 +1,5 @@
 package com.fallenflame.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.math.Vector2;
@@ -23,9 +21,10 @@ public class FogController {
     private List<EnemyModel> enemyModels; //Needed to determine if an enemy is agressive.
     private int tileGridW;
     private int tileGridH;
-    private final int NUM_FOG_ENEMIES = 4;
+    private final int NUM_FOG_ENEMIES = 12;
+    private final int NUM_FOG_SHOOTER = 3;
     private final int NUM_FOG_NORMAL = 1;
-    private final float NUM_FOG_AROUND_ENEMIES = 6.0f;
+    private final float NUM_FOG_AROUND_ENEMIES = 10.0f;
     private static Logger log = Logger.getLogger("FogController");
     private int toSmol;
 
@@ -49,9 +48,6 @@ public class FogController {
     }
 
     public void updateFogAndDraw(GameCanvas canvas, Vector2 scale, float delta) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
-            System.out.println("it broke!");
-        }
         // Cache values locally so we don't have to do expensive calculations each loop.
         float px = playerModel.getX(), py = playerModel.getY(), lightRadius = playerModel.getLightRadius();
         // Camera pos:
@@ -84,7 +80,7 @@ public class FogController {
                 if (levelModel.hasWall(x, y)) continue;
                 //0.5 accounts for the aligning of the light to show the player's face over the feat.
                 boolean withinLight = (Math.pow((Math.pow((x * TILE_SIZE) - (playerModel.getX()), 2) +
-                        Math.pow((y * TILE_SIZE) - (playerModel.getY() + 0.5), 2)), 0.5))
+                        Math.pow((y * TILE_SIZE) - (playerModel.getY() + 0.25), 2)), 0.5))
                         <= (playerModel.getLightRadius());
                 Array<ParticleEffectPool.PooledEffect> fogArr;
                 if (withinLight || levelModel.hasPlayer(x, y)) {
@@ -135,31 +131,25 @@ public class FogController {
                                 fog[x][y] = new fogParticle();
                             }
                             fogArr = fog[x][y].fogParticles;
-                            if (fog[x][y].enemies != null && !levelModel.hasEnemy(x, y)) {
+                            if ((fog[x][y].enemies != null || fogArr.size > NUM_FOG_NORMAL) && !levelModel.hasEnemy(x, y)) {
                                 for (ParticleEffectPool.PooledEffect effect : fogArr) {
-                                    float incX = (float) ((Math.random() - 0.5) * NUM_FOG_AROUND_ENEMIES);
-                                    float incY = (float) ((Math.random() - 0.5) * NUM_FOG_AROUND_ENEMIES);
-                                    float randomX = (float) (((Math.random() * 2.0f) - 0.5f));
-                                    float randomY = (float) (((Math.random() * 2.0f) - 0.5f));
-                                    effect.reset();
-                                    effect.setPosition(levelModel.tileToScreen((int) ((fog[x][y].enemies.getX()))) * scale.x, levelModel.tileToScreen((int) ((fog[x][y].enemies.getY()))) * scale.y);
-                                    fog[levelModel.screenToTile(fog[x][y].enemies.getX())][levelModel.screenToTile(fog[x][y].enemies.getY())].fogParticles.add(effect);
-                                    fog[levelModel.screenToTile(fog[x][y].enemies.getX())][levelModel.screenToTile(fog[x][y].enemies.getY())].enemies = fog[x][y].enemies;
+                                    effect.setDuration(0);
+                                    effect.free();
                                     fogArr.removeValue(effect, true);
                                 }
                                 fog[x][y].enemies = null;
                             }
                             /*Only make a new fog particle if we do not have enough particles in the array for that tile*/
-                            if (fogArr.size < NUM_FOG_NORMAL || levelModel.hasEnemy(x, y) && fogArr.size < NUM_FOG_ENEMIES) {
-                                for (int i = 0; i < ((levelModel.hasEnemy(x, y) ? NUM_FOG_ENEMIES : NUM_FOG_NORMAL)); i++) {
+                            if (fogArr.size < NUM_FOG_NORMAL || levelModel.hasEnemy(x, y) && fogArr.size < ( levelModel.hasLessFog(x,y) ? NUM_FOG_SHOOTER : NUM_FOG_ENEMIES)) {
+                                for (int i = 0; i < ((levelModel.hasEnemy(x, y) ? levelModel.hasLessFog(x, y) ? NUM_FOG_SHOOTER : NUM_FOG_ENEMIES : NUM_FOG_NORMAL)); i++) {
                                     ParticleEffectPool.PooledEffect effect = fogPool.obtain();
                                     effect.reset();
                                     float incX = levelModel.hasEnemy(x, y) ? (float) ((Math.random() - 0.5) * NUM_FOG_AROUND_ENEMIES) : 0;
                                     float incY = levelModel.hasEnemy(x, y) ? (float) ((Math.random() - 0.5) * NUM_FOG_AROUND_ENEMIES) : 0;
-                                    float randomVal = levelModel.hasEnemy(x, y) ? 2.0f : 1.0f;
-                                    float randomX = levelModel.hasEnemy(x, y) ? (float) (((Math.random() * randomVal) - 0.5f)) : 0;
-                                    float randomY = levelModel.hasEnemy(x, y) ? (float) (((Math.random() * randomVal) - 0.5f)) : 0;
-                                    effect.setPosition(levelModel.tileToScreen((int) ((x))) * scale.x, levelModel.tileToScreen((int) ((y))) * scale.y);
+                                    float randomVal = levelModel.hasEnemy(x, y) ? 6.0f : 1.0f;
+                                    float randomX = levelModel.hasEnemy(x, y) ? (float) (((Math.random() - 0.5f)*randomVal))*TILE_SIZE : 0;
+                                    float randomY = levelModel.hasEnemy(x, y) ? (float) (((Math.random() - 0.5f)*randomVal))*TILE_SIZE : 0;
+                                    effect.setPosition((levelModel.tileToScreen((int) ((x + incX))) + randomX) * scale.x, levelModel.tileToScreen((int) ((y+incY + randomY))) * scale.y);
                                     fog[x][y].fogParticles.add(effect);
                                 }
                             }

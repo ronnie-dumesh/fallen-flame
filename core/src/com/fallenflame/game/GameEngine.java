@@ -51,7 +51,7 @@ public class GameEngine implements Screen, InputProcessor {
 
     /**Boolean to determine if debug keys do anything.
      * Note: MUST BE FALSE WHEN MAKING A JAR! */
-    private static final boolean ALLOW_DEBUG = true;
+    private static final boolean ALLOW_DEBUG = false;
 
     private static final String SAVE_PATH = "savedata/save.json";
     private LevelSave[] levelSaves;
@@ -182,7 +182,7 @@ public class GameEngine implements Screen, InputProcessor {
         // Read save data from local save JSON file
         globalJson = jsonReader.parse(Gdx.files.internal("jsons/global.json"));
         fogTemplate = new ParticleEffect();
-        fogTemplate.load(Gdx.files.internal("effects/fog3.p"), Gdx.files.internal("textures"));
+        fogTemplate.load(Gdx.files.internal("effects/fog2.p"), Gdx.files.internal("textures"));
         fogTemplate.start();
 
         JsonAssetManager.getInstance().loadDirectory(assetJson);

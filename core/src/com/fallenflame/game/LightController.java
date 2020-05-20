@@ -136,7 +136,7 @@ public class LightController {
         // Save player and config.
         this.player = player;
         this.lightingConfig = levelLighting;
-        playerLightOffset = (player.getLightRadius()/2) * 0.4f;
+        playerLightOffset = (player.getLightRadius()/3f);
         flareLightOffset = 0.5f;
         // Create player light.
         playerLight = createPointLight(player.getLightRadius()+playerLightOffset, player.getTextureX(), player.getTextureY());
@@ -216,7 +216,7 @@ public class LightController {
 
         // Second step: Update light radii for lights already there.
         for (Map.Entry<T, PointSource> entry : entrySet) {
-           flareLightOffset = (entry.getValue().getDistance()/3.5f);
+           flareLightOffset = (entry.getValue().getDistance()/2.5f);
             entry.getValue().setDistance(entry.getKey().getLightRadius()+flareLightOffset);
             entry.getValue().setColor(entry.getKey().getLightColor());
             entry.getValue().setPosition(entry.getKey().getPosition());
@@ -258,7 +258,7 @@ public class LightController {
         });
        float pLightCurrDist = playerLight.getDistance();
        if (pLightCurrDist + playerLightOffset != targetPlayerRadius) {
-           playerLightOffset = (player.getLightRadius()/4);
+           playerLightOffset = (player.getLightRadius()/3.0f);
            playerLightOffset = playerLightOffset + (player.isSprinting() ? 1.0f : 0f);
            if (Math.abs((pLightCurrDist+playerLightOffset) - targetPlayerRadius) < 0.05) {
                playerLight.setDistance(targetPlayerRadius+playerLightOffset);
