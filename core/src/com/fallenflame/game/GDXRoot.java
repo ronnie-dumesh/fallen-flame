@@ -43,6 +43,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	private ControlMode control;
 	/** Player mode for the the game */
 	private GameEngine engine;
+	/** World select for the game */
+	private WorldSelectMode worldSelect;
 	/** Level select for the game */
 	private LevelSelectMode levelSelect;
 	/** Pause for the game */
@@ -66,6 +68,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		levelCanvas = new GameCanvas();
 		loading = new LoadingMode(canvas,1);
 		control = new ControlMode(levelCanvas);
+		worldSelect = new WorldSelectMode(levelCanvas);
 		levelSelect = new LevelSelectMode(levelCanvas);
 		pauseMode = new PauseMode(levelCanvas);
 		engine = new GameEngine(levelSelect);
@@ -159,9 +162,9 @@ public class GDXRoot extends Game implements ScreenListener {
 					control.setScreenListener(this);
 					setScreen(control);
 				} else {
-					Gdx.input.setInputProcessor(levelSelect);
-					levelSelect.setScreenListener(this);
-					setScreen(levelSelect);
+					Gdx.input.setInputProcessor(worldSelect);
+					worldSelect.setScreenListener(this);
+					setScreen(worldSelect);
 				}
 			}
 
