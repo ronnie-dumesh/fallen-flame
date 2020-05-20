@@ -19,6 +19,8 @@ public class AITypeBController extends AIController {
         DIRECT_FIRE,
         /** The enemy is firing at the player's last known position */
         SUSTAINED_FIRE,
+        /** Pause for a brief moment after seeing enemy */
+        PAUSE,
     }
 
     // Constants
@@ -81,8 +83,18 @@ public class AITypeBController extends AIController {
                 if(withinPlayerLight()) {
                     firingAtFlare = false;
                     enemy.setFiringTarget(player.getX(), player.getY());
-                    state = FSMState.DIRECT_FIRE;
+                    state = FSMState.PAUSE;
+                    enemy.resetPause();
                     break;
+                }
+                break;
+            case PAUSE:
+                enemy.makePause();
+                if(withinPlayerLight()) {
+                    enemy.setFiringTarget(player.getX(), player.getY()); // update in case we loose player
+                }
+                if(enemy.isFinishedPausing()){
+                    state = FSMState.DIRECT_FIRE;
                 }
                 break;
             case DIRECT_FIRE:
@@ -97,19 +109,20 @@ public class AITypeBController extends AIController {
                             // if already fired at wall once, stop firing
                             targetFlare = null;
                             state = FSMState.IDLE;
-                            break;
                         }
                     }
                 }
                 else{
-                    enemy.setFiringTarget(player.getX(), player.getY());
                     // If player now out of range, switch to sustained fire at last known position
                     if(!withinPlayerLight()) {
                         state = FSMState.SUSTAINED_FIRE;
                         firingTime = 0;
-                        break;
+                    }
+                    else {
+                        enemy.setFiringTarget(player.getX(), player.getY());
                     }
                 }
+                break;
             case SUSTAINED_FIRE:
                 enemy.makeAlert();
                 // Check for flare targets -- FIRST because flares are prioritized
@@ -129,11 +142,11 @@ public class AITypeBController extends AIController {
                     break;
                 }
                 // Check if sustained fire has ended
-                if(firingTime >= SUSTAINED_FIRE_TIME){
+                if(firingTime >= SUSTAINED_FIRE_TIME)
                     state = FSMState.IDLE;
-                    break;
-                }
-                firingTime++;
+                else
+                    firingTime++;
+                break;
         }
     }
 

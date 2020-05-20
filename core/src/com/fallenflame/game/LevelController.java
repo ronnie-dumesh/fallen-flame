@@ -654,7 +654,7 @@ public class LevelController implements ContactListener {
                     player.decPowerValSneak();
             }
             // Add ghost enemy if player has used all their power
-            else if(player.getPowerVal() == 0 && ghostAdded == false) {
+            else if(player.getPowerVal() <= 0 && ghostAdded == false) {
                 addGhost();
                 ghostAdded = true;
             }
