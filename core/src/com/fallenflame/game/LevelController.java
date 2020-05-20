@@ -816,8 +816,8 @@ public class LevelController implements ContactListener {
     }
 
     /**
-     * This method provides the coordinates of the boundary wall tile cardinally closest to the player
-     * and spawns the ghost from there
+     * This method determines the coordinates of where the ghost should be spawned, parallel with the angle
+     * created by the exit and the player
      * @return The coordinates where the ghost should be spawned
      */
     private float[] getGhostStart() {
