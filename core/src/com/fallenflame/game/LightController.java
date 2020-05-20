@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 public class LightController {
     /** Ambient light level */
     public static final float AMBIENT_LIGHT = 0.2f;
+    public static final float PLAYER_LIGHT_RATIO = 2.25f;
 
     /**
      * Logger for outputting info.
@@ -139,7 +140,7 @@ public class LightController {
         this.player = player;
         this.lightingConfig = levelLighting;
         playerLightOffset = (player.getLightRadius()/3f);
-        flareLightOffset = 0.5f;
+        flareLightOffset = 0; //Set to 0 initially because no flares at the beginning, so it doesn't matter
         // Create player light.
         playerLight = createPointLight(player.getLightRadius()+playerLightOffset, player.getTextureX(), player.getTextureY());
         targetPlayerRadius = player.getLightRadius();
@@ -218,7 +219,7 @@ public class LightController {
 
         // Second step: Update light radii for lights already there.
         for (Map.Entry<T, PointSource> entry : entrySet) {
-           flareLightOffset = (entry.getValue().getDistance()/2.5f);
+           flareLightOffset = (entry.getValue().getDistance()/PLAYER_LIGHT_RATIO);
             entry.getValue().setDistance(entry.getKey().getLightRadius()+flareLightOffset);
             entry.getValue().setColor(entry.getKey().getLightColor());
             entry.getValue().setPosition(entry.getKey().getPosition());
@@ -260,7 +261,7 @@ public class LightController {
         });
        float pLightCurrDist = playerLight.getDistance();
        if (pLightCurrDist + playerLightOffset != targetPlayerRadius) {
-           playerLightOffset = (player.getLightRadius()/3.0f);
+           playerLightOffset = (player.getLightRadius()/PLAYER_LIGHT_RATIO);
            playerLightOffset = playerLightOffset + (player.isSprinting() ? 1.0f : 0f);
            if (Math.abs((pLightCurrDist+playerLightOffset) - targetPlayerRadius) < 0.05) {
                playerLight.setDistance(targetPlayerRadius+playerLightOffset);
