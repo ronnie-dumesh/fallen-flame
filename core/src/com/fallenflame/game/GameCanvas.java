@@ -893,6 +893,10 @@ public class GameCanvas {
                         Array<ParticleEffectPool.PooledEffect> fogArr = fog[r][c].fogParticles;
                         for (ParticleEffectPool.PooledEffect f : fogArr) {
                             f.draw(spriteBatch, delta);
+                            if(f.isComplete()){
+                                f.free();
+                                fogArr.removeValue(f, true);
+                            }
                         }
                     }
                 }

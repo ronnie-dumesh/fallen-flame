@@ -258,7 +258,7 @@ public class LightController {
         });
        float pLightCurrDist = playerLight.getDistance();
        if (pLightCurrDist + playerLightOffset != targetPlayerRadius) {
-           playerLightOffset = (player.getLightRadius()/2) * 0.4f;
+           playerLightOffset = (player.getLightRadius()/4);
            playerLightOffset = playerLightOffset + (player.isSprinting() ? 1.0f : 0f);
            if (Math.abs((pLightCurrDist+playerLightOffset) - targetPlayerRadius) < 0.05) {
                playerLight.setDistance(targetPlayerRadius+playerLightOffset);

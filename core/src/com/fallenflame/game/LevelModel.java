@@ -22,6 +22,7 @@ public class LevelModel {
         /** Has player? */
         public boolean player = false;
 
+
     }
 
     private enum TileOccupiedBy {
