@@ -509,6 +509,7 @@ public class GameEngine implements Screen, InputProcessor {
         } else if (isFailed) {
             canvas.beginWithoutCamera(); // DO NOT SCALE
             canvas.draw(border, canvas.getWidth()/2-(border.getRegionWidth()/2), canvas.getHeight()/2-(border.getRegionHeight()/2));
+            displayFont.setColor(Color.CYAN);
             canvas.drawTextCentered("Game Over!", displayFont, border.getRegionHeight()/6);
             menuOptionsFont.setColor(hoverStates[0] == 1 ? Color.CYAN : Color.WHITE);
             gl.setText(menuOptionsFont, "Retry");

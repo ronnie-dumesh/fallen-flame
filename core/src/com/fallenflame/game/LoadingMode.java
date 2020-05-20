@@ -122,17 +122,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private TextureRegion statusFrgRight;
     /**Layout to get the bounds for the rectanlges*/
     /**
-     * Start layout
+     * layout to create all of the bounds
      */
-    private GlyphLayout startLayout;
-    /**
-     * Select layout
-     */
-    private GlyphLayout selectLayout;
-    /**
-     * Controls layout
-     */
-    private GlyphLayout controlLayout;
+    private GlyphLayout menuLayout;
+
 
     Array<MenuText> menuTextArray;
     /**
@@ -241,6 +234,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
     /** Is the next screen control? */
     public boolean toControl = false;
+    /**Is the next screen credits? */
+    public boolean toCredits = false;
 
     /**
      * Returns the budget for the asset loader.
@@ -309,16 +304,14 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         // Load the next four images immediately.
         playButton = null;
-        text_offset = -(canvas.getHeight() / 7);
+        text_offset = -(canvas.getHeight() / 8);
         background = new Texture(BACKGROUND_FILE);
         menu = new Texture(MENU_BACKGROUND_FILE);
         statusBar = new Texture(PROGRESS_FILE);
         fireBuddy = new Texture(FIRE_BUDDY_FILE);
         normalFontColor = new Color(242, 242, 242, 1);
         hoveredFontColor = new Color(152, 243, 255, 1);
-        startLayout = new GlyphLayout();
-        selectLayout = new GlyphLayout();
-        controlLayout = new GlyphLayout();
+        menuLayout = new GlyphLayout();
 
         // No progress so far.
         progress = 0;
@@ -353,9 +346,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         statusFrgLeft = null;
         statusFrgRight = null;
         statusFrgMiddle = null;
-        startLayout = null;
-        selectLayout = null;
-        controlLayout = null;
+        menuLayout = null;
         background.dispose();
         menu.dispose();
         fireBuddy.dispose();
@@ -407,19 +398,23 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 displayFont = generator.generateFont(parameter);
                 generator.dispose();
                 displayFont.setColor(normalFontColor);
-                startLayout.setText(displayFont, "Start");
-                selectLayout.setText(displayFont, "Level Select");
-                controlLayout.setText(displayFont, "Controls");
-                if(menuTextArray.size < 3) {
+                if(menuTextArray.size < 4) {
+                    menuLayout = new GlyphLayout(displayFont, "Start");
                     menuTextArray.add(new MenuText(false, "Start", new Rectangle(
-                            (canvas.getWidth() - startLayout.width) / 2, (canvas.getHeight() - startLayout.height) / 2,
-                            startLayout.width, startLayout.height), 0));
+                            (canvas.getWidth() - menuLayout.width) / 2, (canvas.getHeight() - menuLayout.height) / 2,
+                            menuLayout.width, menuLayout.height), 0));
+                    menuLayout = new GlyphLayout(displayFont, "Select");
                     menuTextArray.add(new MenuText(false, "Select", new Rectangle(
-                            (canvas.getWidth() - selectLayout.width) / 2, (canvas.getHeight() - selectLayout.height) / 2 + text_offset,
-                            selectLayout.width, selectLayout.height), 1));
+                            (canvas.getWidth() - menuLayout.width) / 2, (canvas.getHeight() - menuLayout.height) / 2 + text_offset,
+                            menuLayout.width, menuLayout.height), 1));
+                    menuLayout =  new GlyphLayout(displayFont, "Controls");
                     menuTextArray.add(new MenuText(false, "Controls", new Rectangle(
-                            (canvas.getWidth() - controlLayout.width) / 2, (canvas.getHeight() - controlLayout.height ) / 2 + (text_offset * 2),
-                            controlLayout.width, controlLayout.height), 2));
+                            (canvas.getWidth() - menuLayout.width) / 2, (canvas.getHeight() - menuLayout.height ) / 2 + (text_offset * 2),
+                            menuLayout.width, menuLayout.height), 2));
+                    menuLayout =  new GlyphLayout(displayFont, "Credits");
+                    menuTextArray.add(new MenuText(false, "Credits", new Rectangle(
+                            (canvas.getWidth() - menuLayout.width) / 2, (canvas.getHeight() - menuLayout.height ) / 2 + (text_offset * 3),
+                            menuLayout.width, menuLayout.height), 3));
                 }
             }
         }
@@ -598,6 +593,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             }
         }
         toControl = (menuTextArray.get(2).rect.contains(screenX, screenY));
+        toCredits = (menuTextArray.get(3).rect.contains(screenX, screenY));
         return false;
     }
 
