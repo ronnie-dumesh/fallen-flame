@@ -129,7 +129,7 @@
       "density": 1.0,
       "friction": 0.0,
       "restitution": 0.0,
-      "walkspeed": 	  3.0,
+      "walkspeed": 	  3.3,
       "sneakspeed":   1.5,
       "sprintspeed":  8,
       "startframe": 0,
@@ -275,8 +275,8 @@
       "y": 5
     },
     "scale": {
-      "x": 0.7,
-      "y": 0.7
+      "x": 0.5,
+      "y": 0.5
     }
   }
 }
