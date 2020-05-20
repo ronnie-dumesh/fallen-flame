@@ -1,0 +1,17 @@
+{
+    "platform": "mac",
+    "jdk": "openjdk-9.0.4_osx-x64_bin/jdk-9.0.4.jdk.zip",
+    "executable": "fallen-flame",
+    "classpath": [
+        "fallen-flame.jar"
+    ],
+    "mainclass": "com.fallenflame.game.desktop.DesktopLauncher",
+    "vmargs": [
+       "Xmx1G"
+    ],
+    "resources": [
+        "fallen-flame/core/assets"
+    ],
+    "minimizejre": "soft",
+    "output": "FallenFlame.app"
+}

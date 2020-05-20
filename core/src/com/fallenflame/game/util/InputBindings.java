@@ -17,8 +17,6 @@ public class InputBindings {
         RESET_LEVEL,
         SNEAKING,
         SPRINTING,
-        INCREASE_LIGHT,
-        DECREASE_LIGHT,
     }
     private static final Map<Control, Integer> bindings;
     static {
@@ -109,8 +107,6 @@ public class InputBindings {
         bindings.put(Control.RESET_LEVEL, Input.Keys.R);
         bindings.put(Control.SNEAKING, Input.Keys.CONTROL_LEFT);
         bindings.put(Control.SPRINTING, Input.Keys.SHIFT_LEFT);
-        bindings.put(Control.INCREASE_LIGHT, Input.Keys.PERIOD);
-        bindings.put(Control.DECREASE_LIGHT, Input.Keys.COMMA);
         if (resetPrefs) {
             prefs.clear();
             prefs.flush();
@@ -214,8 +210,6 @@ public class InputBindings {
             case RESET_LEVEL: return "reset";
             case SNEAKING: return "sneak";
             case SPRINTING: return "sprint";
-            case INCREASE_LIGHT: return "incLightRad";
-            case DECREASE_LIGHT: return "decLightRad";
         }
         return null;
     }
@@ -228,16 +222,6 @@ public class InputBindings {
             case RESET_LEVEL: return new String[]{"reset"};
             case SNEAKING: return new String[]{"sneak"};
             case SPRINTING: return new String[]{"sprint"};
-            case INCREASE_LIGHT:
-                return new String[]{
-                        "incLightRad", "incLightrad", "inclightrad",
-                        "increaseLightRad", "increaseLightrad", "increaselightrad"
-                };
-            case DECREASE_LIGHT:
-                return new String[]{
-                        "decLightRad", "decLightrad", "declightrad",
-                        "decreaseLightRad", "decreaseLightrad", "decreaselightrad"
-                };
         }
         return null;
     }
@@ -250,8 +234,6 @@ public class InputBindings {
             case "reset": return Control.RESET_LEVEL;
             case "sneak": return Control.SNEAKING;
             case "sprint": return Control.SPRINTING;
-            case "inclightrad": case "increaselightrad": return Control.INCREASE_LIGHT;
-            case "declightrad": case "decreaselightrad": return Control.DECREASE_LIGHT;
         }
         return null;
     }
@@ -264,8 +246,6 @@ public class InputBindings {
             case RESET_LEVEL: return "Reset level";
             case SNEAKING: return "Sneaking";
             case SPRINTING: return "Sprinting";
-            case INCREASE_LIGHT: return "Increase light radius (secondary)";
-            case DECREASE_LIGHT: return "Decrease light radius (secondary)";
         }
         return null;
     }

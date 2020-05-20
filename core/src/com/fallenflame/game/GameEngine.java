@@ -688,10 +688,10 @@ public class GameEngine implements Screen, InputProcessor {
         }
 
         //#region mouse wheel alternative
-        if(Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.INCREASE_LIGHT))){
+        if(Gdx.input.isKeyPressed(Input.Keys.PERIOD) && ALLOW_DEBUG){
             level.lightFromPlayer(0.5f);
         }
-        if(Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.DECREASE_LIGHT))){
+        if(Gdx.input.isKeyPressed(Input.Keys.COMMA) && ALLOW_DEBUG){
             level.lightFromPlayer(-0.5f);
         }
         //#endregion
@@ -784,10 +784,10 @@ public class GameEngine implements Screen, InputProcessor {
         if(!isScreenActive()){
             return true;
         }
-        if(amount == 1){
+        if(amount == 1 && ALLOW_DEBUG){
             level.lightFromPlayer(-1.0f);
         }
-        if(amount == -1){
+        if(amount == -1 && ALLOW_DEBUG){
             level.lightFromPlayer(1.0f);
         }
 
