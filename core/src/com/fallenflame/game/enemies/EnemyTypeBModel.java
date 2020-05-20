@@ -92,7 +92,7 @@ public class EnemyTypeBModel extends EnemyModel{
      * @return light radius
      */
     public float getLightRadius() {
-        return isActivated() ? 4.5f : 0.0f;
+        return isActivated() ? 5.5f : 0.0f;
     }
 
     /**

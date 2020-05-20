@@ -166,14 +166,14 @@ public class GameEngine implements Screen, InputProcessor {
 
         jsonReader = new JsonReader();
         assetJson = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
-        if(Gdx.files.local("savedata/save.json").exists()){
-            saveJson = jsonReader.parse(Gdx.files.local("savedata/save.json"));
+        if(Gdx.files.external("savedata/save.json").exists()){
+            saveJson = jsonReader.parse(Gdx.files.external("savedata/save.json"));
             levelSaves = json.readValue(LevelSave[].class, saveJson);
         }
         else {
             // If local save file doesn't exist (like when jar is first opened), create it from internal template
             saveJson = jsonReader.parse(Gdx.files.internal("jsons/save.json"));
-            FileHandle file = Gdx.files.local(SAVE_PATH);
+            FileHandle file = Gdx.files.external(SAVE_PATH);
             JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
             settings.outputType = JsonWriter.OutputType.json;
             levelSaves = json.readValue(LevelSave[].class, saveJson);
@@ -463,7 +463,7 @@ public class GameEngine implements Screen, InputProcessor {
             // Write save data to local save JSON file
             JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
             settings.outputType = JsonWriter.OutputType.json;
-            FileHandle file = Gdx.files.local(SAVE_PATH);
+            FileHandle file = Gdx.files.external(SAVE_PATH);
             file.writeString(json.prettyPrint(levelSaves, settings), false);
             // Update level select
             levelSelect.resetNumberUnlocked();
