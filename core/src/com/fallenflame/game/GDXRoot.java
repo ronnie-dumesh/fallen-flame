@@ -163,6 +163,7 @@ public class GDXRoot extends Game implements ScreenListener {
 					control.setScreenListener(this);
 					setScreen(control);
 				} else {
+					worldSelect.reset();
 					Gdx.input.setInputProcessor(worldSelect);
 					worldSelect.setScreenListener(this);
 					setScreen(worldSelect);
@@ -192,6 +193,7 @@ public class GDXRoot extends Game implements ScreenListener {
 				engine.resume();
 				setScreen(engine);
 			} else { // Level select = -1 means go back.
+				worldSelect.reset();
 				Gdx.input.setInputProcessor(worldSelect);
 				worldSelect.setScreenListener(this);
 				worldSelect.setScreenListener(this);

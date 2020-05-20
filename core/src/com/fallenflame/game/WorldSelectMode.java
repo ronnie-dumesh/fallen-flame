@@ -103,7 +103,7 @@ public class WorldSelectMode implements Screen, InputProcessor {
     private static final int BACK_BTN_Y = 10;
 
     /** World selected by the player */
-    private int worldSelected;
+    public int worldSelected;
 
     public WorldSelectMode(GameCanvas canvas)
     {
@@ -123,6 +123,92 @@ public class WorldSelectMode implements Screen, InputProcessor {
             hoverState[i] = 0;
         }
     }
+    @Override
+    public void render(float v) {
+        canvas.beginWithoutCamera();
+        canvas.draw(background, 0, 0);
+        for (int i = 0; i < posVec.length; i++) {
+            if (hoverState[i] != 1) {
+                canvas.draw(hoverTextures[i], Color.WHITE, hoverTextures[i].getWidth() / 2, hoverTextures[i].getHeight() / 2,
+                        posVec[i].x, posVec[i].y, 0, mapScale, mapScale);
+            } else {
+                canvas.draw(coloredTextures[i], Color.WHITE, coloredTextures[i].getWidth() / 2, coloredTextures[i].getHeight() / 2,
+                        posVec[i].x, posVec[i].y, 0, mapScale, mapScale);
+            }
+        }
+        for (int i = 0; i < posVecSteps.length; i++) {
+            canvas.draw(stepsTextures[i], Color.WHITE, stepsTextures[i].getWidth() / 2, stepsTextures[i].getHeight() / 2,
+                    posVecSteps[i].x, posVecSteps[i].y, 0, mapScale, mapScale);
+        }
+        displayFont.getData().setScale(.5f);
+        displayFont.setColor(hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE);
+        canvas.drawText("Back", displayFont,BACK_BTN_X, heightY - BACK_BTN_Y);
+        displayFont.setColor(Color.WHITE);
+        displayFont.getData().setScale(1f);
+        canvas.end();
+
+        // We are are ready, notify our listener
+        if (isReady() && listener != null) {
+            listener.exitScreen(this, 0);
+        }
+    }
+
+    public void reset(){
+        pressState = 0;
+       for(int i = 0; i<hoverState.length; i++){
+           hoverState[i] = 0;
+       }
+    }
+    @Override
+    public void resize(int width, int height) {
+        float sx = ((float)width)/STANDARD_WIDTH;
+        float sy = ((float)height)/STANDARD_HEIGHT;
+        scale = (sx < sy ? sx : sy);
+
+        widthX = width;
+        heightY = height;
+
+        for (int i = 0; i < posVecRel.length; i++) {
+            posVec[i] = new Vector2(posVecRel[i].x * widthX,posVecRel[i].y * heightY);
+        }
+        for (int i = 0; i < posVecRelSteps.length; i++) {
+            posVecSteps[i] = new Vector2(posVecRelSteps[i].x * widthX,posVecRelSteps[i].y * heightY);
+        }
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+
+    }
+
+    /**
+     * Returns true if all assets are loaded and the player is ready to go.
+     *
+     * @return true if the player is ready to go
+     */
+    public boolean isReady() {
+        return pressState == 1;
+    }
+
+    public void setScreenListener(ScreenListener listener) { this.listener = listener; }
+
+    public int getWorldSelected() {return worldSelected;}
+
 
     @Override
     public boolean keyDown(int i) {
@@ -210,85 +296,6 @@ public class WorldSelectMode implements Screen, InputProcessor {
     public void show() {
         displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
     }
-
-    @Override
-    public void render(float v) {
-        canvas.beginWithoutCamera();
-        canvas.draw(background, 0, 0);
-        for (int i = 0; i < posVec.length; i++) {
-            if (hoverState[i] != 1) {
-                canvas.draw(hoverTextures[i], Color.WHITE, hoverTextures[i].getWidth() / 2, hoverTextures[i].getHeight() / 2,
-                        posVec[i].x, posVec[i].y, 0, mapScale, mapScale);
-            } else {
-                canvas.draw(coloredTextures[i], Color.WHITE, coloredTextures[i].getWidth() / 2, coloredTextures[i].getHeight() / 2,
-                        posVec[i].x, posVec[i].y, 0, mapScale, mapScale);
-            }
-        }
-        for (int i = 0; i < posVecSteps.length; i++) {
-                canvas.draw(stepsTextures[i], Color.WHITE, stepsTextures[i].getWidth() / 2, stepsTextures[i].getHeight() / 2,
-                        posVecSteps[i].x, posVecSteps[i].y, 0, mapScale, mapScale);
-        }
-        displayFont.getData().setScale(.5f);
-        displayFont.setColor(hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE);
-        canvas.drawText("Back", displayFont,BACK_BTN_X, heightY - BACK_BTN_Y);
-        displayFont.setColor(Color.WHITE);
-        displayFont.getData().setScale(1f);
-        canvas.end();
-
-        // We are are ready, notify our listener
-        if (isReady() && listener != null) {
-            listener.exitScreen(this, 0);
-        }
     }
 
-    @Override
-    public void resize(int width, int height) {
-        float sx = ((float)width)/STANDARD_WIDTH;
-        float sy = ((float)height)/STANDARD_HEIGHT;
-        scale = (sx < sy ? sx : sy);
-
-        widthX = width;
-        heightY = height;
-
-        for (int i = 0; i < posVecRel.length; i++) {
-            posVec[i] = new Vector2(posVecRel[i].x * widthX,posVecRel[i].y * heightY);
-        }
-        for (int i = 0; i < posVecRelSteps.length; i++) {
-            posVecSteps[i] = new Vector2(posVecRelSteps[i].x * widthX,posVecRelSteps[i].y * heightY);
-        }
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    /**
-     * Returns true if all assets are loaded and the player is ready to go.
-     *
-     * @return true if the player is ready to go
-     */
-    public boolean isReady() {
-        return pressState == 1;
-    }
-
-    public void setScreenListener(ScreenListener listener) { this.listener = listener; }
-
-    public int getWorldSelected() {return worldSelected;}
-}
 
