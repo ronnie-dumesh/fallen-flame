@@ -49,6 +49,9 @@ public class WorldSelectMode implements Screen, InputProcessor {
     /** The current state of whether any level buttons are being hovered over */
     private int[] hoverState;
 
+    /** World selected by the player */
+    private int worldSelected;
+
     public WorldSelectMode(GameCanvas canvas)
     {
         this.canvas  = canvas;
@@ -85,7 +88,28 @@ public class WorldSelectMode implements Screen, InputProcessor {
     }
 
     @Override
-    public boolean touchUp(int i, int i1, int i2, int i3) {
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+
+        if (pressState == 1) {
+            return true;
+        }
+
+        int origScreenY = screenY;
+        // Flip to match graphics coordinates
+        screenY = heightY-screenY;
+
+        float w = scale*levelButton.getWidth()/2.0f;
+        float h = scale*levelButton.getHeight()/2.0f;
+
+        for (int i = 0; i < posVec.length; i++) {
+            if ((Math.pow(screenX-posVec[i].x,2) / (w*w)) + (Math.pow(screenY-posVec[i].y,2) / (h*h)) <= 1) {
+                if(true) { //EVENTUALLY CHANGE THIS TO LOGIC FOR IF WORLD IS UNLOCKED
+                    pressState = 1;
+                    worldSelected = i;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -95,7 +119,23 @@ public class WorldSelectMode implements Screen, InputProcessor {
     }
 
     @Override
-    public boolean mouseMoved(int i, int i1) {
+    public boolean mouseMoved(int screenX, int screenY) {
+
+        int origScreenY = screenY;
+        // Flip to match graphics coordinates
+        screenY = heightY-screenY;
+
+        float w = scale*levelButton.getWidth()/2.0f;
+        float h = scale*levelButton.getHeight()/2.0f;
+
+        for (int i = 0; i < posVec.length; i++) {
+            if ((Math.pow(screenX-posVec[i].x,2) / (w*w)) + (Math.pow(screenY-posVec[i].y,2) / (h*h)) <= 1) {
+                hoverState[i] = 1;
+            } else {
+                hoverState[i] = 0;
+            }
+        }
+
         return false;
     }
 
@@ -113,7 +153,21 @@ public class WorldSelectMode implements Screen, InputProcessor {
     public void render(float v) {
         canvas.beginWithoutCamera();
         canvas.draw(background, 0, 0);
+        for (int i = 0; i < posVec.length; i++) {
+            if (hoverState[i] != 1) {
+                canvas.draw(levelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                        posVec[i].x, posVec[i].y, 0, 1, 1);
+            } else {
+                canvas.draw(levelButton, Color.valueOf("98F3FF"), levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                        posVec[i].x, posVec[i].y, 0, 1, 1);
+            }
+        }
         canvas.end();
+
+        // We are are ready, notify our listener
+        if (isReady() && listener != null) {
+            listener.exitScreen(this, 0);
+        }
     }
 
     @Override
@@ -124,6 +178,10 @@ public class WorldSelectMode implements Screen, InputProcessor {
 
         widthX = width;
         heightY = height;
+
+        for (int i = 0; i < posVecRel.length; i++) {
+            posVec[i] = new Vector2(posVecRel[i].x * widthX,posVecRel[i].y * heightY);
+        }
     }
 
     @Override
@@ -146,6 +204,17 @@ public class WorldSelectMode implements Screen, InputProcessor {
 
     }
 
+    /**
+     * Returns true if all assets are loaded and the player is ready to go.
+     *
+     * @return true if the player is ready to go
+     */
+    public boolean isReady() {
+        return pressState == 1;
+    }
+
     public void setScreenListener(ScreenListener listener) { this.listener = listener; }
+
+    public int getWorldSelected() {return worldSelected;}
 }
 

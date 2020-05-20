@@ -798,6 +798,7 @@ public class GameEngine implements Screen, InputProcessor {
 
 class LevelSave {
     protected String name;
+    protected int world;
     protected boolean unlocked;
     protected boolean completed;
     protected String path;

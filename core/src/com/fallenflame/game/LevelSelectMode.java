@@ -81,6 +81,9 @@ public class LevelSelectMode implements Screen, InputProcessor {
     /** Level selected by the player */
     private int levelSelected;
 
+    /** World selected by the player in WorldSelectMode */
+    private int worldSelected;
+
     private int numberUnlocked;
 
     public LevelSelectMode(GameCanvas canvas)
@@ -230,6 +233,8 @@ public class LevelSelectMode implements Screen, InputProcessor {
     public void setScreenListener(ScreenListener listener) { this.listener = listener; }
 
     public int getLevelSelected() {return levelSelected;}
+
+    public void setWorldSelected(int world) {worldSelected = world;}
 
     // PROCESSING PLAYER INPUT
 
