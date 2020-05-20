@@ -36,9 +36,12 @@ public class PlayerModel extends CharacterModel {
     protected float lightRadiusSneak;
     /** Player sneak and spring left (once hits 0, a ghost is deployed on the map)
      *  powerVal must be greater than or equal to 0 */
-    protected int powerVal;
+    protected float powerVal;
     /** Max sneak and spring player can have at a given level */
-    protected int maxPowerVal;
+    protected float maxPowerVal;
+    /** Static resource decrease rates */
+    private float sprintDecRate;
+    private float sneakDecRate;
 
     /**Tint of player light */
     protected Color tint;
@@ -91,6 +94,8 @@ public class PlayerModel extends CharacterModel {
         lightRadius = minLightRadius;
         float[] tintValues = globalJson.get("tint").asFloatArray();//RGBA
         tint = new Color(tintValues[0], tintValues[1], tintValues[2], tintValues[3]);
+        sneakDecRate = globalJson.get("sneakDecRate").asFloat();
+        sprintDecRate = globalJson.get("sprintDecRate").asFloat();
 
         // Level json data
         flareCount = levelJson.has("startFlareCount") ?
@@ -100,7 +105,7 @@ public class PlayerModel extends CharacterModel {
         maxFlareCount = levelJson.has("maxFlareCount") ?
                 levelJson.get("maxFlareCount").asInt() : flareCount;
         powerVal = levelJson.has("startSneakVal") ?
-                levelJson.get("startSneakVal").asInt() : globalJson.get("defaultStartSneakVal").asInt();
+                levelJson.get("startSneakVal").asFloat() : globalJson.get("defaultStartSneakVal").asInt();
         maxPowerVal = powerVal;
 
         String walkSoundKey = globalJson.get("walksound").asString();
@@ -309,13 +314,20 @@ public class PlayerModel extends CharacterModel {
     }
 
     /** Get amount of sneak and spring updates left for player */
-    public int getPowerVal() { return powerVal; }
+    public float getPowerVal() { return powerVal; }
 
     /** Get maximum amount of sneak and spring updates left for player on this level*/
-    public int getMaxPowerVal() { return maxPowerVal; }
+    public float getMaxPowerVal() { return maxPowerVal; }
 
-    /** Decrement sneak and spring value by 1 (for 1 update of sneaking) */
-    public void decPowerVal() { powerVal--; }
+    /** Decrement resource value by 2 for sprinting (for 1 update of sprinting) */
+    public void decPowerValSprint() {
+        powerVal -= sprintDecRate;
+    }
+
+    /** Decrement resource value by 1 for sneaking */
+    public void decPowerValSneak() {
+        powerVal -= sneakDecRate;
+    }
 
     /**
      * Gets player color tint
