@@ -893,6 +893,8 @@ public class GameCanvas {
                         Array<ParticleEffectPool.PooledEffect> fogArr = fog[r][c].fogParticles;
                         for (ParticleEffectPool.PooledEffect f : fogArr) {
                             f.draw(spriteBatch, delta);
+                            /*Many tutorials free the particle after it's drawn, so I've tried that here. No idea if
+                            That impacted anything but it works so I've left it in*/
                             if(f.isComplete()){
                                 f.free();
                                 fogArr.removeValue(f, true);
