@@ -291,11 +291,26 @@ public class LevelSelectMode implements Screen, InputProcessor {
         float w = scale*levelButton.getWidth()/2.0f;
         float h = scale*levelButton.getHeight()/2.0f;
 
-        for (int i = 0; i < posVec.length; i++) {
-            if ((Math.pow(screenX-posVec[i].x,2) / (w*w)) + (Math.pow(screenY-posVec[i].y,2) / (h*h)) <= 1) {
-                if(i + (page*10) < numberUnlocked) {
-                    pressState = 1;
-                    levelSelected = i + (page*10);
+        int numNotDrawn = 0;
+        int numDrawn = 0;
+        boolean stopDrawing = false;
+        for (int i = 0; i < levelSaves.length; i++) {
+            //only draw if it's from the correct world
+            if (levelSaves[i].world == worldSelected) {
+                if (numNotDrawn >= page * 10 && !stopDrawing) {
+                    if (levelSaves[i].unlocked) {
+                        //Do unlocked stuff
+                        if ((Math.pow(screenX-posVec[numDrawn].x,2) / (w*w)) + (Math.pow(screenY-posVec[numDrawn].y,2) / (h*h)) <= 1) {
+                                pressState = 1;
+                                levelSelected = i;
+                        }
+                    }
+                    numDrawn++;
+                    if (numDrawn == 10) {
+                        stopDrawing = true;
+                    }
+                } else {
+                    numNotDrawn++;
                 }
             }
         }
