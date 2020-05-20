@@ -126,7 +126,7 @@
       "density": 1.0,
       "friction": 0.0,
       "restitution": 0.0,
-      "walkspeed": 	  2.4,
+      "walkspeed": 	  3.0,
       "sneakspeed":   1.5,
       "sprintspeed":  8,
       "startframe": 0,
@@ -264,6 +264,16 @@
       "lightradius":    1,
       "tint":           [1.0, 1.0, 1.0, 1.0],
       "texture":        "activeflarecounter"
+    }
+  },
+  "ghost-spawn": {
+    "offset": {
+      "x": 5,
+      "y": 5
+    },
+    "scale": {
+      "x": 0.7,
+      "y": 0.7
     }
   }
 }

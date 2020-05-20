@@ -139,6 +139,14 @@ public class LevelController implements ContactListener {
     /** The distance between each counter */
     protected float flareCountSplit;
 
+    /** The scale of the distance between the player and the ghost spawning. The scale is a vector
+     * that represents the percentage of the distance between the player and the exit that the ghost is offset by
+     */
+    protected Vector2 ghostSpawnScale;
+    /** The offset of the distance between where the ghost would spawn if it were on a perfect line
+     * along the angle between the player and the exit*/
+    protected Vector2 ghostSpawnOffset;
+
     // Controllers
     private final LightController lightController;
     private final List<AIController> AIControllers;
@@ -524,6 +532,11 @@ public class LevelController implements ContactListener {
         lightController.initialize(player, exit, levelJson.get("lighting"), world, bounds, scale);
         fogController.initialize(fogTemplate, levelModel, player, flares);
 
+        JsonValue ghostSpawn = globalJson.get("ghost-spawn");
+        ghostSpawnOffset = new Vector2(ghostSpawn.get("offset").get("x").asFloat(),
+                                        ghostSpawn.get("offset").get("y").asFloat());
+        ghostSpawnScale = new Vector2(ghostSpawn.get("scale").get("x").asFloat(),
+                                        ghostSpawn.get("scale").get("y").asFloat());
     }
 
     /**
@@ -797,34 +810,23 @@ public class LevelController implements ContactListener {
      * @return The coordinates where the ghost should be spawned
      */
     private float[] getGhostStart() {
-
+        Vector2 exitPos = exit.getPosition();
         Vector2 playerPos = player.getPosition();
-        float playerX = playerPos.x;
-        float playerY = playerPos.y;
-        float recWidth = bounds.getWidth();
-        float recHeight = bounds.getHeight();
 
-        float distLeft = playerPos.dst(0, playerY);
-        float distRight = playerPos.dst(recWidth, playerY);
-        float distUp = playerPos.dst(playerX, recHeight);
-        float distDown = playerPos.dst(playerX, 0);
+        float dx = player.getX() - exit.getX();
+        float dy = player.getY() - exit.getY();
+        float dis = exitPos.dst(playerPos);
 
-        float[] retFloatArr = new float[2];
-        if(distLeft < distRight && distLeft < distUp && distLeft < distDown){
-            retFloatArr[0] = 0;
-            retFloatArr[1] = playerY;
-        } else if(distRight < distUp && distRight < distDown){
-            retFloatArr[0] = recWidth;
-            retFloatArr[1] = playerY;
-        } else if(distUp < distDown) {
-            retFloatArr[0] = playerX;
-            retFloatArr[1] = recHeight;
-        } else {
-            retFloatArr[0] = playerX;
-            retFloatArr[1] = 0;
-        }
+        double pi = Math.PI;
+        double angle = dy > 0 ? Math.acos(dx/dis) : Math.acos(-dx/dis) + pi;
 
-        return retFloatArr;
+        float ghostX = player.getX() + (dx * ghostSpawnScale.x);
+        ghostX = angle > pi / 2 && angle < 3 * pi / 2 ? ghostX - ghostSpawnOffset.x : ghostX + ghostSpawnOffset.x;
+
+        float ghostY = player.getY() + (dy * ghostSpawnScale.y);
+        ghostY = angle < pi ? ghostY + ghostSpawnOffset.y : ghostY - ghostSpawnOffset.y;
+
+        return new float[]{ghostX, ghostY};
     }
 
     /**
