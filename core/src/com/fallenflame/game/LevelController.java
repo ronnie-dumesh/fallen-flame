@@ -529,7 +529,7 @@ public class LevelController implements ContactListener {
         pathLevelModel.initialize(bounds, walls, enemies, PATH_GRID_SIZE);
         fogLevelModel.initialize(bounds, walls, enemies, FOG_GRID_SIZE);
         lightController.initialize(player, exit, levelJson.get("lighting"), world, bounds, scale);
-        fogController.initialize(fogTemplate, fogLevelModel, player, flares);
+        fogController.initialize(fogTemplate, fogLevelModel, player, flares, enemies);
 
     }
 

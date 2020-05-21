@@ -144,6 +144,12 @@ public abstract class EnemyModel extends CharacterModel {
     public boolean isCalm() {
         return this.state.equals(ActivationStates.Calm);
     }
+    /**
+            * @return whether enemy is calm
+     */
+    public boolean isPause() {
+        return this.state.equals(ActivationStates.Pause);
+    }
 
     /**
      * @return false if the enemy is calm and true otherwise
