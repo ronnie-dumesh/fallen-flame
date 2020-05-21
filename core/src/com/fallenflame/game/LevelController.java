@@ -637,9 +637,18 @@ public class LevelController implements ContactListener {
         // If dead, mark dead.
         if (player.isDead()) setLevelState(LevelState.LOSS);
 
+        // If victorious, mark victorious
+        if (player.hasWon()) setLevelState(LevelState.WIN);
+
         // If dying or dead, that's it. Don't update anything else.
         // (such as light, fog, enemies, etc)
-        if (player.isDead() || player.isDying()) return;
+        if (player.isDead() || player.isDying() || player.hasWon()) return;
+
+        if (player.isWinning()) {
+            player.setLightRadius(player.getLightRadiusSprint()); //increase light radius to see fire buddy
+            lightController.updateLights(flares, enemies, fireballs, items);
+            return;
+        }
 
         assert inBounds(player);
 
@@ -1109,7 +1118,8 @@ public class LevelController implements ContactListener {
             // Check for win condition
             if ((bd1 == player && bd2 == exit  )
                     || (bd1 == exit && bd2 == player)) {
-            setLevelState(levelState.WIN);
+                stopAllSounds();
+                player.win();
                 return;
             }
             // Check for loss condition 1 (player runs into enemy)
