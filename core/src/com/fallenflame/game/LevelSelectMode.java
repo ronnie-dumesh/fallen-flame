@@ -238,7 +238,10 @@ public class LevelSelectMode implements Screen, InputProcessor {
         }
     }
 
-    public void reset() { pressState = 0; }
+    public void reset() {
+        pressState = 0;
+        page = 0;
+    }
 
     @Override
     public void pause() {

@@ -184,6 +184,7 @@ public class GDXRoot extends Game implements ScreenListener {
 //			loading = null;
 		} else if (screen == worldSelect) {
 			if (worldSelect.getWorldSelected() >= 0) {
+				levelSelect.reset();
 				levelSelect.setWorldSelected(worldSelect.getWorldSelected());
 				Gdx.input.setInputProcessor(levelSelect);
 				levelSelect.setScreenListener(this);
