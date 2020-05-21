@@ -167,16 +167,17 @@ public class LevelSelectMode implements Screen, InputProcessor {
                 if (levelSaves[i].world == worldSelected) {
                     if (!stopDrawing) {
                         if (numNotDrawn >= page * 10) {
-                            if (hoverState[numDrawn] != 1) {
-                                if (levelSaves[i].unlocked) {
+                            if (levelSaves[i].unlocked) {
+                                if (hoverState[numDrawn] != 1) {
                                     canvas.draw(levelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
                                             posVec[numDrawn].x, posVec[numDrawn].y, 0, 1, 1);
+
                                 } else {
-                                    canvas.draw(lockedLevelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                                    canvas.draw(levelButton, Color.valueOf("98F3FF"), levelButton.getWidth() / 2, levelButton.getHeight() / 2,
                                             posVec[numDrawn].x, posVec[numDrawn].y, 0, 1, 1);
                                 }
                             } else {
-                                canvas.draw(levelButton, Color.valueOf("98F3FF"), levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                                canvas.draw(lockedLevelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
                                         posVec[numDrawn].x, posVec[numDrawn].y, 0, 1, 1);
                             }
                             canvas.drawTextFromCenter("" + ((numDrawn + 1) + (page * 10)), displayFont, posVec[numDrawn].x, posVec[numDrawn].y - levelButton.getHeight() / 5);

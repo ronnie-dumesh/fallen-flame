@@ -404,7 +404,7 @@ public class GameEngine implements Screen, InputProcessor {
                 }
             }
             else{
-                listener.exitScreen(this, 1);
+                listener.exitScreen(this, 2);
             }
         }
 
