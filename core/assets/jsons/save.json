@@ -40,7 +40,13 @@
     "unlocked": true,
     "completed": true,
     "path": "levels/ghost-tutorial.json"
-
+  },
+  {
+    "name": "tutorial 7",
+    "world":      0,
+    "unlocked": true,
+    "completed": true,
+    "path": "levels/shooter-tutorial.json"
   },
   {
     "name": "level 5",
