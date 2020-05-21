@@ -16,6 +16,15 @@ public class LevelSelectMode implements Screen, InputProcessor {
     private static final String BACKGROUND_FILE = "textures/ls_background.png";
     private Texture background = new Texture(BACKGROUND_FILE);
 
+    private static final String CAVE_BACKGROUND_FILE = "textures/ls_cave_background.png";
+    private Texture caveBackground = new Texture(CAVE_BACKGROUND_FILE);
+
+    private static final String FOREST_BACKGROUND_FILE = "textures/ls_forest_background.png";
+    private Texture forestBackground = new Texture(FOREST_BACKGROUND_FILE);
+
+    private static final String VOLCANO_BACKGROUND_FILE = "textures/ls_volcano_background.png";
+    private Texture volcanoBackground = new Texture(VOLCANO_BACKGROUND_FILE);
+
     private static final String PAGE_NEXT_FILE = "textures/ls_forward.png";
     private Texture pageNext = new Texture(PAGE_NEXT_FILE);
 
@@ -73,7 +82,7 @@ public class LevelSelectMode implements Screen, InputProcessor {
     /** The current state of whether any level buttons are being hovered over */
     private int[] hoverState;
 
-    private static final int BACK_BTN_WIDTH = 60;
+    private static final int BACK_BTN_WIDTH = 210;
     private static final int BACK_BTN_HEIGHT = 30;
     private static final int BACK_BTN_X = 10;
     private static final int BACK_BTN_Y = 10;
@@ -133,7 +142,21 @@ public class LevelSelectMode implements Screen, InputProcessor {
     @Override
     public void render(float delta) {
         canvas.beginWithoutCamera();
-        canvas.draw(background, 0, 0);
+        switch(worldSelected)
+        {
+            case 0:
+                canvas.draw(caveBackground, 0, 0);
+                break;
+            case 1:
+                canvas.draw(forestBackground, 0, 0);
+                break;
+            case 2:
+                canvas.draw(volcanoBackground, 0, 0);
+                break;
+            default:
+                canvas.draw(background, 0, 0);
+                break;
+        }
         displayFont.setColor(Color.BLACK);
         displayFont.getData().setScale(.5f);
         int numNotDrawn = 0;
@@ -142,26 +165,32 @@ public class LevelSelectMode implements Screen, InputProcessor {
         for (int i = 0; i < levelSaves.length; i++) {
                 //only draw if it's from the correct world
                 if (levelSaves[i].world == worldSelected) {
-                    if (numNotDrawn >= page * 10 && !stopDrawing) {
-                        if (hoverState[numDrawn] != 1) {
-                            if (levelSaves[i].unlocked) {
-                                canvas.draw(levelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
-                                        posVec[numDrawn].x, posVec[numDrawn].y, 0, 1, 1);
+                    if (!stopDrawing) {
+                        if (numNotDrawn >= page * 10) {
+                            if (hoverState[numDrawn] != 1) {
+                                if (levelSaves[i].unlocked) {
+                                    canvas.draw(levelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                                            posVec[numDrawn].x, posVec[numDrawn].y, 0, 1, 1);
+                                } else {
+                                    canvas.draw(lockedLevelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                                            posVec[numDrawn].x, posVec[numDrawn].y, 0, 1, 1);
+                                }
                             } else {
-                                canvas.draw(lockedLevelButton, Color.WHITE, levelButton.getWidth() / 2, levelButton.getHeight() / 2,
+                                canvas.draw(levelButton, Color.valueOf("98F3FF"), levelButton.getWidth() / 2, levelButton.getHeight() / 2,
                                         posVec[numDrawn].x, posVec[numDrawn].y, 0, 1, 1);
                             }
+                            canvas.drawTextFromCenter("" + ((numDrawn + 1) + (page * 10)), displayFont, posVec[numDrawn].x, posVec[numDrawn].y - levelButton.getHeight() / 5);
+                            numDrawn++;
+                            if (numDrawn == 10) {
+                                stopDrawing = true;
+                            }
                         } else {
-                            canvas.draw(levelButton, Color.valueOf("98F3FF"), levelButton.getWidth() / 2, levelButton.getHeight() / 2,
-                                    posVec[numDrawn].x, posVec[numDrawn].y, 0, 1, 1);
-                        }
-                        canvas.drawTextFromCenter("" + ((numDrawn + 1) + (page * 10)), displayFont, posVec[numDrawn].x, posVec[numDrawn].y - levelButton.getHeight() / 5);
-                        numDrawn++;
-                        if (numDrawn == 10) {
-                            stopDrawing = true;
+                            numNotDrawn++;
                         }
                     } else {
-                        numNotDrawn++;
+                        canvas.draw(pageNext, hoverState[posVec.length + 2] == 1 ? Color.CYAN : Color.WHITE, pageNext.getWidth() / 2, pageNext.getHeight() / 2,
+                                nextPrev[1].x, nextPrev[1].y, 0, 1, 1);
+                        break;
                     }
                 }
         }
@@ -169,12 +198,10 @@ public class LevelSelectMode implements Screen, InputProcessor {
             canvas.draw(pagePrev, hoverState[posVec.length + 1] == 1 ? Color.CYAN : Color.WHITE, pagePrev.getWidth() / 2, pagePrev.getHeight() / 2,
                     nextPrev[0].x, nextPrev[0].y, 0, 1, 1);
         }
-        if ((page + 1) * 10 < levelSaves.length) {
-            canvas.draw(pageNext, hoverState[posVec.length + 2] == 1 ? Color.CYAN : Color.WHITE, pageNext.getWidth() / 2, pageNext.getHeight() / 2,
-                    nextPrev[1].x, nextPrev[1].y, 0, 1, 1);
-        }
+        canvas.draw(pagePrev, hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE, pagePrev.getWidth() / 2, pagePrev.getHeight(),
+                BACK_BTN_X, heightY - BACK_BTN_Y, 0, .75f, .75f);
         displayFont.setColor(hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE);
-        canvas.drawText("Back", displayFont,BACK_BTN_X, heightY - BACK_BTN_Y);
+        canvas.drawText("Back to World Select", displayFont,BACK_BTN_X + (pagePrev.getWidth()/2), heightY - BACK_BTN_Y);
         displayFont.setColor(Color.WHITE);
         displayFont.getData().setScale(1f);
         canvas.end();

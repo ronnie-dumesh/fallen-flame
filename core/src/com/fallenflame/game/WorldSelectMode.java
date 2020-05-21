@@ -103,7 +103,7 @@ public class WorldSelectMode implements Screen, InputProcessor {
     /** The current state of whether any level buttons are being hovered over */
     private int[] hoverState;
 
-    private static final int BACK_BTN_WIDTH = 60;
+    private static final int BACK_BTN_WIDTH = 210;
     private static final int BACK_BTN_HEIGHT = 30;
     private static final int BACK_BTN_X = 10;
     private static final int BACK_BTN_Y = 10;
@@ -177,7 +177,10 @@ public class WorldSelectMode implements Screen, InputProcessor {
         }
         displayFont.getData().setScale(.5f);
         displayFont.setColor(hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE);
-        canvas.drawText("Back", displayFont,BACK_BTN_X, heightY - BACK_BTN_Y);
+        canvas.draw(back, hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE, back.getWidth() / 2, back.getHeight(),
+                BACK_BTN_X, heightY - BACK_BTN_Y, 0, .75f, .75f);
+        displayFont.setColor(hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE);
+        canvas.drawText("Back to Main Menu", displayFont,BACK_BTN_X + (back.getWidth()/2), heightY - BACK_BTN_Y);
         displayFont.setColor(Color.WHITE);
         displayFont.getData().setScale(1f);
         canvas.end();
@@ -188,7 +191,9 @@ public class WorldSelectMode implements Screen, InputProcessor {
         }
     }
 
-    public void reset(){
+    public void reset(LevelSave[] levelSaves){
+        this.levelSaves = levelSaves;
+        resetNumberUnlocked();
         pressState = 0;
        for(int i = 0; i<hoverState.length; i++){
            hoverState[i] = 0;
@@ -319,6 +324,10 @@ public class WorldSelectMode implements Screen, InputProcessor {
                 hoverState[i] = 0;
             }
         }
+
+        hoverState[posVec.length] =
+                (screenX >= BACK_BTN_X && screenX <= BACK_BTN_X + BACK_BTN_WIDTH &&
+                        origScreenY >= BACK_BTN_Y && origScreenY <= BACK_BTN_Y + BACK_BTN_HEIGHT) ? 1 : 0;
 
         return false;
     }
