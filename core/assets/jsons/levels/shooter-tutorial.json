@@ -1,0 +1,153 @@
+{
+  "name": "shooter-tutorial",
+  "physicsSize": [
+    16.64,
+    8.96
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    2.32,
+    3.4
+  ],
+  "exitpos": [
+    14.44,
+    5.13
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        8.28,
+        2.66
+      ],
+      "enemytype": "typeB"
+    }
+  ],
+  "items": [],
+  "texts": [
+    {
+      "pos": [
+        2.38,
+        3.82
+      ],
+      "size": [
+        2.52,
+        5
+      ],
+      "text": "Be careful, there is another type of enemy. The shooter. If you throw a flare at this enemy or expose it to your light, it will shoot you!"
+    },
+    {
+      "pos": [
+        7.28,
+        4.42
+      ],
+      "size": [
+        6.96,
+        7.96
+      ],
+      "text": "Use {sneak} to sneak around the enemy."
+    }
+  ],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        8.32,
+        8.32
+      ],
+      "size": [
+        16.64,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.64,
+        4.48
+      ],
+      "size": [
+        1.28,
+        8.96
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        16,
+        4.48
+      ],
+      "size": [
+        1.28,
+        8.96
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        8.32,
+        0.64
+      ],
+      "size": [
+        16.64,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        8.32,
+        7.68
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        8.32,
+        1.28
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        8.32,
+        6.4
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "wall-side"
+    }
+  ],
+  "startFlareCount": 1,
+  "maxFlareCount": 1,
+  "startSneakVal": 500,
+  "graphicSize": [
+    800,
+    600
+  ]
+}

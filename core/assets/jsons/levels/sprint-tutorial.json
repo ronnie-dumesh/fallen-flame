@@ -1,0 +1,160 @@
+{
+  "name": "sprint-tutorial",
+  "physicsSize": [
+    21.76,
+    12.8
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    4.62,
+    6.04
+  ],
+  "exitpos": [
+    19.5,
+    6.49
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        2.4,
+        5.86
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          6.4,
+          5.86
+        ]
+      ]
+    }
+  ],
+  "items": [],
+  "texts": [
+    {
+      "pos": [
+        8.02,
+        6.42
+      ],
+      "size": [
+        15.52,
+        2.12
+      ],
+      "text": "There's an enemy behind you, move while holding {sprint} to sprint to the exit!"
+    }
+  ],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        10.88,
+        12.16
+      ],
+      "size": [
+        21.76,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.64,
+        6.4
+      ],
+      "size": [
+        1.28,
+        12.8
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        21.12,
+        6.4
+      ],
+      "size": [
+        1.28,
+        12.8
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        10.88,
+        0.64
+      ],
+      "size": [
+        21.76,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        10.88,
+        8.32
+      ],
+      "size": [
+        19.2,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        8.32,
+        4.48
+      ],
+      "size": [
+        16.64,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        10.88,
+        10.24
+      ],
+      "size": [
+        21.76,
+        3.84
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        10.88,
+        3.2
+      ],
+      "size": [
+        21.76,
+        3.84
+      ],
+      "texture": "wall-top"
+    }
+  ],
+  "startFlareCount": 0,
+  "maxFlareCount": 0,
+  "startSneakVal": 500,
+  "graphicSize": [
+    800,
+    600
+  ]
+}
