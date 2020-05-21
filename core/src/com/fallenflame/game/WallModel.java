@@ -179,11 +179,7 @@ public class WallModel extends BoxObstacle {
     @Override
     public void draw(GameCanvas canvas) {
         if (region != null) {
-            canvas.draw(region, Color.WHITE, 0, 0,
-                    (getX() - anchor.x) * drawScale.x,
-                    (getY() - anchor.y) * drawScale.y,
-                    getAngle(),
-                    1, 1);
+            canvas.draw(region, (getX() - anchor.x)* drawScale.x, (getY() - anchor.y) * drawScale.y);
         }
     }
 }
