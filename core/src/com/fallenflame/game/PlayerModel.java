@@ -519,18 +519,20 @@ public class PlayerModel extends CharacterModel {
 
             // Animate if necessary
             // Do not change values of walkCool and animate, to be done in PlayerModel.update();
-            if (animate && walkCool <= 0 && fireBuddyFilmstrip != null) {
+            //int frame =
+            if (animate && walkCool <= 0 && fireBuddyFilmstrip != null) { //animate
                 int next = (fireBuddyFilmstrip.getFrame() + 1) % fireBuddyFilmstrip.getSize();
                 fireBuddyFilmstrip.setFrame(next);
-            } else if (!animate && fireBuddyFilmstrip != null) {
-                fireBuddyFilmstrip.setFrame(startFrame);
+//            } else if (fireBuddyFilmstrip != null) { //!animate
+//                fireBuddyFilmstrip.setFrame(startFrame);
+//            }
             }
         } else {
             fireBuddyFilmstrip = fireBuddyThrow;
 
             // Do not change values of walkCool and animate, to be done in PlayerModel.update();
             int frame = fireBuddyFilmstrip.getFrame();
-            if (walkCool <= 0 && frame < fireBuddyFilmstrip.getSize() - 1) {
+            if (frame < fireBuddyFilmstrip.getSize() - 1) { //walkCool <= 0
                 fireBuddyFilmstrip.setFrame(frame + 1);
             } else if (frame == fireBuddyFilmstrip.getSize() - 1){
                 throwing = false;
