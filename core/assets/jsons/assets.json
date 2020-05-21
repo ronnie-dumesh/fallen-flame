@@ -1,25 +1,5 @@
 {
 	"textures": {
-		"enemy": {
-			"file": "textures/enemy-walking.png",
-			"wrap": false,
-			"strip": {
-				"size": 4,
-				"rows": 1,
-				"cols": 4,
-				"first": 0
-			}
-		},
-		"enemyb": {
-			"file": "textures/enemyb-walking.png",
-			"wrap": false,
-			"strip": {
-				"size": 4,
-				"rows": 1,
-				"cols": 4,
-				"first": 0
-			}
-		},
 		"player-left": {
 			"file": "textures/player-walk-left.png",
 			"wrap": false,
@@ -228,16 +208,6 @@
 			"file": "textures/exit.png",
 			"wrap": false
 		},
-		"fire": {
-			"file": "textures/fire.png",
-			"wrap": true,
-			"strip": {
-				"size": 4,
-				"rows": 1,
-				"cols": 4,
-				"first": 0
-			}
-		},
 		"wall-side": {
 			"file": "textures/double-wall-side-view.png",
 			"wrap": true
@@ -250,20 +220,12 @@
 			"file": "textures/floor-tile.png",
 			"wrap": true
 		},
-		"slime": {
-			"file": "textures/slime.png",
-			"wrap": false
-		},
 		"flare": {
 			"file": "textures/flare.png",
 			"wrap": false
 		},
 		"activeflarecounter": {
 			"file": "textures/r_active_flare.png",
-			"wrap": false
-		},
-		"inactiveflarecounter": {
-			"file": "textures/r_inactive_flare.png",
 			"wrap": false
 		},
 		"sneak-meter-background-left": {
