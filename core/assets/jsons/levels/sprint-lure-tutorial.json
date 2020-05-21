@@ -1,0 +1,131 @@
+{
+  "name": "sprint-lure-tutorial",
+  "physicsSize": [
+    20.48,
+    12.8
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    2.62,
+    5.68
+  ],
+  "exitpos": [
+    17.62,
+    6.39
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        10.74,
+        5.86
+      ],
+      "enemytype": "typeA"
+    }
+  ],
+  "items": [],
+  "texts": [
+    {
+      "pos": [
+        5.84,
+        6.4
+      ],
+      "size": [
+        11.68,
+        12.8
+      ],
+      "text": "There's an enemy blocking your path to the exit. Hold {sprint} to lure the enemy towards you, and then let go to maneuver around the enemy. Enemies can only see you if your light is touching them."
+    }
+  ],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        10.24,
+        12.16
+      ],
+      "size": [
+        20.48,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.64,
+        6.4
+      ],
+      "size": [
+        1.28,
+        12.8
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        19.84,
+        6.4
+      ],
+      "size": [
+        1.28,
+        12.8
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        10.24,
+        0.64
+      ],
+      "size": [
+        20.48,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        10.88,
+        10.24
+      ],
+      "size": [
+        3.84,
+        5.12
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        10.88,
+        3.2
+      ],
+      "size": [
+        3.84,
+        3.84
+      ],
+      "texture": "wall-top"
+    }
+  ],
+  "startFlareCount": 0,
+  "maxFlareCount": 0,
+  "startSneakVal": 500,
+  "graphicSize": [
+    800,
+    600
+  ]
+}

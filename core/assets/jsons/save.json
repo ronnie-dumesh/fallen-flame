@@ -6,22 +6,34 @@
     "path":       "levels/t1.json"
   },
   {
-    "name":       "tutorial 2",
-    "unlocked":   true,
-    "completed":  true,
-    "path":       "levels/t2.json"
+    "name": "tutorial 2",
+    "unlocked": true,
+    "completed": true,
+    "path": "levels/sneak-tutorial.json"
   },
   {
-    "name":       "tutorial 3",
-    "unlocked":   true,
-    "completed":  true,
-    "path":       "levels/t3.json"
+    "name": "tutorial 3",
+    "unlocked": true,
+    "completed": true,
+    "path": "levels/sprint-tutorial.json"
   },
   {
-    "name":       "tutorial 4",
-    "unlocked":   true,
-    "completed":  true,
-    "path":       "levels/t4.json"
+    "name": "tutorial 4",
+    "unlocked": true,
+    "completed": true,
+    "path": "levels/t4.json"
+  },
+  {
+    "name": "tutorial 5",
+    "unlocked": true,
+    "completed": true,
+    "path": "levels/sprint-lure-tutorial.json"
+  },
+  {
+    "name": "tutorial 6",
+    "unlocked": true,
+    "completed": true,
+    "path": "levels/ghost-tutorial.json"
   },
   {
     "name": "level 5",
