@@ -97,8 +97,8 @@ public class StoryMode implements Screen, InputProcessor {
         hoverState[1] = 0;
         storyTextures = new HashMap<>();
         nextPrev = new Vector2[nextPrevRel.length];
-        nextPrev[0] = new Vector2(canvas.getWidth()/LOCATION_RATIO, canvas.getHeight()/LOCATION_RATIO);
-        nextPrev[1] = new Vector2(canvas.getWidth()-(canvas.getWidth()/LOCATION_RATIO), canvas.getHeight()/LOCATION_RATIO);
+        nextPrev[0] = new Vector2(0,0);
+        nextPrev[1] = new Vector2(0,0);
         for (int i = 0; i < 2; i++) {
             hoverState[i] = 0;
         }
@@ -124,10 +124,10 @@ public class StoryMode implements Screen, InputProcessor {
         canvas.draw(background, 0, 0);
         displayFont.setColor(Color.BLACK);
         displayFont.getData().setScale(.5f);
-        canvas.draw(pageNext, hoverState[0] == 1 ? Color.CYAN : Color.WHITE, pageNext.getWidth() / 2, pageNext.getHeight() / 2,
+        canvas.draw(pageNext, hoverState[1] == 1 ? Color.CYAN : Color.WHITE, pageNext.getWidth() / 2, pageNext.getHeight() / 2,
                 nextPrev[1].x, nextPrev[1].y, 0, 1, 1);
         if(page != 0){
-            canvas.draw(pagePrev, hoverState[1] == 1 ? Color.CYAN : Color.WHITE, pagePrev.getWidth() / 2, pagePrev.getHeight() / 2,
+            canvas.draw(pagePrev, hoverState[0] == 1 ? Color.CYAN : Color.WHITE, pagePrev.getWidth() / 2, pagePrev.getHeight() / 2,
                     nextPrev[0].x, nextPrev[0].y, 0, 1, 1);
         }
         canvas.end();
@@ -154,6 +154,9 @@ public class StoryMode implements Screen, InputProcessor {
 
         widthX = width;
         heightY = height;
+        for (int i = 0; i < nextPrevRel.length; i++) {
+            nextPrev[i] = new Vector2(nextPrevRel[i].x * widthX,nextPrevRel[i].y * heightY);
+        }
 
 
     }
@@ -270,9 +273,11 @@ public class StoryMode implements Screen, InputProcessor {
         int origScreenY = screenY;
         // Flip to match graphics coordinates
         screenY = heightY - screenY;
-        float w = scale*pageNext.getWidth()/2.0f;
-        float h = scale*pageNext.getHeight()/2.0f;
+        float  w = scale * pageNext.getWidth() / 2.0f;
+        float h = scale * pageNext.getHeight() / 2.0f;
 
+        hoverState[0] = 0;
+        hoverState[1] = 0;
         for (int i = 0; i < nextPrev.length; i++) {
             if ((Math.pow(screenX - nextPrev[i].x, 2) / (w * w)) + (Math.pow(screenY - nextPrev[i].y, 2) / (h * h)) <= 1) {
                 if (i == 0) {
@@ -280,10 +285,6 @@ public class StoryMode implements Screen, InputProcessor {
                 } else {
                     hoverState[1] = 1;
                 }
-            }
-            else{
-                hoverState[0] = 0;
-                hoverState[1] = 0;
             }
         }
         return false;
