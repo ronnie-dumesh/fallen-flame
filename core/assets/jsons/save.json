@@ -1,91 +1,106 @@
 [
   {
     "name":       "tutorial 1",
+    "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path":       "levels/t1.json"
   },
   {
     "name":       "tutorial 2",
+    "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path":       "levels/t2.json"
   },
   {
     "name":       "tutorial 3",
+    "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path":       "levels/t3.json"
   },
   {
     "name":       "tutorial 4",
+    "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path":       "levels/t4.json"
   },
   {
     "name": "level 5",
+    "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/easyLevel.json"
   },
   {
     "name": "level 6",
+    "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/mediumLevel.json"
   },
   {
     "name": "level 7",
+    "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/hardLevel.json"
   },
   {
     "name": "level 8",
+    "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/enemySurroundingPlayer.json"
   },
   {
     "name": "level 9",
+    "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/forceSneak.json"
   },
   {
     "name": "level 10",
+    "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/shooterAndPatrol.json"
   },
   {
     "name":       "level 11",
+    "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path":       "levels/maxLevel.json"
   },
   {
     "name": "level 12",
+    "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/onlypatrol.json"
   },
   {
     "name": "level 13",
+    "world":      1,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/ronnie-level.json"
   },
   {
     "name": "level 14",
-    "unlocked":   true,
+    "world":      2,
+    "unlocked":   false,
     "completed":  true,
     "path": "levels/bryansfirstlevel.json"
   },
   {
     "name": "level 16",
-    "unlocked":   true,
+    "world":      2,
+    "unlocked":   false,
     "completed":  true,
     "path": "levels/medium.json"
   }
