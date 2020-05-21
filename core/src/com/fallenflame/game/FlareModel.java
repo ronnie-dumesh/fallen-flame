@@ -283,12 +283,12 @@ public class FlareModel extends WheelObstacle implements ILight {
 
     /**
      * How long until flare is deactived
-     * @return 1 if flare is not yet stuck to wall, otherwise returns stuck time left until burnout
+     * @return -1 if flare is not yet stuck to wall, otherwise returns stuck time left until burnout
      */
     public int timeToBurnout() {
         if(isStuck)
             return Math.max(flareDuration - (int) (System.currentTimeMillis() - stuckTime), 0);
-        return 1;
+        return -1;
     }
 
     /**
@@ -296,9 +296,13 @@ public class FlareModel extends WheelObstacle implements ILight {
      *
      * @param canvas Drawing context
      */
-    public void draw(ObstacleCanvas canvas) {
+    public void draw(GameCanvas canvas) {
         if (texture != null) {
-            canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),1.0f,1.0f);
+            if (timeToBurnout() == -1){
+                canvas.draw(texture, new Color(1, 1, 1, 1), origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), 1.0f, 1.0f);
+            } else {
+                canvas.draw(texture, new Color(1, 1, 1, .0005f * timeToBurnout()), origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), 1.0f, 1.0f);
+            }
         }
     }
 }
