@@ -10,6 +10,7 @@
     "sprintspeed": 	  5.0,
     "startframe":       0,
     "walklimit":		4,
+    "firebuddylimit": 4,
     "standardflarecount": 5,
     "sprintlightrad":  7,
     "sneaklightrad":    1,
