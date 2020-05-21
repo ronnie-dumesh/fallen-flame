@@ -49,6 +49,9 @@ public class GDXRoot extends Game implements ScreenListener {
 	private LevelSelectMode levelSelect;
 	/** Pause for the game */
 	private PauseMode pauseMode;
+	/** Credits for the game*/
+	private CreditsMode credits;
+
 	private Transition transition;
 
 
@@ -71,6 +74,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		worldSelect = new WorldSelectMode(levelCanvas);
 		levelSelect = new LevelSelectMode(levelCanvas);
 		pauseMode = new PauseMode(levelCanvas);
+		credits = new CreditsMode(levelCanvas);
 		engine = new GameEngine(levelSelect);
 		InputMultiplexer multiplexer = new InputMultiplexer(); //Allows for multiple InputProcessors
 		//Multiplexer is an ordered list, so when an event occurs, it'll check loadingMode first, and then GameEngine
@@ -163,6 +167,11 @@ public class GDXRoot extends Game implements ScreenListener {
 					Gdx.input.setInputProcessor(control);
 					control.setScreenListener(this);
 					setScreen(control);
+				}
+				else if(loading.toCredits){
+					Gdx.input.setInputProcessor(credits);
+					credits.setScreenListener(this);
+					setScreen(credits);
 				} else {
 					worldSelect.reset();
 					Gdx.input.setInputProcessor(worldSelect);
@@ -256,7 +265,13 @@ public class GDXRoot extends Game implements ScreenListener {
 				loading.setScreenListener(this);
 				setScreen(loading);
 			}
-		} else if (exitCode == engine.EXIT_QUIT) {
+		}
+		else if (screen == credits){
+			Gdx.input.setInputProcessor(loading);
+			loading.setScreenListener(this);
+			setScreen(loading);
+		}
+		else if (exitCode == engine.EXIT_QUIT) {
 			// We quit the main application
 			Gdx.app.exit();
 		}

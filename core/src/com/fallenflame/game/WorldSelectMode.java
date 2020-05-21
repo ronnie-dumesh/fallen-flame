@@ -276,14 +276,15 @@ public class WorldSelectMode implements Screen, InputProcessor {
         // Flip to match graphics coordinates
         screenY = heightY-screenY;
 
-        float w = scale*levelButton.getWidth()/2.0f;
-        float h = scale*levelButton.getHeight()/2.0f;
-
         for (int i = 0; i < posVec.length; i++) {
-            if ((Math.pow(screenX-posVec[i].x,2) / (w*w)) + (Math.pow(screenY-posVec[i].y,2) / (h*h)) <= 1) {
-                if(true) { //EVENTUALLY CHANGE THIS TO LOGIC FOR IF WORLD IS UNLOCKED
-                    pressState = 1;
-                    worldSelected = i;
+            float w = scale*hoverTextures[i].getWidth()/2.0f;
+            float h = scale*hoverTextures[i].getHeight()/2.0f;
+            if (numberUnlocked >= i) {
+                if ((Math.pow(screenX - posVec[i].x, 2) / (w * w)) + (Math.pow(screenY - posVec[i].y, 2) / (h * h)) <= 1) {
+                    if (true) { //EVENTUALLY CHANGE THIS TO LOGIC FOR IF WORLD IS UNLOCKED
+                        pressState = 1;
+                        worldSelected = i;
+                    }
                 }
             }
         }
