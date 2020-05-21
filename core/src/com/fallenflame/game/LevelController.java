@@ -144,6 +144,14 @@ public class LevelController implements ContactListener {
     /** The distance between each counter */
     protected float flareCountSplit;
 
+    /** The scale of the distance between the player and the ghost spawning. The scale is a vector
+     * that represents the percentage of the distance between the player and the exit that the ghost is offset by
+     */
+    protected Vector2 ghostSpawnScale;
+    /** The offset of the distance between where the ghost would spawn if it were on a perfect line
+     * along the angle between the player and the exit*/
+    protected Vector2 ghostSpawnOffset;
+
     // Controllers
     private final LightController lightController;
     private final List<AIController> AIControllers;
@@ -531,6 +539,11 @@ public class LevelController implements ContactListener {
         lightController.initialize(player, exit, levelJson.get("lighting"), world, bounds, scale);
         fogController.initialize(fogTemplate, fogLevelModel, player, flares, enemies);
 
+        JsonValue ghostSpawn = globalJson.get("ghost-spawn");
+        ghostSpawnOffset = new Vector2(ghostSpawn.get("offset").get("x").asFloat(),
+                                        ghostSpawn.get("offset").get("y").asFloat());
+        ghostSpawnScale = new Vector2(ghostSpawn.get("scale").get("x").asFloat(),
+                                        ghostSpawn.get("scale").get("y").asFloat());
     }
 
     /**
@@ -793,7 +806,7 @@ public class LevelController implements ContactListener {
     public void addGhost() {
         // Create ghost model
         EnemyModel ghost = new EnemyGhostModel();
-        ghost.initialize(ghostJSON, startPos);
+        ghost.initialize(ghostJSON, getGhostStart());
         ghost.initializeTextures(ghostJSON);
         ghost.setConstantSoundID(ghost.getConstantSound().loop(0, ENEMY_CONS_PITCH, 0));
         ghost.setDrawScale(scale);
@@ -801,6 +814,31 @@ public class LevelController implements ContactListener {
         enemies.add(ghost);
         // Create ghost controller
         AIControllers.add(new AIGhostController(enemies.size()-1, pathLevelModel, enemies, player));
+    }
+
+    /**
+     * This method determines the coordinates of where the ghost should be spawned, parallel with the angle
+     * created by the exit and the player
+     * @return The coordinates where the ghost should be spawned
+     */
+    private float[] getGhostStart() {
+        Vector2 exitPos = exit.getPosition();
+        Vector2 playerPos = player.getPosition();
+
+        float dx = player.getX() - exit.getX();
+        float dy = player.getY() - exit.getY();
+        float dis = exitPos.dst(playerPos);
+
+        double pi = Math.PI;
+        double angle = dy > 0 ? Math.acos(dx/dis) : Math.acos(-dx/dis) + pi;
+
+        float ghostX = player.getX() + (dx * ghostSpawnScale.x);
+        ghostX = angle > pi / 2 && angle < 3 * pi / 2 ? ghostX - ghostSpawnOffset.x : ghostX + ghostSpawnOffset.x;
+
+        float ghostY = player.getY() + (dy * ghostSpawnScale.y);
+        ghostY = angle < pi ? ghostY + ghostSpawnOffset.y : ghostY - ghostSpawnOffset.y;
+
+        return new float[]{ghostX, ghostY};
     }
 
     /**
