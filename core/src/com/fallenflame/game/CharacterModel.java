@@ -32,9 +32,9 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
     protected boolean animate = false;
 
     /** How many frames until we can walk again */
-    protected int walkCool;
+    protected float walkCool;
     /** The standard number of frames to wait until we can walk again */
-    protected int walkLimit;
+    protected float walkLimit;
 
     /** FilmStrip pointers to the texture regions */
     protected FilmStrip filmstrip;
@@ -125,7 +125,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
      *
      * @return the cooldown limit between walk animations
      */
-    public int getWalkLimit() {
+    public float getWalkLimit() {
         return walkLimit;
     }
 
@@ -134,7 +134,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
      *
      * @param value	the cooldown limit between walk animations
      */
-    public void setWalkLimit(int value) {
+    public void setWalkLimit(float value) {
         walkLimit = value;
     }
 
@@ -240,7 +240,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
         setFriction(json.get("friction").asFloat());
         setRestitution(json.get("restitution").asFloat());
         setStartFrame(json.get("startframe").asInt());
-        setWalkLimit(json.get("walklimit").asInt());
+        setWalkLimit(json.get("walklimit").asFloat());
         setTextureOffset(json.get("textureoffset").get("x").asFloat(),
                 json.get("textureoffset").get("y").asFloat());
 
@@ -325,6 +325,8 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
+        //float walkCoolMultiplier = (dt/(1/60));
+        float walkCoolMultiplier = 60 / (1 / dt);
         //getAngle has up as 0 radians, down as pi radians, pi/2 is left, -pi/2 is right.
         double angle = getAngle();
         if(angle < 0) angle = angle + 2 * Math.PI;
@@ -343,19 +345,19 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
         setTexture(filmstrip, textureOffset.x, textureOffset.y);
 
         // Animate if necessary
-        if (animate && walkCool == 0) {
+        if (animate && walkCool <= 0) {
             if (filmstrip != null) {
                 int next = (filmstrip.getFrame()+1) % filmstrip.getSize();
                 filmstrip.setFrame(next);
             }
             walkCool = walkLimit;
         } else if (walkCool > 0) {
-            walkCool--;
+            walkCool -= walkCoolMultiplier;
         } else if (!animate) {
             if (filmstrip != null) {
                 filmstrip.setFrame(startFrame);
             }
-            walkCool = 0;
+            walkCool = 0.0f;
         }
 
         super.update(dt);
