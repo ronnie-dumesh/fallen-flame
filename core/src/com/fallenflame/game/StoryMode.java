@@ -28,6 +28,7 @@ public class StoryMode implements Screen, InputProcessor {
     private static final String INTRO_3 = "textures/intro_page3.png";
     private static final String TREES_1 = "textures/trees_page1.png";
     private static final String VOLCANO_1 = "textures/volcano_page1.png";
+    private static final int LOCATION_RATIO = 10;
 
     /**
      * Display font
@@ -91,11 +92,13 @@ public class StoryMode implements Screen, InputProcessor {
     public StoryMode(GameCanvas canvas) {
         this.canvas = canvas;
         pressState = 0;
-        hoverState = new int[3]; // Plus three for back button, next and prev page
+        hoverState = new int[2];
+        hoverState[0] = 0;
+        hoverState[1] = 0;
         storyTextures = new HashMap<>();
         nextPrev = new Vector2[nextPrevRel.length];
-        nextPrev[0] = new Vector2(canvas.getWidth()/8, canvas.getHeight()/8);
-        nextPrev[1] = new Vector2(canvas.getWidth()-(canvas.getWidth()/8), canvas.getHeight()/8);
+        nextPrev[0] = new Vector2(canvas.getWidth()/LOCATION_RATIO, canvas.getHeight()/LOCATION_RATIO);
+        nextPrev[1] = new Vector2(canvas.getWidth()-(canvas.getWidth()/LOCATION_RATIO), canvas.getHeight()/LOCATION_RATIO);
         for (int i = 0; i < 2; i++) {
             hoverState[i] = 0;
         }
@@ -277,6 +280,10 @@ public class StoryMode implements Screen, InputProcessor {
                 } else {
                     hoverState[1] = 1;
                 }
+            }
+            else{
+                hoverState[0] = 0;
+                hoverState[1] = 0;
             }
         }
         return false;
