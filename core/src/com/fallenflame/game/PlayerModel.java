@@ -382,10 +382,7 @@ public class PlayerModel extends CharacterModel {
      * Sets the player's life state to winning and increase the player light radius.
      * Once the winning animation concludes the player is then set as won.
      */
-    public void win() {
-        setLightRadius(getLightRadiusSprint()); //increase light radius to see fire buddy
-        life = LifeState.WINNING;
-    }
+    public void win() { life = LifeState.WINNING; }
 
     /**
      * Returns whether the player is dead.
@@ -494,11 +491,15 @@ public class PlayerModel extends CharacterModel {
             } else if (frame == filmstrip.getSize() - 1) {
                 deathDelay--;
             }
+        } else if (isWinning()) {
+            if (walkCool <= 0){
+                walkCool = walkLimit;
+            } else if (walkCool > 0) {
+                walkCool = walkCool - 2;
+            }
+        } else if (isAlive()) super.update(dt);
 
-        } else if (isAlive() || isWinning()) {
-            animateFireBuddy(angle100);
-            super.update(dt);
-        }
+        if (isAlive() || isWinning())  animateFireBuddy(angle100);
     }
 
     /**
