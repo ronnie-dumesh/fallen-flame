@@ -23,7 +23,7 @@ public class FogController {
     private final int NUM_FOG_SHOOTER = 3;
     private float tileSize;
     private final int NUM_FOG_NORMAL = 1;
-    private final float NUM_FOG_AROUND_ENEMIES = 10.0f;
+    private final float NUM_FOG_AROUND_ENEMIES = 11.0f;
     private static Logger log = Logger.getLogger("FogController");
 
     private final int[] DIRECTIONS = {1, -1};
@@ -80,7 +80,7 @@ public class FogController {
                 //0.25 accounts for the aligning of the light to show the player's face instead of just the feet.
                 boolean withinLight = (Math.pow((Math.pow((x * tileSize) - (playerModel.getX()), 2) +
                         Math.pow((y * tileSize) - (playerModel.getY() + 0.25), 2)), 0.5))
-                        <= playerModel.getLightRadius();
+                        <= playerModel.getLightRadius()-(playerModel.getLightRadius()/4);
 
                 Array<ParticleEffectPool.PooledEffect> fogArr;
                 if (withinLight || levelModel.hasPlayer(x, y)) {
@@ -98,7 +98,7 @@ public class FogController {
                         FlareModel flare = iterator.next();
                         withinLight = (Math.pow((Math.pow((x * tileSize) - (flare.getX()), 2) +
                                 Math.pow((y * tileSize) - (flare.getY()), 2)), 0.5))
-                                <= flare.getLightRadius();
+                                <= flare.getLightRadius()- flare.getLightRadius()/4;
                     }
                     if (withinLight) {
                         if (fog[x][y] != null) {
@@ -131,7 +131,7 @@ public class FogController {
                                 fog[x][y] = new fogParticle();
                             }
                             fogArr = fog[x][y].fogParticles;
-                            if ((fog[x][y].enemies != null || fogArr.size > NUM_FOG_NORMAL) && !levelModel.hasEnemy(x, y)) {
+                        if ((fog[x][y].enemies != null || fogArr.size > NUM_FOG_NORMAL)  && !levelModel.hasEnemy(x, y)) {
                                 for (ParticleEffectPool.PooledEffect effect : fogArr) {
                                     effect.setDuration(0);
                                     effect.free();

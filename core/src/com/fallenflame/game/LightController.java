@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class LightController {
     /** Ambient light level */
     public static final float AMBIENT_LIGHT = 0.2f;
-    public static final float PLAYER_LIGHT_RATIO = 2.25f;
+    public static final float PLAYER_LIGHT_RATIO = 5f;
 
     /**
      * Logger for outputting info.
@@ -139,7 +139,7 @@ public class LightController {
         // Save player and config.
         this.player = player;
         this.lightingConfig = levelLighting;
-        playerLightOffset = (player.getLightRadius()/3f);
+        playerLightOffset = (player.getLightRadius()/PLAYER_LIGHT_RATIO);
         flareLightOffset = 0; //Set to 0 initially because no flares at the beginning, so it doesn't matter
         // Create player light.
         playerLight = createPointLight(player.getLightRadius()+playerLightOffset, player.getTextureX(), player.getTextureY());
@@ -262,7 +262,6 @@ public class LightController {
        float pLightCurrDist = playerLight.getDistance();
        if (pLightCurrDist + playerLightOffset != targetPlayerRadius) {
            playerLightOffset = (player.getLightRadius()/PLAYER_LIGHT_RATIO);
-           playerLightOffset = playerLightOffset + (player.isSprinting() ? 1.0f : 0f);
            if (Math.abs((pLightCurrDist+playerLightOffset) - targetPlayerRadius) < 0.05) {
                playerLight.setDistance(targetPlayerRadius+playerLightOffset);
            } else if (pLightCurrDist+playerLightOffset < targetPlayerRadius) {
