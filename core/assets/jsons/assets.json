@@ -297,6 +297,18 @@
 		"winborder": {
 			"file": "textures/s_win_game_border.png",
 			"wrap": false
+		},
+		"wintext": {
+			"file": "textures/s_wingame_text.png",
+			"wrap": false
+		},
+		"losetext": {
+			"file": "textures/s_lose_text.png",
+			"wrap": false
+		},
+		"successtext": {
+			"file": "textures/s_success_text.png",
+			"wrap": false
 		}
 	},
 	"fonts": {
