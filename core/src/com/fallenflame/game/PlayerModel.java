@@ -485,12 +485,6 @@ public class PlayerModel extends CharacterModel {
             } else if (frame == filmstrip.getSize() - 1) {
                 deathDelay -= walkCoolDec;
             }
-        } else if (isWinning()) {
-            if (walkCool <= 0){
-                walkCool = walkLimit;
-            } else if (walkCool > 0) {
-                walkCool -= walkCoolDec;
-            }
         } else if (isAlive()) super.update(dt);
 
         if (isAlive() || isWinning())  animateFireBuddy(angle100, dt);
@@ -528,7 +522,7 @@ public class PlayerModel extends CharacterModel {
                 fireBuddyFilmstrip = fireBuddyRight;
             }
 
-            if (fireBuddyCool <= 0 && fireBuddyFilmstrip != null) { //animate
+            if (fireBuddyCool <= 0 && fireBuddyFilmstrip != null) {
                 int next = (fireBuddyFilmstrip.getFrame() + 1) % fireBuddyFilmstrip.getSize();
                 fireBuddyFilmstrip.setFrame(next);
             }
@@ -544,15 +538,10 @@ public class PlayerModel extends CharacterModel {
             }
         }
 
-        if(fireBuddyCool > 0) {
-            if(isWinning()) {
-                fireBuddyCool -= 4 * fireCoolDec;
-            } else {
-                fireBuddyCool -= fireCoolDec;
-            }
-        } else {
-            fireBuddyCool = fireBuddyCoolLimit;
-        }
+        if(fireBuddyCool > 0 && isWinning()) fireBuddyCool -= 4 * fireCoolDec;
+        else if (fireBuddyCool > 0) fireBuddyCool -= fireCoolDec;
+        else fireBuddyCool = fireBuddyCoolLimit;
+
     }
 
     public void draw(GameCanvas canvas) {

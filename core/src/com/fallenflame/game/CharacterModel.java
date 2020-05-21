@@ -325,8 +325,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
-        //float walkCoolMultiplier = (dt/(1/60));
-        float walkCoolMultiplier = 60 / (1 / dt);
+        float walkCoolDec = dt * 60;
         //getAngle has up as 0 radians, down as pi radians, pi/2 is left, -pi/2 is right.
         double angle = getAngle();
         if(angle < 0) angle = angle + 2 * Math.PI;
@@ -352,7 +351,7 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
             }
             walkCool = walkLimit;
         } else if (walkCool > 0) {
-            walkCool -= walkCoolMultiplier;
+            walkCool -= walkCoolDec;
         } else if (!animate) {
             if (filmstrip != null) {
                 filmstrip.setFrame(startFrame);
