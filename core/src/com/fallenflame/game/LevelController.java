@@ -1118,6 +1118,7 @@ public class LevelController implements ContactListener {
             // Check for win condition
             if ((bd1 == player && bd2 == exit  )
                     || (bd1 == exit && bd2 == player)) {
+                stopAllSounds();
                 player.win();
                 return;
             }
