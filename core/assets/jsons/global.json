@@ -180,6 +180,7 @@
     "radius":      	  0.1,
     "lightradius":     3.5,
     "flareduration":  2500,
+    "fadeRate":       0.0005,
     "bodytype":    	  "dynamic",
     "density":        1.0,
     "friction":       0.0,

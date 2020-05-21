@@ -33,6 +33,9 @@ public class FlareModel extends WheelObstacle implements ILight {
     /** Time when flare stuck to wall **/
     private long stuckTime;
 
+    /** Rate at which flare fades from wall **/
+    private float fadeRate;
+
     /** Light Radius */
     private float lightRadius;
 
@@ -199,6 +202,7 @@ public class FlareModel extends WheelObstacle implements ILight {
         setRadius(radius);
         lightRadius = json.get("lightradius").asFloat();
         flareDuration = json.get("flareduration").asInt();
+        fadeRate = json.get("fadeRate").asFloat();
         isStuck = false;
 
         // TODO #2: Technically, we should do error checking here.
@@ -301,7 +305,7 @@ public class FlareModel extends WheelObstacle implements ILight {
             if (timeToBurnout() == -1){
                 canvas.draw(texture, new Color(1, 1, 1, 1), origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), 1.0f, 1.0f);
             } else {
-                canvas.draw(texture, new Color(1, 1, 1, .0005f * timeToBurnout()), origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), 1.0f, 1.0f);
+                canvas.draw(texture, new Color(1, 1, 1, fadeRate * timeToBurnout()), origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), 1.0f, 1.0f);
             }
         }
     }
