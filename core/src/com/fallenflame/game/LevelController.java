@@ -712,7 +712,7 @@ public class LevelController implements ContactListener {
         Iterator<FlareModel> i = flares.iterator();
         while(i.hasNext()){
             FlareModel flare = i.next();
-            if(!(Float.compare(flare.timeToBurnout(), 0.0f) > 0)){
+            if(flare.timeToBurnout() == 0){
                 flare.deactivatePhysics(world);
                 flare.dispose();
                 i.remove();
