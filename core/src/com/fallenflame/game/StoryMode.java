@@ -26,6 +26,7 @@ public class StoryMode implements Screen, InputProcessor {
     private static final String INTRO_1 = "textures/intro_page1.png";
     private static final String INTRO_2 = "textures/intro_page2.png";
     private static final String INTRO_3 = "textures/intro_page3.png";
+    private static final String TREES_1 = "textures/trees_page1.png";
     private static final String VOLCANO_1 = "textures/volcano_page1.png";
 
     /**
@@ -101,6 +102,7 @@ public class StoryMode implements Screen, InputProcessor {
         storySelected = 0;
         page = 0;
         storyTextures.put(0, new Story(new Texture[]{new Texture(INTRO_1), new Texture(INTRO_2), new Texture(INTRO_3)}));
+        storyTextures.put(1, new Story(new Texture[]{new Texture(TREES_1)}));
         storyTextures.put(2, new Story(new Texture[]{new Texture(VOLCANO_1)}));
 
     }

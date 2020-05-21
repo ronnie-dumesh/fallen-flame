@@ -225,8 +225,7 @@ public class GDXRoot extends Game implements ScreenListener {
 				levelSelect.setScreenListener(this);
 				setScreen(levelSelect);
 				engine.pause();
-			} else if(exitCode == 2){
-				System.out.println("here!");
+			} else if(exitCode == 2){ //If endgame of story is made, this will become useless, but here for now
 				worldSelect.reset(engine.getLevelSaves());
 				Gdx.input.setInputProcessor(worldSelect);
 				worldSelect.setScreenListener(this);
@@ -234,7 +233,17 @@ public class GDXRoot extends Game implements ScreenListener {
 				engine.pause();
 			} else if(exitCode ==3){ //To ensure this only is checked when swapping worlds
 				worldSelect.reset(engine.getLevelSaves());
-				if(worldSelect.getNumberUnlocked() == 2){
+				//This can be simplified if we have stories for all changing of worlds. If we do not, this will stay
+				if(worldSelect.getWorldSelected() == 0){
+					story.reset();
+					story.storySelected = 1;
+					Gdx.input.setInputProcessor(story);
+					story.setScreenListener(this);
+					setScreen(story);
+					engine.pause();
+
+				}
+				else if(worldSelect.getWorldSelected() == 1){
 					story.reset();
 					story.storySelected = 2;
 					Gdx.input.setInputProcessor(story);
