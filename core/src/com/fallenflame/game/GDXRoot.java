@@ -43,6 +43,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	private ControlMode control;
 	/** Player mode for the the game */
 	private GameEngine engine;
+	/** World select for the game */
+	private WorldSelectMode worldSelect;
 	/** Level select for the game */
 	private LevelSelectMode levelSelect;
 	/** Pause for the game */
@@ -69,6 +71,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		levelCanvas = new GameCanvas();
 		loading = new LoadingMode(canvas,1);
 		control = new ControlMode(levelCanvas);
+		worldSelect = new WorldSelectMode(levelCanvas);
 		levelSelect = new LevelSelectMode(levelCanvas);
 		pauseMode = new PauseMode(levelCanvas);
 		credits = new CreditsMode(levelCanvas);
@@ -76,6 +79,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		InputMultiplexer multiplexer = new InputMultiplexer(); //Allows for multiple InputProcessors
 		//Multiplexer is an ordered list, so when an event occurs, it'll check loadingMode first, and then GameEngine
 		multiplexer.addProcessor(loading);
+		multiplexer.addProcessor(worldSelect);
 		multiplexer.addProcessor(levelSelect);
 		multiplexer.addProcessor(engine);
 		Gdx.input.setInputProcessor(multiplexer);
@@ -84,6 +88,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		// Initialize the three game worlds
 		engine.preLoadContent();
 		loading.setScreenListener(this);
+		worldSelect.initialize(engine.getLevelSaves());
 		levelSelect.initialize(engine.getLevelSaves());
 		setScreen(loading, false);
 	}
@@ -167,15 +172,29 @@ public class GDXRoot extends Game implements ScreenListener {
 					Gdx.input.setInputProcessor(credits);
 					credits.setScreenListener(this);
 					setScreen(credits);
-				}else {
-					Gdx.input.setInputProcessor(levelSelect);
-					levelSelect.setScreenListener(this);
-					setScreen(levelSelect);
+				} else {
+					worldSelect.reset(engine.getLevelSaves());
+					Gdx.input.setInputProcessor(worldSelect);
+					worldSelect.setScreenListener(this);
+					setScreen(worldSelect);
 				}
 			}
 
 //			loading.dispose();
 //			loading = null;
+		} else if (screen == worldSelect) {
+			if (worldSelect.getWorldSelected() >= 0) {
+				levelSelect.reset();
+				levelSelect.setWorldSelected(worldSelect.getWorldSelected());
+				Gdx.input.setInputProcessor(levelSelect);
+				levelSelect.setScreenListener(this);
+				setScreen(levelSelect);
+			} else { // World select = -1 means go back.
+				Gdx.input.setInputProcessor(loading);
+				loading.setScreenListener(this);
+				loading.setScreenListener(this);
+				setScreen(loading);
+			}
 		} else if (screen == levelSelect) {
 			if (levelSelect.getLevelSelected() >= 0) {
 				Gdx.input.setInputProcessor(engine);
@@ -185,10 +204,10 @@ public class GDXRoot extends Game implements ScreenListener {
 				engine.resume();
 				setScreen(engine);
 			} else { // Level select = -1 means go back.
-				Gdx.input.setInputProcessor(loading);
-				loading.setScreenListener(this);
-				loading.setScreenListener(this);
-				setScreen(loading);
+				worldSelect.reset(engine.getLevelSaves());
+				Gdx.input.setInputProcessor(worldSelect);
+				worldSelect.setScreenListener(this);
+				setScreen(worldSelect);
 			}
 		} else if (screen == engine) {
 			if(exitCode == 1){
@@ -196,8 +215,13 @@ public class GDXRoot extends Game implements ScreenListener {
 				levelSelect.setScreenListener(this);
 				setScreen(levelSelect);
 				engine.pause();
-			}
-			else {
+			} else if(exitCode == 2){
+				worldSelect.reset(engine.getLevelSaves());
+				Gdx.input.setInputProcessor(worldSelect);
+				worldSelect.setScreenListener(this);
+				setScreen(worldSelect);
+				engine.pause();
+			} else {
 				Gdx.input.setInputProcessor(pauseMode);
 				pauseMode.setScreenListener(this);
 				pauseMode.screenshot();

@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 public class LightController {
     /** Ambient light level */
     public static final float AMBIENT_LIGHT = 0.2f;
+    public static final float PLAYER_LIGHT_RATIO = 5f;
 
     /**
      * Logger for outputting info.
@@ -46,6 +47,9 @@ public class LightController {
      */
     protected PlayerModel player;
 
+    /**Float value to increase the actual amount seen*/
+    protected float playerLightOffset;
+    protected float flareLightOffset;
     /**
      * A cached copy of lighting config.
      */
@@ -130,15 +134,15 @@ public class LightController {
         rayhandler.setAmbientLight(0, 0, 0, AMBIENT_LIGHT);
         rayhandler.setBlur(true);
         rayhandler.setBlurNum(3);
-
         updateCamera();
 
         // Save player and config.
         this.player = player;
         this.lightingConfig = levelLighting;
-
+        playerLightOffset = (player.getLightRadius()/PLAYER_LIGHT_RATIO);
+        flareLightOffset = 0; //Set to 0 initially because no flares at the beginning, so it doesn't matter
         // Create player light.
-        playerLight = createPointLight(player.getLightRadius(), player.getTextureX(), player.getTextureY());
+        playerLight = createPointLight(player.getLightRadius()+playerLightOffset, player.getTextureX(), player.getTextureY());
         targetPlayerRadius = player.getLightRadius();
 
         // Create exit light.
@@ -215,14 +219,15 @@ public class LightController {
 
         // Second step: Update light radii for lights already there.
         for (Map.Entry<T, PointSource> entry : entrySet) {
-            entry.getValue().setDistance(entry.getKey().getLightRadius());
+           flareLightOffset = (entry.getValue().getDistance()/PLAYER_LIGHT_RATIO);
+            entry.getValue().setDistance(entry.getKey().getLightRadius()+flareLightOffset);
             entry.getValue().setColor(entry.getKey().getLightColor());
             entry.getValue().setPosition(entry.getKey().getPosition());
         }
 
         // Last step: Create lights for new things in the list.
         list.stream().filter(i -> !lightMap.containsKey(i)).forEach(i -> {
-            PointSource f = createPointLight(i.getLightRadius(), i.getX(), i.getY());
+            PointSource f = createPointLight(i.getLightRadius()+flareLightOffset, i.getX(), i.getY());
             f.setColor(i.getLightColor());
             lightMap.put(i, f);
             animateIn.put(f, 0f);
@@ -255,13 +260,14 @@ public class LightController {
             return false;
         });
        float pLightCurrDist = playerLight.getDistance();
-       if (pLightCurrDist != targetPlayerRadius) {
-           if (Math.abs(pLightCurrDist - targetPlayerRadius) < 0.05) {
-               playerLight.setDistance(targetPlayerRadius);
-           } else if (pLightCurrDist < targetPlayerRadius) {
-               playerLight.setDistance(pLightCurrDist + (targetPlayerRadius - pLightCurrDist) * 0.5f);
+       if (pLightCurrDist + playerLightOffset != targetPlayerRadius) {
+           playerLightOffset = (player.getLightRadius()/PLAYER_LIGHT_RATIO);
+           if (Math.abs((pLightCurrDist+playerLightOffset) - targetPlayerRadius) < 0.05) {
+               playerLight.setDistance(targetPlayerRadius+playerLightOffset);
+           } else if (pLightCurrDist+playerLightOffset < targetPlayerRadius) {
+               playerLight.setDistance(pLightCurrDist + playerLightOffset + (targetPlayerRadius  - pLightCurrDist) * 0.5f);
            } else {
-               playerLight.setDistance(pLightCurrDist - (pLightCurrDist - targetPlayerRadius) * 0.5f);
+               playerLight.setDistance(pLightCurrDist + playerLightOffset - (pLightCurrDist  - targetPlayerRadius) * 0.5f);
            }
        }
     }

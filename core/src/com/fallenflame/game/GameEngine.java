@@ -183,6 +183,7 @@ public class GameEngine implements Screen, InputProcessor {
         globalJson = jsonReader.parse(Gdx.files.internal("jsons/global.json"));
         fogTemplate = new ParticleEffect();
         fogTemplate.load(Gdx.files.internal("effects/fog2.p"), Gdx.files.internal("textures"));
+        fogTemplate.start();
 
         JsonAssetManager.getInstance().loadDirectory(assetJson);
     }
@@ -390,7 +391,11 @@ public class GameEngine implements Screen, InputProcessor {
         }
       else if (countdown == 0) {
             if(isSuccess && lastLevelPlayed +1 < saveJson.size)
-                reset(lastLevelPlayed+1);
+                if (levelSaves[lastLevelPlayed].world != levelSaves[lastLevelPlayed+1].world){
+                    listener.exitScreen(this, 2);
+                } else {
+                    reset(lastLevelPlayed + 1);
+                }
             else if(isFailed){
                 if(retrySelected){
                     reset(lastLevelPlayed);
@@ -400,7 +405,7 @@ public class GameEngine implements Screen, InputProcessor {
                 }
             }
             else{
-                listener.exitScreen(this, 1);
+                listener.exitScreen(this, 2);
             }
         }
 
@@ -799,6 +804,7 @@ public class GameEngine implements Screen, InputProcessor {
 
 class LevelSave {
     protected String name;
+    protected int world;
     protected boolean unlocked;
     protected boolean completed;
     protected String path;

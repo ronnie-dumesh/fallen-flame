@@ -25,8 +25,6 @@ public class PlayerModel extends CharacterModel {
     }
     private LifeState life;
 
-    /** Max flares player can hold. Also determines UI flare indicators */
-    private int maxFlareCount;
     /** Number of flares the player has left */
     private int flareCount;
 
@@ -106,10 +104,6 @@ public class PlayerModel extends CharacterModel {
         // Level json data
         flareCount = levelJson.has("startFlareCount") ?
                 levelJson.get("startFlareCount").asInt() : globalJson.get("standardflarecount").asInt();
-        maxFlareCount = levelJson.has("maxFlareCount") ?
-                levelJson.get("maxFlareCount").asInt() : flareCount;
-        maxFlareCount = levelJson.has("maxFlareCount") ?
-                levelJson.get("maxFlareCount").asInt() : flareCount;
         powerVal = levelJson.has("startSneakVal") ?
                 levelJson.get("startSneakVal").asFloat() : globalJson.get("defaultStartSneakVal").asInt();
         maxPowerVal = powerVal;
@@ -294,11 +288,6 @@ public class PlayerModel extends CharacterModel {
     public float getMinLightRadius() { return minLightRadius; }
 
     /**
-     * Returns max flare count
-     */
-    public int getMaxFlareCount() { return maxFlareCount; }
-
-    /**
      * Returns the number of flares the player has left
      *
      * @return the number of flares the player has left
@@ -311,15 +300,10 @@ public class PlayerModel extends CharacterModel {
     public void decFlareCount() { flareCount--; }
 
     /**
-     * Increment flare count (for picking up a flare) iff player not at max flares
-     * @return True if player is able to pick it up, else false
+     * Increment flare count (for picking up a flare)
      */
-    public boolean incFlareCount() {
-        if(flareCount < maxFlareCount){
-            flareCount++;
-            return true;
-        }
-        return false;
+    public void incFlareCount() {
+        flareCount++;
     }
 
     /**
