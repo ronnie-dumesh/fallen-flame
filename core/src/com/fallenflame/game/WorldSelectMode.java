@@ -249,6 +249,8 @@ public class WorldSelectMode implements Screen, InputProcessor {
 
     public int getWorldSelected() {return worldSelected;}
 
+    public int getNumberUnlocked() {return numberUnlocked;}
+
 
     @Override
     public boolean keyDown(int i) {

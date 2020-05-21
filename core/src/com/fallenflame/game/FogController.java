@@ -138,6 +138,10 @@ public class FogController {
                                     fogArr.removeValue(effect, true);
                                 }
                                 fog[x][y].enemies = null;
+                                ParticleEffectPool.PooledEffect effect = fogPool.obtain();
+                                effect.reset();
+                            effect.setPosition((levelModel.tileToScreen(x) * scale.x), levelModel.tileToScreen(y) * scale.y);
+                            fog[x][y].fogParticles.add(effect);
                             }
                             /*Only make a new fog particle if we do not have enough particles in the array for that tile*/
                             if (fogArr.size < NUM_FOG_NORMAL || levelModel.hasEnemy(x, y) && fogArr.size < ( levelModel.hasLessFog(x,y) ? NUM_FOG_SHOOTER : NUM_FOG_ENEMIES)) {
