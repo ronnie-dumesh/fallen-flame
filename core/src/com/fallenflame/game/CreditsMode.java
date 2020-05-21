@@ -16,7 +16,7 @@ public class CreditsMode implements Screen, InputProcessor {
     private static final String BACKGROUND_FILE = "textures/s_credits_background.png";
     private Texture background = new Texture(BACKGROUND_FILE);
 
-    private static final String PAGE_PREV_FILE = "textures/ls_back.png";
+    private static final String PAGE_PREV_FILE = "textures/ws_back.png";
     private Texture pagePrev = new Texture(PAGE_PREV_FILE);
 
 
@@ -49,10 +49,10 @@ public class CreditsMode implements Screen, InputProcessor {
     /** The current state of whether any level buttons are being hovered over */
     private int hoverState;
 
-    private static final int BACK_BTN_WIDTH = 60;
+    private static final int BACK_BTN_WIDTH = 100;
     private static final int BACK_BTN_HEIGHT = 30;
-    private static final int BACK_BTN_X = 10;
-    private static final int BACK_BTN_Y = 10;
+    private static final int BACK_BTN_X = 80;
+    private static final int BACK_BTN_Y = 80;
 
     /** Level selected by the player */
     private int levelSelected;
@@ -83,7 +83,9 @@ public class CreditsMode implements Screen, InputProcessor {
         displayFont.getData().setScale(.5f);
 
         displayFont.setColor(hoverState == 1 ? Color.CYAN : Color.WHITE);
-        canvas.drawText("Back", displayFont,BACK_BTN_X, heightY - BACK_BTN_Y);
+        canvas.draw(pagePrev, hoverState==1 ? Color.CYAN : Color.WHITE, pagePrev.getWidth() / 2, pagePrev.getHeight(),
+                BACK_BTN_X, heightY - BACK_BTN_Y, 0, .75f, .75f);
+        canvas.drawText("Back", displayFont,BACK_BTN_X + (pagePrev.getWidth()), heightY - BACK_BTN_Y);
         displayFont.setColor(Color.WHITE);
         displayFont.getData().setScale(1f);
         canvas.end();

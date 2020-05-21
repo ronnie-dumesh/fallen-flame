@@ -398,23 +398,19 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 displayFont = generator.generateFont(parameter);
                 generator.dispose();
                 displayFont.setColor(normalFontColor);
-                if(menuTextArray.size < 4) {
-                    menuLayout = new GlyphLayout(displayFont, "Start");
-                    menuTextArray.add(new MenuText(false, "Start", new Rectangle(
+                if(menuTextArray.size < 3) {
+                    menuLayout = new GlyphLayout(displayFont, "Play");
+                    menuTextArray.add(new MenuText(false, "Play", new Rectangle(
                             (canvas.getWidth() - menuLayout.width) / 2, (canvas.getHeight() - menuLayout.height) / 2,
                             menuLayout.width, menuLayout.height), 0));
-                    menuLayout = new GlyphLayout(displayFont, "Select");
-                    menuTextArray.add(new MenuText(false, "Select", new Rectangle(
-                            (canvas.getWidth() - menuLayout.width) / 2, (canvas.getHeight() - menuLayout.height) / 2 + text_offset,
-                            menuLayout.width, menuLayout.height), 1));
                     menuLayout =  new GlyphLayout(displayFont, "Controls");
                     menuTextArray.add(new MenuText(false, "Controls", new Rectangle(
-                            (canvas.getWidth() - menuLayout.width) / 2, (canvas.getHeight() - menuLayout.height ) / 2 + (text_offset * 2),
-                            menuLayout.width, menuLayout.height), 2));
+                            (canvas.getWidth() - menuLayout.width) / 2, (canvas.getHeight() - menuLayout.height ) / 2 + (text_offset),
+                            menuLayout.width, menuLayout.height), 1));
                     menuLayout =  new GlyphLayout(displayFont, "Credits");
                     menuTextArray.add(new MenuText(false, "Credits", new Rectangle(
-                            (canvas.getWidth() - menuLayout.width) / 2, (canvas.getHeight() - menuLayout.height ) / 2 + (text_offset * 3),
-                            menuLayout.width, menuLayout.height), 3));
+                            (canvas.getWidth() - menuLayout.width) / 2, (canvas.getHeight() - menuLayout.height ) / 2 + (text_offset * 2),
+                            menuLayout.width, menuLayout.height), 2));
                 }
             }
         }
@@ -592,8 +588,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 break;
             }
         }
-        toControl = (menuTextArray.get(2).rect.contains(screenX, screenY));
-        toCredits = (menuTextArray.get(3).rect.contains(screenX, screenY));
+        toControl = (menuTextArray.get(1).rect.contains(screenX, screenY));
+        toCredits = (menuTextArray.get(2).rect.contains(screenX, screenY));
         return false;
     }
 

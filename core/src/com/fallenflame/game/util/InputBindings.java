@@ -14,9 +14,10 @@ public class InputBindings {
         GO_DOWN,
         GO_LEFT,
         GO_RIGHT,
-        RESET_LEVEL,
         SNEAKING,
         SPRINTING,
+        RESET_LEVEL,
+        PAUSE_LEVEL,
     }
     private static final Map<Control, Integer> bindings;
     static {
@@ -105,6 +106,7 @@ public class InputBindings {
         bindings.put(Control.GO_LEFT, Input.Keys.A);
         bindings.put(Control.GO_RIGHT, Input.Keys.D);
         bindings.put(Control.RESET_LEVEL, Input.Keys.R);
+        bindings.put(Control.PAUSE_LEVEL, Input.Keys.P);
         bindings.put(Control.SNEAKING, Input.Keys.CONTROL_LEFT);
         bindings.put(Control.SPRINTING, Input.Keys.SHIFT_LEFT);
         if (resetPrefs) {
@@ -207,9 +209,10 @@ public class InputBindings {
             case GO_DOWN: return "down";
             case GO_LEFT: return "left";
             case GO_RIGHT: return "right";
-            case RESET_LEVEL: return "reset";
             case SNEAKING: return "sneak";
             case SPRINTING: return "sprint";
+            case RESET_LEVEL: return "reset";
+            case PAUSE_LEVEL: return "pause";
         }
         return null;
     }
@@ -219,9 +222,10 @@ public class InputBindings {
             case GO_DOWN: return new String[]{"down"};
             case GO_LEFT: return new String[]{"left"};
             case GO_RIGHT: return new String[]{"right"};
-            case RESET_LEVEL: return new String[]{"reset"};
             case SNEAKING: return new String[]{"sneak"};
             case SPRINTING: return new String[]{"sprint"};
+            case RESET_LEVEL: return new String[]{"reset"};
+            case PAUSE_LEVEL: return new String[]{"pause"};
         }
         return null;
     }
@@ -231,9 +235,10 @@ public class InputBindings {
             case "down": return Control.GO_DOWN;
             case "left": return Control.GO_LEFT;
             case "right": return Control.GO_RIGHT;
-            case "reset": return Control.RESET_LEVEL;
             case "sneak": return Control.SNEAKING;
             case "sprint": return Control.SPRINTING;
+            case "reset": return Control.RESET_LEVEL;
+            case "pause": return Control.PAUSE_LEVEL;
         }
         return null;
     }
@@ -243,9 +248,10 @@ public class InputBindings {
             case GO_DOWN: return "Go down";
             case GO_LEFT: return "Go left";
             case GO_RIGHT: return "Go right";
+            case SNEAKING: return "Sneak";
+            case SPRINTING: return "Sprint";
             case RESET_LEVEL: return "Reset level";
-            case SNEAKING: return "Sneaking";
-            case SPRINTING: return "Sprinting";
+            case PAUSE_LEVEL: return "Pause Level";
         }
         return null;
     }

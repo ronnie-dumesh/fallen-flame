@@ -25,6 +25,9 @@ public class LevelSelectMode implements Screen, InputProcessor {
     private static final String VOLCANO_BACKGROUND_FILE = "textures/ls_volcano_background.png";
     private Texture volcanoBackground = new Texture(VOLCANO_BACKGROUND_FILE);
 
+    private static final String BACK_FILE = "textures/ws_back.png";
+    private Texture back = new Texture(BACK_FILE);
+
     private static final String PAGE_NEXT_FILE = "textures/ls_forward.png";
     private Texture pageNext = new Texture(PAGE_NEXT_FILE);
 
@@ -82,10 +85,10 @@ public class LevelSelectMode implements Screen, InputProcessor {
     /** The current state of whether any level buttons are being hovered over */
     private int[] hoverState;
 
-    private static final int BACK_BTN_WIDTH = 210;
+    private static final int BACK_BTN_WIDTH = 100;
     private static final int BACK_BTN_HEIGHT = 30;
-    private static final int BACK_BTN_X = 10;
-    private static final int BACK_BTN_Y = 10;
+    private static final int BACK_BTN_X = 80;
+    private static final int BACK_BTN_Y = 80;
 
     /** Level selected by the player */
     private int levelSelected;
@@ -199,10 +202,10 @@ public class LevelSelectMode implements Screen, InputProcessor {
             canvas.draw(pagePrev, hoverState[posVec.length + 1] == 1 ? Color.CYAN : Color.WHITE, pagePrev.getWidth() / 2, pagePrev.getHeight() / 2,
                     nextPrev[0].x, nextPrev[0].y, 0, 1, 1);
         }
-        canvas.draw(pagePrev, hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE, pagePrev.getWidth() / 2, pagePrev.getHeight(),
+        canvas.draw(back, hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE, back.getWidth() / 2, back.getHeight(),
                 BACK_BTN_X, heightY - BACK_BTN_Y, 0, .75f, .75f);
         displayFont.setColor(hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE);
-        canvas.drawText("Back to World Select", displayFont,BACK_BTN_X + (pagePrev.getWidth()/2), heightY - BACK_BTN_Y);
+        canvas.drawText("Back", displayFont,BACK_BTN_X + (back.getWidth()), heightY - BACK_BTN_Y);
         displayFont.setColor(Color.WHITE);
         displayFont.getData().setScale(1f);
         canvas.end();
