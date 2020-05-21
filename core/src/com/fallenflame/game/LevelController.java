@@ -537,7 +537,7 @@ public class LevelController implements ContactListener {
         pathLevelModel.initialize(bounds, walls, enemies, PATH_GRID_SIZE);
         fogLevelModel.initialize(bounds, walls, enemies, FOG_GRID_SIZE);
         lightController.initialize(player, exit, levelJson.get("lighting"), world, bounds, scale);
-        fogController.initialize(fogTemplate, fogLevelModel, player, flares);
+        fogController.initialize(fogTemplate, fogLevelModel, player, flares, enemies);
 
         JsonValue ghostSpawn = globalJson.get("ghost-spawn");
         ghostSpawnOffset = new Vector2(ghostSpawn.get("offset").get("x").asFloat(),
@@ -730,7 +730,8 @@ public class LevelController implements ContactListener {
         while(i3.hasNext()){
             ItemModel item = i3.next();
             // If item is a flare try to increment flare count (will return false if player is at max)
-            if(item.isFlare() && player.incFlareCount()) {
+            if(item.isFlare()) {
+                player.incFlareCount();
                 item.deactivate();
                 i3.remove();
             }
@@ -1025,15 +1026,9 @@ public class LevelController implements ContactListener {
         float flareWidth = activeFlareCountTexture.getRegionWidth() + flareCountSplit * scale.x;
 
         if (activeFlareCountTexture != null && inactiveFlareCountTexture != null) {
-            int flaresUsed = player.getMaxFlareCount() - player.getFlareCount();
-
-            for(int i = flaresUsed; i < player.getMaxFlareCount(); i++){
+            for(int i = 0; i < player.getFlareCount(); i++){
                 float activeFlareX = ox - i * flareWidth;
                 canvas.draw(activeFlareCountTexture, activeFlareX, oy);
-            }
-            for(int j = 0; j < flaresUsed; j++){
-                float inactiveFlareX = ox - j * flareWidth;
-                canvas.draw(inactiveFlareCountTexture, inactiveFlareX, oy);
             }
         }
 

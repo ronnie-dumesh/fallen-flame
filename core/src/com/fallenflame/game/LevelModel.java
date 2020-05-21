@@ -2,7 +2,9 @@ package com.fallenflame.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.*;
+import com.fallenflame.game.enemies.EnemyGhostModel;
 import com.fallenflame.game.enemies.EnemyModel;
+import com.fallenflame.game.enemies.EnemyTypeBModel;
 import com.fallenflame.game.physics.obstacle.BoxObstacle;
 import com.fallenflame.game.physics.obstacle.WheelObstacle;
 
@@ -21,6 +23,12 @@ public class LevelModel {
         public boolean enemy = false;
         /** Has player? */
         public boolean player = false;
+
+        /**Has shooter or ghost enemy (for fog) */
+        public boolean hasLessFog = false;
+
+        /**Is the enemy patrolling (for fog) */
+        public boolean isPatrolling = false;
 
     }
 
@@ -76,25 +84,27 @@ public class LevelModel {
      * Sets tiles previously covered by player as available
      * @param player
      */
-    public void removePlayer(PlayerModel player) { setWheelObstacleInGrid(player, false, TileOccupiedBy.PLAYER); }
+    public void removePlayer(PlayerModel player) { setWheelObstacleInGrid(player, false, TileOccupiedBy.PLAYER, false); }
 
     /**
      * Sets tiles currently covered by player as unavailable
      * @param player
      */
-    public void placePlayer(PlayerModel player) { setWheelObstacleInGrid(player, true, TileOccupiedBy.PLAYER); }
+    public void placePlayer(PlayerModel player) { setWheelObstacleInGrid(player, true, TileOccupiedBy.PLAYER, false); }
 
     /**
      * Sets tiles previously covered by enemy as available
      * @param enemy
      */
-    public void removeEnemy(EnemyModel enemy) { setWheelObstacleInGrid(enemy, false, TileOccupiedBy.ENEMY); }
+    public void removeEnemy(EnemyModel enemy) { setWheelObstacleInGrid(enemy, false, TileOccupiedBy.ENEMY, false); }
 
     /**
      * Sets tiles currently covered by enemy as unavailable
      * @param enemy
      */
-    public void placeEnemy(EnemyModel enemy) { setWheelObstacleInGrid(enemy, true, TileOccupiedBy.ENEMY); }
+    public void placeEnemy(EnemyModel enemy) {
+        setWheelObstacleInGrid(enemy, true, TileOccupiedBy.ENEMY, (enemy.getClass() == EnemyTypeBModel.class)
+                || enemy.getClass() == EnemyGhostModel.class); }
 
     private void markObstacleTypeInGrid(int x, int y, boolean b, TileOccupiedBy o) {
         switch (o) {
@@ -115,13 +125,15 @@ public class LevelModel {
      * @param obs Wheel obstacle
      * @param b Boolean value
      * @param o Type of obstacle
+     * @param sh : If this is a shooter enemy (for fog)
      */
-    public void setWheelObstacleInGrid(WheelObstacle obs, boolean b, TileOccupiedBy o) {
+    public void setWheelObstacleInGrid(WheelObstacle obs, boolean b, TileOccupiedBy o, boolean sh) {
         for(int x = screenToTile(obs.getX() - obs.getRadius());
             x <= screenToTile(obs.getX() + obs.getRadius()); x++) {
             for(int y = screenToTile(obs.getY() - obs.getRadius());
                 y <= screenToTile(obs.getY() + obs.getRadius()); y++) {
                 if (!inBounds(x, y)) continue;
+                if(sh) tileGrid[x][y].hasLessFog = true;
                 markObstacleTypeInGrid(x, y, b, o);
             }
         }
@@ -209,6 +221,9 @@ public class LevelModel {
 
     /** Whether enemy is on a tile. */
     public boolean hasEnemy(int x, int y) { return tileGrid[x][y].enemy; }
+
+    /** Whether shooter is on a tile. */
+    public boolean hasLessFog(int x, int y) { return tileGrid[x][y].hasLessFog; }
 
     /** Tile grid size. */
     public int[] tileGridSize() { return new int[]{tileGrid.length, tileGrid[0].length}; }
@@ -303,6 +318,7 @@ public class LevelModel {
         for (int x = 0; x < tileGrid.length; x++) {
             for (int y = 0; y < tileGrid[0].length; y++) {
                tileGrid[x][y].enemy = false;
+               tileGrid[x][y].hasLessFog = false;
                tileGrid[x][y].player = false;
             }
         }
