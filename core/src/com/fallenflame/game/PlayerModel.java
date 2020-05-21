@@ -479,7 +479,7 @@ public class PlayerModel extends CharacterModel {
             if (walkCool <= 0){
                 walkCool = walkLimit;
             } else if (walkCool > 0) {
-                walkCool = walkCool - 2;
+                walkCool = walkCool - 4;
             }
         } else if (isAlive()) super.update(dt);
 

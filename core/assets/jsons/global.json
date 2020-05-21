@@ -26,7 +26,7 @@
       "death-right": "player-death-right"
     },
     "deathdelay": 45,
-    "windelay": 45,
+    "windelay": 20,
     "walksound":    "new-walk",
     "firebuddy": {
       "texture": {
