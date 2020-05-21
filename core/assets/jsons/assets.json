@@ -228,10 +228,6 @@
 			"file": "textures/r_active_flare.png",
 			"wrap": false
 		},
-		"inactiveflarecounter": {
-			"file": "textures/r_inactive_flare.png",
-			"wrap": false
-		},
 		"sneak-meter-background-left": {
 			"file": "textures/r_sneak_meter_left.png",
 			"wrap": false

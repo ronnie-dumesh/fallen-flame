@@ -254,8 +254,7 @@
   },
   "flarecount": {
     "texture": {
-      "active": "activeflarecounter",
-      "inactive": "inactiveflarecounter"
+      "active": "activeflarecounter"
     },
     "textureoffset": {
       "x": 11.5,

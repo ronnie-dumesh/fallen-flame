@@ -424,8 +424,6 @@ public class LevelController implements ContactListener {
         JsonValue flareCountJSON = globalJson.get("flarecount");
         key = flareCountJSON.get("texture").get("active").asString();
         activeFlareCountTexture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-        key = flareCountJSON.get("texture").get("inactive").asString();
-        inactiveFlareCountTexture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
         flareCountSplit = flareCountJSON.get("flare-split").asFloat();
         flareCountOffset = new Vector2 (flareCountJSON.get("textureoffset").get("x").asFloat(),
               flareCountJSON.get("textureoffset").get("y").asFloat());
@@ -1025,7 +1023,7 @@ public class LevelController implements ContactListener {
 
         float flareWidth = activeFlareCountTexture.getRegionWidth() + flareCountSplit * scale.x;
 
-        if (activeFlareCountTexture != null && inactiveFlareCountTexture != null) {
+        if (activeFlareCountTexture != null) {
             for(int i = 0; i < player.getFlareCount(); i++){
                 float activeFlareX = ox - i * flareWidth;
                 canvas.draw(activeFlareCountTexture, activeFlareX, oy);
