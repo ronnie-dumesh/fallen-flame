@@ -274,6 +274,54 @@
 			"file": "textures/slime.png",
 			"wrap": false
 		},
+		"c-horizontal-extras": {
+			"file": "textures/c-horizontal-extras.png",
+			"wrap": false
+		},
+		"c-square-extras": {
+			"file": "textures/c-square-extras.png",
+			"wrap": false
+		},
+		"c-vertical-extras": {
+			"file": "textures/c-vertical-extras.png",
+			"wrap": false
+		},
+		"cave-patch": {
+			"file": "textures/cave-patch.png",
+			"wrap": false
+		},
+		"f-horizontal-extras": {
+			"file": "textures/f-horizontal-extras.png",
+			"wrap": false
+		},
+		"f-square-extras": {
+			"file": "textures/f-square-extras.png",
+			"wrap": false
+		},
+		"f-vertical-extras": {
+			"file": "textures/f-vertical-extras.png",
+			"wrap": false
+		},
+		"forest-patch": {
+			"file": "textures/forest-patch.png",
+			"wrap": false
+		},
+		"v-horizontal-extras": {
+			"file": "textures/v-horizontal-extras.png",
+			"wrap": false
+		},
+		"v-square-extras": {
+			"file": "textures/v-square-extras.png",
+			"wrap": false
+		},
+		"v-vertical-extras": {
+			"file": "textures/v-vertical-extras.png",
+			"wrap": false
+		},
+		"volcano-patch": {
+			"file": "textures/volcano-patch.png",
+			"wrap": false
+		},
 		"wintext": {
 			"file": "textures/s_wingame_text.png",
 			"wrap": false

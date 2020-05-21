@@ -277,6 +277,128 @@
       "texture":        "activeflarecounter"
     }
   },
+  "extras": {
+    "c-horizontal": {
+      "size":           [ 5, 1.25],
+      "texture":       "c-horizontal-extras",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":   1,
+      "debugcolor":    "yellow",
+      "debugopacity":   200
+    },
+    "c-square": {
+      "size":           [ 1.25, 1.25],
+      "texture":       "c-square-extras",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":   1,
+      "debugcolor":    "yellow",
+      "debugopacity":   200
+    },
+    "c-vertical": {
+      "size":           [ 1.25, 5],
+      "texture":       "c-vertical-extras",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":   1,
+      "debugcolor":    "yellow",
+      "debugopacity":   200
+    },
+    "f-horizontal": {
+      "size":           [ 5, 1.25],
+      "texture":       "f-horizontal-extras",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":   1,
+      "debugcolor":    "yellow",
+      "debugopacity":   200
+    },
+    "f-square": {
+      "size":           [ 1.25, 1.25],
+      "texture":       "f-square-extras",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":   1,
+      "debugcolor":    "yellow",
+      "debugopacity":   200
+    },
+    "f-vertical": {
+      "size":           [ 1.25, 5],
+      "texture":       "f-vertical-extras",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":   1,
+      "debugcolor":    "yellow",
+      "debugopacity":   200
+    },
+    "v-horizontal": {
+      "size":           [ 5, 1.25],
+      "texture":       "v-horizontal-extras",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":   1,
+      "debugcolor":    "yellow",
+      "debugopacity":   200
+    },
+    "v-square": {
+      "size":           [ 1.25, 1.25],
+      "texture":       "v-square-extras",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":   1,
+      "debugcolor":    "yellow",
+      "debugopacity":   200
+    },
+    "v-vertical": {
+      "size":           [ 1.25, 5],
+      "texture":       "v-vertical-extras",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":   1,
+      "debugcolor":    "yellow",
+      "debugopacity":   200
+    },
+    "f-patch": {
+      "size":           [ 1.25, 1.25],
+      "texture":       "forest-patch",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":   1,
+      "debugcolor":    "yellow",
+      "debugopacity":   200
+    },
+    "c-patch": {
+      "size":           [ 1.25, 1.25],
+      "texture":       "cave-patch",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":   1,
+      "debugcolor":    "yellow",
+      "debugopacity":   200
+    },
+    "v-patch": {
+      "size":           [ 1.25, 1.25],
+      "texture":       "volcano-patch",
+      "density":  	    0.0,
+      "friction":       0.0,
+      "restitution":    0.0,
+      "lightradius":   1,
+      "debugcolor":    "yellow",
+      "debugopacity":   200
+    }
+  },
   "ghost-spawn": {
     "offset": {
       "x": 5,
