@@ -84,6 +84,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		// Initialize the three game worlds
 		engine.preLoadContent();
 		loading.setScreenListener(this);
+		worldSelect.initialize(engine.getLevelSaves());
 		levelSelect.initialize(engine.getLevelSaves());
 		setScreen(loading, false);
 	}

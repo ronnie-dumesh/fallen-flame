@@ -85,22 +85,22 @@
   },
   {
     "name": "level 13",
-    "world":      0,
+    "world":      1,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/ronnie-level.json"
   },
   {
     "name": "level 14",
-    "world":      1,
-    "unlocked":   true,
+    "world":      2,
+    "unlocked":   false,
     "completed":  true,
     "path": "levels/bryansfirstlevel.json"
   },
   {
     "name": "level 16",
-    "world":      1,
-    "unlocked":   true,
+    "world":      2,
+    "unlocked":   false,
     "completed":  true,
     "path": "levels/medium.json"
   }

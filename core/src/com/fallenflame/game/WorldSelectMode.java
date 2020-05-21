@@ -50,6 +50,12 @@ public class WorldSelectMode implements Screen, InputProcessor {
     private static final String STEPS_VOLCANO = "textures/steps-to-volcano.png";
     private Texture stepsVolcano = new Texture(STEPS_VOLCANO);
 
+    /** Save Json contains data on unlocked levels */
+    private LevelSave[] levelSaves;
+
+    /** Number of unlocked worlds */
+    private int numberUnlocked;
+
     /** Position vectors for all the world select buttons */
     private Vector2[] posVecRel = {new Vector2(1f/2f,1f/4f),new Vector2(3f/4f,9f/20f),new Vector2(2f/5f,5f/8f)};
     private Vector2[] posVec;
@@ -123,22 +129,51 @@ public class WorldSelectMode implements Screen, InputProcessor {
             hoverState[i] = 0;
         }
     }
+
+    /**
+     * Initializes levelSaves which track level unlock status
+     * and number level unlocked (assumes sequential unlocking)
+     * @param levelSaves
+     */
+    public void initialize(LevelSave[] levelSaves) {
+        this.levelSaves = levelSaves;
+        resetNumberUnlocked();
+    }
+
+    public void resetNumberUnlocked() {
+        numberUnlocked = 0;
+        for (int i = 0; i < levelSaves.length; i++) {
+            if(levelSaves[i].unlocked) {
+                if (levelSaves[i].world > numberUnlocked) {
+                    numberUnlocked = levelSaves[i].world;
+                }
+            }
+        }
+    }
+
     @Override
     public void render(float v) {
         canvas.beginWithoutCamera();
         canvas.draw(background, 0, 0);
         for (int i = 0; i < posVec.length; i++) {
-            if (hoverState[i] != 1) {
-                canvas.draw(hoverTextures[i], Color.WHITE, hoverTextures[i].getWidth() / 2, hoverTextures[i].getHeight() / 2,
-                        posVec[i].x, posVec[i].y, 0, mapScale, mapScale);
+            if (numberUnlocked >= i) {
+                if (hoverState[i] != 1) {
+                    canvas.draw(hoverTextures[i], Color.WHITE, hoverTextures[i].getWidth() / 2, hoverTextures[i].getHeight() / 2,
+                            posVec[i].x, posVec[i].y, 0, mapScale, mapScale);
+                } else {
+                    canvas.draw(coloredTextures[i], Color.WHITE, coloredTextures[i].getWidth() / 2, coloredTextures[i].getHeight() / 2,
+                            posVec[i].x, posVec[i].y, 0, mapScale, mapScale);
+                }
             } else {
-                canvas.draw(coloredTextures[i], Color.WHITE, coloredTextures[i].getWidth() / 2, coloredTextures[i].getHeight() / 2,
+                canvas.draw(uncoloredTextures[i], Color.WHITE, uncoloredTextures[i].getWidth() / 2, uncoloredTextures[i].getHeight() / 2,
                         posVec[i].x, posVec[i].y, 0, mapScale, mapScale);
             }
         }
         for (int i = 0; i < posVecSteps.length; i++) {
-            canvas.draw(stepsTextures[i], Color.WHITE, stepsTextures[i].getWidth() / 2, stepsTextures[i].getHeight() / 2,
-                    posVecSteps[i].x, posVecSteps[i].y, 0, mapScale, mapScale);
+            if (numberUnlocked >= i) {
+                canvas.draw(stepsTextures[i], Color.WHITE, stepsTextures[i].getWidth() / 2, stepsTextures[i].getHeight() / 2,
+                        posVecSteps[i].x, posVecSteps[i].y, 0, mapScale, mapScale);
+            }
         }
         displayFont.getData().setScale(.5f);
         displayFont.setColor(hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE);
