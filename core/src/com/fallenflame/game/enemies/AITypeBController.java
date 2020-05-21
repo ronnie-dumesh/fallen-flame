@@ -68,38 +68,46 @@ public class AITypeBController extends AIController {
         switch(state) {
             case IDLE:
                 enemy.makeCalm();
-                // Check for flare targets -- FIRST because flares are prioritized
+                // Check for player target within range -- FIRST because player is prioritized
+                if(withinPlayerLight()) {
+                    firingAtFlare = false;
+                    enemy.setFiringTarget(player.getX(), player.getY());
+                    state = FSMState.PAUSE; // pauses when sees player at first
+                    enemy.resetPause();
+                    return;
+                }
+                // Check for flare targets -- SECOND because player is prioritized
                 for(FlareModel f : flares) {
                     if(withinFlareRange(f) && !f.isStuck()){
                         firingAtFlare = true;
                         firedWall = false;
                         targetFlare = f;
                         enemy.setFiringTarget(f.getX(), f.getY());
-                        state = FSMState.DIRECT_FIRE;
-                        break;
+                        state = FSMState.DIRECT_FIRE; // does not pause for flares
+                        return;
                     }
                 }
-                // Check for player target within range
+                break;
+
+            case PAUSE:
+                enemy.makePause();
+                if(withinPlayerLight())
+                    enemy.setFiringTarget(player.getX(), player.getY()); // updates in case we later loose player
+                if(enemy.isFinishedPausing())
+                    state = FSMState.DIRECT_FIRE; // start shooting
+                break;
+
+            case DIRECT_FIRE:
+                enemy.makeAggressive();
+                // Check for player target within range & PRIORITIZE if was shooting at flare
                 if(withinPlayerLight()) {
                     firingAtFlare = false;
                     enemy.setFiringTarget(player.getX(), player.getY());
-                    state = FSMState.PAUSE;
-                    enemy.resetPause();
-                    break;
+//                    state = FSMState.PAUSE; // should still pause here??
+//                    enemy.resetPause();
                 }
-                break;
-            case PAUSE:
-                enemy.makePause();
-                if(withinPlayerLight()) {
-                    enemy.setFiringTarget(player.getX(), player.getY()); // update in case we loose player
-                }
-                if(enemy.isFinishedPausing()){
-                    state = FSMState.DIRECT_FIRE;
-                }
-                break;
-            case DIRECT_FIRE:
-                enemy.makeAggressive();
-                if(firingAtFlare){
+                // If shooting at flare, update firing
+                else if(firingAtFlare){
                     enemy.setFiringTarget(targetFlare.getX(), targetFlare.getY());
                     // If flare now out of stuck to wall, stop firing
                     if(targetFlare.isStuck()){
@@ -112,34 +120,30 @@ public class AITypeBController extends AIController {
                         }
                     }
                 }
-                else{
-                    // If player now out of range, switch to sustained fire at last known position
-                    if(!withinPlayerLight()) {
-                        state = FSMState.SUSTAINED_FIRE;
-                        firingTime = 0;
-                    }
-                    else {
-                        enemy.setFiringTarget(player.getX(), player.getY());
-                    }
+                // Else: !firingAtFlare and !withinPlayerLight() so was shooting at player, but player gone --> switch states
+                else {
+                    state = FSMState.SUSTAINED_FIRE;
+                    firingTime = 0;
                 }
                 break;
+
             case SUSTAINED_FIRE:
                 enemy.makeAlert();
-                // Check for flare targets -- FIRST because flares are prioritized
+                // Check for player target within range -- FIRST because player is prioritized
+                if(withinPlayerLight()) {
+                    enemy.setFiringTarget(player.getX(), player.getY());
+                    state = FSMState.DIRECT_FIRE; // no pause bc already active
+                    return;
+                }
+                // Check for flare targets -- SECOND because player is prioritized
                 for(FlareModel f : flares) {
                     if(withinFlareRange(f) && !f.isStuck()){
                         firingAtFlare = true;
                         targetFlare = f;
                         enemy.setFiringTarget(f.getX(), f.getY());
                         state = FSMState.DIRECT_FIRE;
-                        break;
+                        return;
                     }
-                }
-                // Check for player target within range
-                if(withinPlayerLight()) {
-                    enemy.setFiringTarget(player.getX(), player.getY());
-                    state = FSMState.DIRECT_FIRE;
-                    break;
                 }
                 // Check if sustained fire has ended
                 if(firingTime >= SUSTAINED_FIRE_TIME)
