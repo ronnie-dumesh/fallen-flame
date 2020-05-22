@@ -132,7 +132,7 @@ public class StoryMode implements Screen, InputProcessor {
         displayFont.setColor(Color.BLACK);
         displayFont.getData().setScale(.5f);
         if(storyTextures.get(storySelected).hasSkip){
-            canvas.draw(progress_textures[page], canvas.getWidth()/2, canvas.getHeight()/9);
+            canvas.draw(progress_textures[page], canvas.getWidth()/2, canvas.getHeight()/15);
         }
         canvas.draw(pageNext, hoverState[1] == 1 ? Color.CYAN : Color.WHITE, pageNext.getWidth() / 2, pageNext.getHeight() / 2,
                 nextPrev[1].x, nextPrev[1].y, 0, 1, 1);
