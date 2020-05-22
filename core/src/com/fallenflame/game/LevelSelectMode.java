@@ -331,40 +331,43 @@ public class LevelSelectMode implements Screen, InputProcessor {
         for (int i = 0; i < levelSaves.length; i++) {
             //only draw if it's from the correct world
             if (levelSaves[i].world == worldSelected) {
-                if (numNotDrawn >= page * 10 && !stopDrawing) {
-                    if (levelSaves[i].unlocked) {
-                        //Do unlocked stuff
-                        if ((Math.pow(screenX-posVec[numDrawn].x,2) / (w*w)) + (Math.pow(screenY-posVec[numDrawn].y,2) / (h*h)) <= 1) {
+                if (!stopDrawing) {
+                    if (numNotDrawn >= page * 10) {
+                        if (levelSaves[i].unlocked) {
+                            //Do unlocked stuff
+                            if ((Math.pow(screenX - posVec[numDrawn].x, 2) / (w * w)) + (Math.pow(screenY - posVec[numDrawn].y, 2) / (h * h)) <= 1) {
                                 pressState = 1;
                                 levelSelected = i;
+                            }
                         }
-                    }
-                    numDrawn++;
-                    if (numDrawn == 10) {
-                        stopDrawing = true;
+                        numDrawn++;
+                        if (numDrawn == 10) {
+                            stopDrawing = true;
+                        }
+                    } else {
+                        numNotDrawn++;
                     }
                 } else {
-                    numNotDrawn++;
+                    w = scale*pageNext.getWidth()/2.0f;
+                    h = scale*pageNext.getHeight()/2.0f;
+                    if ((Math.pow(screenX-nextPrev[1].x,2) / (w*w)) + (Math.pow(screenY-nextPrev[1].y,2) / (h*h)) <= 1) {
+                        if ((page + 1) * 10 < levelSaves.length) {
+                            page++;
+                        }
+                    }
+                    break;
                 }
             }
         }
 
         w = scale*pageNext.getWidth()/2.0f;
         h = scale*pageNext.getHeight()/2.0f;
-
-        for (int i = 0; i < nextPrev.length; i++) {
-            if ((Math.pow(screenX-nextPrev[i].x,2) / (w*w)) + (Math.pow(screenY-nextPrev[i].y,2) / (h*h)) <= 1) {
-                if (i == 0) {
-                    if (page > 0) {
-                        page--;
-                    }
-                } else {
-                    if ((page + 1) * 10 < levelSaves.length) {
-                        page++;
-                    }
+            if ((Math.pow(screenX-nextPrev[0].x,2) / (w*w)) + (Math.pow(screenY-nextPrev[0].y,2) / (h*h)) <= 1) {
+                if (page > 0) {
+                    page--;
                 }
             }
-        }
+
         if (screenX >= BACK_BTN_X && screenX <= BACK_BTN_X + BACK_BTN_WIDTH &&
                 origScreenY >= BACK_BTN_Y && origScreenY <= BACK_BTN_Y + BACK_BTN_HEIGHT) {
             pressState = 1;
