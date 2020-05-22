@@ -1,56 +1,48 @@
 {
-  "name": "t4",
+  "name": "ghost-tutorial",
+  "maxFlareCount": 0,
+  "startFlareCount": 0,
+  "startSneakVal": 36,
   "texts": [
     {
       "pos": [
-        5.1,
-        11.2
+        16.5,
+        4.76
       ],
       "size": [
-        8.68,
-        7.88
+        11.64,
+        4.76
       ],
-      "text": "Aim with the mouse and click to throw a flare"
+      "text": "Run!"
     },
     {
       "pos": [
-        11.28,
-        11.02
+        5.58,
+        4.8
       ],
       "size": [
-        3.2,
-        7.52
+        9.56,
+        5
       ],
-      "text": "Enemies are attracted to the light! "
-    },
-    {
-      "pos": [
-        15.48,
-        11.02
-      ],
-      "size": [
-        4.8,
-        7.72
-      ],
-      "text": "Your remaining flare count is on the right side of the screen"
+      "text": "Be careful! If you use too much sneak/sprint (indicated by the top left bar) a ghost will start chasing you! Try to sneak past the enemies in front of you."
     }
   ],
   "physicsSize": [
-    23.04,
-    21.76
+    25.6,
+    10.24
   ],
   "fpsRange": [
     20,
     60
   ],
   "playerpos": [
-    2.22,
-    11.28
+    2.48,
+    5.06
   ],
   "bgm": "the-doll-thrown-away-in-rain",
   "exitpos": [
-    19,
-    11.53
+    22.86,
+    5.37
   ],
   "background": {
     "texture": "floor-tile"
@@ -58,8 +50,29 @@
   "enemies": [
     {
       "enemypos": [
-        11.64,
-        10.96
+        7.7,
+        2.02
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        7.38,
+        6.58
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        9.38,
+        6.66
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        9.42,
+        2
       ],
       "enemytype": "typeA"
     }
@@ -81,11 +94,11 @@
   "walls": [
     {
       "pos": [
-        10.88,
-        21.12
+        12.8,
+        9.6
       ],
       "size": [
-        21.76,
+        25.6,
         1.28
       ],
       "texture": "wall-side"
@@ -93,79 +106,101 @@
     {
       "pos": [
         0.64,
-        10.88
+        5.12
       ],
       "size": [
         1.28,
-        21.76
+        10.24
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        22.4,
-        10.88
+        24.96,
+        4.48
       ],
       "size": [
         1.28,
-        21.76
+        8.96
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        10.88,
+        12.8,
         0.64
       ],
       "size": [
-        21.76,
+        25.6,
         1.28
       ],
       "texture": "wall-side"
     },
     {
       "pos": [
-        11.52,
-        17.92
+        3.84,
+        8.96
       ],
       "size": [
-        20.48,
-        7.68
+        5.12,
+        2.56
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        11.52,
+        3.2,
+        2.56
+      ],
+      "size": [
+        6.4,
         3.84
       ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        17.92,
+        8.96
+      ],
       "size": [
-        20.48,
-        5.12
+        15.36,
+        2.56
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        11.52,
-        13.44
+        17.92,
+        2.56
       ],
       "size": [
-        20.48,
+        15.36,
+        3.84
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        3.84,
+        7.04
+      ],
+      "size": [
+        5.12,
         1.28
       ],
       "texture": "wall-side"
     },
     {
       "pos": [
-        11.52,
-        8.32
+        17.28,
+        7.04
       ],
       "size": [
-        20.48,
-        3.84
+        14.08,
+        1.28
       ],
-      "texture": "wall-top"
+      "texture": "wall-side"
     }
   ],
   "graphicSize": [

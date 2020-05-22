@@ -1,51 +1,50 @@
 {
-  "name": "t1",
+  "name": "sprint-lure-tutorial",
+  "maxFlareCount": 0,
   "startFlareCount": 0,
+  "startSneakVal": 500,
   "texts": [
     {
       "pos": [
-        6.58,
-        11.76
+        7.97,
+        6.4
       ],
       "size": [
-        10.92,
-        5
+        14.74,
+        12.8
       ],
-      "text": "Move with the {up}{left}{down}{right} keys"
-    },
-    {
-      "pos": [
-        16.36,
-        9.82
-      ],
-      "size": [
-        8.96,
-        8.6
-      ],
-      "text": "Walk to the exit"
+      "text": "An enemy is blocking your path! It will only chase you if your light touches it. Hold {sprint} to lure it towards you, and release and move away to sneak by. The enemy will go to your last known location."
     }
   ],
   "physicsSize": [
-    21.76,
-    21.76
+    20.48,
+    12.8
   ],
   "fpsRange": [
     20,
     60
   ],
   "playerpos": [
-    4.42,
-    13.32
+    2.62,
+    5.68
   ],
   "bgm": "the-doll-thrown-away-in-rain",
   "exitpos": [
-    17.98,
-    3.53
+    17.62,
+    6.39
   ],
   "background": {
     "texture": "floor-tile"
   },
-  "enemies": [],
+  "enemies": [
+    {
+      "enemypos": [
+        10.72,
+        5.14
+      ],
+      "enemytype": "typeA"
+    }
+  ],
   "items": [],
   "trees": [],
   "lighting": {
@@ -63,11 +62,11 @@
   "walls": [
     {
       "pos": [
-        10.88,
-        21.12
+        10.24,
+        12.16
       ],
       "size": [
-        21.76,
+        20.48,
         1.28
       ],
       "texture": "wall-side"
@@ -75,68 +74,57 @@
     {
       "pos": [
         0.64,
-        10.88
-      ],
-      "size": [
-        1.28,
-        21.76
-      ],
-      "texture": "wall-top"
-    },
-    {
-      "pos": [
-        21.12,
-        10.88
-      ],
-      "size": [
-        1.28,
-        21.76
-      ],
-      "texture": "wall-top"
-    },
-    {
-      "pos": [
-        10.88,
-        0.64
-      ],
-      "size": [
-        21.76,
-        1.28
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        8.32,
         6.4
       ],
       "size": [
-        14.08,
-        10.24
+        1.28,
+        12.8
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        10.88,
-        19.84
+        19.84,
+        6.4
       ],
       "size": [
-        19.2,
-        3.84
+        1.28,
+        12.8
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        10.88,
-        17.28
+        10.24,
+        0.64
       ],
       "size": [
-        19.2,
+        20.48,
         1.28
       ],
       "texture": "wall-side"
+    },
+    {
+      "pos": [
+        10.88,
+        9.6
+      ],
+      "size": [
+        3.84,
+        6.4
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        10.88,
+        2.56
+      ],
+      "size": [
+        3.84,
+        5.12
+      ],
+      "texture": "wall-top"
     }
   ],
   "graphicSize": [

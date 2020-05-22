@@ -1,51 +1,57 @@
 {
-  "name": "t1",
+  "name": "sprint-tutorial",
+  "maxFlareCount": 0,
   "startFlareCount": 0,
+  "startSneakVal": 500,
   "texts": [
     {
       "pos": [
-        6.58,
-        11.76
+        8.02,
+        6.42
       ],
       "size": [
-        10.92,
-        5
+        15.52,
+        2.12
       ],
-      "text": "Move with the {up}{left}{down}{right} keys"
-    },
-    {
-      "pos": [
-        16.36,
-        9.82
-      ],
-      "size": [
-        8.96,
-        8.6
-      ],
-      "text": "Walk to the exit"
+      "text": "There's an enemy behind you, move while holding {sprint} to sprint to the exit!"
     }
   ],
   "physicsSize": [
     21.76,
-    21.76
+    12.8
   ],
   "fpsRange": [
     20,
     60
   ],
   "playerpos": [
-    4.42,
-    13.32
+    4.62,
+    6.04
   ],
   "bgm": "the-doll-thrown-away-in-rain",
   "exitpos": [
-    17.98,
-    3.53
+    19.5,
+    6.49
   ],
   "background": {
     "texture": "floor-tile"
   },
-  "enemies": [],
+  "enemies": [
+    {
+      "enemypos": [
+        2.4,
+        5.86
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          6.4,
+          5.86
+        ]
+      ]
+    }
+  ],
   "items": [],
   "trees": [],
   "lighting": {
@@ -64,7 +70,7 @@
     {
       "pos": [
         10.88,
-        21.12
+        12.16
       ],
       "size": [
         21.76,
@@ -75,22 +81,22 @@
     {
       "pos": [
         0.64,
-        10.88
+        6.4
       ],
       "size": [
         1.28,
-        21.76
+        12.8
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
         21.12,
-        10.88
+        6.4
       ],
       "size": [
         1.28,
-        21.76
+        12.8
       ],
       "texture": "wall-top"
     },
@@ -107,22 +113,33 @@
     },
     {
       "pos": [
-        8.32,
-        6.4
+        10.88,
+        8.32
       ],
       "size": [
-        14.08,
-        10.24
+        19.2,
+        1.28
       ],
-      "texture": "wall-top"
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        8.32,
+        4.48
+      ],
+      "size": [
+        16.64,
+        1.28
+      ],
+      "texture": "wall-side"
     },
     {
       "pos": [
         10.88,
-        19.84
+        10.24
       ],
       "size": [
-        19.2,
+        21.76,
         3.84
       ],
       "texture": "wall-top"
@@ -130,13 +147,13 @@
     {
       "pos": [
         10.88,
-        17.28
+        3.2
       ],
       "size": [
-        19.2,
-        1.28
+        21.76,
+        3.84
       ],
-      "texture": "wall-side"
+      "texture": "wall-top"
     }
   ],
   "graphicSize": [

@@ -1,0 +1,221 @@
+{
+  "name": "sneak tutorial",
+  "startSneakVal": 500,
+  "texts": [
+    {
+      "pos": [
+        6.92,
+        5.96
+      ],
+      "size": [
+        10.6,
+        1.76
+      ],
+      "text": "Fog means that there are enemies nearby. Move while holding {sneak} to sneak past them."
+    }
+  ],
+  "physicsSize": [
+    16.64,
+    12.8
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    1.9,
+    5.48
+  ],
+  "bgm": "the-doll-thrown-away-in-rain",
+  "exitpos": [
+    14.64,
+    5.81
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        7.44,
+        3.46
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        9.24,
+        3.48
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        7.46,
+        6.92
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        9.22,
+        6.96
+      ],
+      "enemytype": "typeA"
+    }
+  ],
+  "items": [],
+  "trees": [],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "extras": [],
+  "walls": [
+    {
+      "pos": [
+        8.32,
+        12.16
+      ],
+      "size": [
+        16.64,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.64,
+        6.4
+      ],
+      "size": [
+        1.28,
+        12.8
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        16,
+        6.4
+      ],
+      "size": [
+        1.28,
+        12.8
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        8.32,
+        0.64
+      ],
+      "size": [
+        16.64,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        8.32,
+        10.24
+      ],
+      "size": [
+        16.64,
+        3.84
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        8.32,
+        1.92
+      ],
+      "size": [
+        16.64,
+        2.56
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        3.84,
+        7.04
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        3.2,
+        3.84
+      ],
+      "size": [
+        6.4,
+        2.56
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        12.8,
+        3.84
+      ],
+      "size": [
+        5.12,
+        2.56
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        12.8,
+        7.04
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        3.84,
+        8.32
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        12.8,
+        8.32
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "wall-top"
+    }
+  ],
+  "startFlareCount": 0,
+  "maxFlareCount": 0,
+  "graphicSize": [
+    800,
+    600
+  ]
+}
