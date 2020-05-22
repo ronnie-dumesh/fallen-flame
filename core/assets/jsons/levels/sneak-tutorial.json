@@ -16,6 +16,7 @@
       "text": "Fog means that there are enemies nearby. Move while holding {sneak} to sneak past them."
     }
   ],
+  "bgm": "the-doll-thrown-away-in-rain",
   "physicsSize": [
     16.64,
     12.8
