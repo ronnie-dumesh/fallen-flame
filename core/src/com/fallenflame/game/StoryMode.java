@@ -5,6 +5,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.fallenflame.game.util.BGMController;
 import com.fallenflame.game.util.JsonAssetManager;
@@ -33,6 +35,7 @@ public class StoryMode implements Screen, InputProcessor {
     private static final String PROGRESS_2 = "textures/progress-2.png";
     private static final String PROGRESS_3 = "textures/progress-3.png";
     private static final String PROGRESS_4 = "textures/progress-4.png";
+    private static final String WIN_1 = "textures/end_page1.png";
     private static final Texture P_1 = new Texture(PROGRESS_1);
     private static final Texture P_2 = new Texture(PROGRESS_2);
     private static final Texture P_3 = new Texture(PROGRESS_3);
@@ -90,6 +93,8 @@ public class StoryMode implements Screen, InputProcessor {
      * The current state of whether any level buttons are being hovered over
      */
     private int[] hoverState;
+    private Rectangle hoverRect;
+    private GlyphLayout gl;
     /**
      * Position vectors for the next page and prev page buttons
      */
@@ -114,6 +119,7 @@ public class StoryMode implements Screen, InputProcessor {
         storyTextures.put(0, new Story(new Texture[]{new Texture(INTRO_1), new Texture(INTRO_2), new Texture(INTRO_3), new Texture(INTRO_4)}, true));
         storyTextures.put(1, new Story(new Texture[]{new Texture(TREES_1)}, false));
         storyTextures.put(2, new Story(new Texture[]{new Texture(VOLCANO_1)}, false));
+        storyTextures.put(3, new Story(new Texture[]{new Texture(WIN_1)}, false));
 
     }
 
@@ -121,6 +127,9 @@ public class StoryMode implements Screen, InputProcessor {
     @Override
     public void show() {
         displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
+        gl = new GlyphLayout(displayFont, "Skip");
+        hoverRect  = new Rectangle((canvas.getWidth() - gl.width) / 2, (canvas.getHeight() - gl.height) / 2 - canvas.getHeight()/2.5f,
+                gl.width, gl.height);
         BGMController.startBGM("menu-music");
     }
 
@@ -129,10 +138,11 @@ public class StoryMode implements Screen, InputProcessor {
         canvas.beginWithoutCamera();
         background = storyTextures.get(storySelected).stories[page];
         canvas.draw(background, 0, 0);
-        displayFont.setColor(Color.BLACK);
-        displayFont.getData().setScale(.5f);
+        displayFont.setColor(hoverState[2] == 1 ? Color.CYAN : Color.WHITE);
+        displayFont.getData().setScale(.75f);
         if(storyTextures.get(storySelected).hasSkip){
-            canvas.draw(progress_textures[page], canvas.getWidth()/2, canvas.getHeight()/15);
+            canvas.draw(progress_textures[page], canvas.getWidth()/2-progress_textures[page].getWidth()/2, canvas.getHeight()/8);
+            canvas.drawTextCentered("Skip", displayFont, -canvas.getHeight()/2.5f);
         }
         canvas.draw(pageNext, hoverState[1] == 1 ? Color.CYAN : Color.WHITE, pageNext.getWidth() / 2, pageNext.getHeight() / 2,
                 nextPrev[1].x, nextPrev[1].y, 0, 1, 1);
@@ -267,6 +277,9 @@ public class StoryMode implements Screen, InputProcessor {
                     }
                 }
             }
+            if(hoverRect != null && hoverRect.contains(screenX, screenY)){
+                pressState = 1;
+            }
         }
         return false;
 
@@ -288,6 +301,7 @@ public class StoryMode implements Screen, InputProcessor {
 
         hoverState[0] = 0;
         hoverState[1] = 0;
+        hoverState[2] = 0;
         for (int i = 0; i < nextPrev.length; i++) {
             if ((Math.pow(screenX - nextPrev[i].x, 2) / (w * w)) + (Math.pow(screenY - nextPrev[i].y, 2) / (h * h)) <= 1) {
                 if (i == 0) {
@@ -297,6 +311,8 @@ public class StoryMode implements Screen, InputProcessor {
                 }
             }
         }
+        hoverState[2] = hoverRect != null && hoverRect.contains(screenX, screenY) ? 1 : 0;
+
         return false;
     }
     @Override
