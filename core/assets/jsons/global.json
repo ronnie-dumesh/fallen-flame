@@ -14,7 +14,7 @@
     "standardflarecount": 5,
     "sprintlightrad":  7,
     "sneaklightrad":    1,
-    "minlightradius":   2,
+    "walklightrad":   2,
     "defaultStartSneakVal":   300,
     "sprintDecRate": 1.4,
     "sneakDecRate": 0.7,

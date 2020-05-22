@@ -30,8 +30,7 @@ public class PlayerModel extends CharacterModel {
 
     /** Radius of player's light */
     protected float lightRadius;
-    protected float minLightRadius;
-    protected float lightRadiusSaved;
+    protected float lightRadiusWalk;
     protected float lightRadiusSprint;
     protected float lightRadiusSneak;
     /** Player sneak and spring left (once hits 0, a ghost is deployed on the map)
@@ -100,8 +99,8 @@ public class PlayerModel extends CharacterModel {
         // Global json data
         lightRadiusSprint = globalJson.get("sprintlightrad").asInt();
         lightRadiusSneak = globalJson.get("sneaklightrad").asInt();
-        minLightRadius = globalJson.get("minlightradius").asInt();
-        lightRadius = minLightRadius;
+        lightRadiusWalk = globalJson.get("walklightrad").asInt();
+        lightRadius = lightRadiusWalk;
         float[] tintValues = globalJson.get("tint").asFloatArray();//RGBA
         tint = new Color(tintValues[0], tintValues[1], tintValues[2], tintValues[3]);
         sneakDecRate = globalJson.get("sneakDecRate").asFloat();
@@ -290,13 +289,6 @@ public class PlayerModel extends CharacterModel {
     }
 
     /**
-     * Returns the minimum light radius the player can have
-     *
-     * @return minimum light radius
-     */
-    public float getMinLightRadius() { return minLightRadius; }
-
-    /**
      * Returns the number of flares the player has left
      *
      * @return the number of flares the player has left
@@ -348,17 +340,20 @@ public class PlayerModel extends CharacterModel {
     }
 
     /**
-     * Sets player light radius (does not include sneak speed)
-     * @param r light radius
-     */
-    public void setLightRadius(float r) {
-        lightRadius = Math.max(r, minLightRadius);
-    }
-
-    /**
      * Sets player to sneak light radius (not reachable by scrolling)
      */
     public void setLightRadiusSneak() { lightRadius = lightRadiusSneak; }
+
+    /**
+     * Sets player to sprint light radius
+     */
+    public void setLightRadiusSprint() { lightRadius = lightRadiusSprint; }
+
+
+    /**
+     * Sets player to walk light radius
+     */
+    public void setLightRadiusWalk() { lightRadius = lightRadiusWalk; }
 
     /**
      * Make the firebuddy begin the flare throwing animation.
@@ -415,36 +410,6 @@ public class PlayerModel extends CharacterModel {
     public Sound getWalkSound() {
         return walkSound;
     }
-
-    /**
-     * Gets player light radius when not sprinting or sneaking
-     * @return light radius
-     */
-    public float getLightRadiusSaved() {
-        return lightRadiusSaved;
-    }
-
-    /**
-     * Sets player light radius when not sprinting or sneaking
-     * @param r light radius
-     */
-    public void setLightRadiusSaved(float r) {
-        lightRadiusSaved = r;
-    }
-
-    /**
-     * Gets player light radius when sprinting
-     * @return light radius
-     */
-    public float getLightRadiusSprint() {
-        return lightRadiusSprint;
-    }
-
-    /**
-     * Increments light radius by i (can be positive or negative) ensuring lightRadius is never less than 0.
-     * @param i value to increment radius by
-     */
-    public void incrementLightRadius(float i) { setLightRadius(lightRadius + i); }
 
     public boolean isPlayingSound() {return playingSound;}
 
