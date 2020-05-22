@@ -186,6 +186,6 @@
     "world":      2,
     "unlocked":   true,
     "completed":  true,
-    "path": "levels/max3.json"
+    "path":    "levels/ronnie-maze-level.json"
   }
 ]
