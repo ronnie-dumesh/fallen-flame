@@ -505,7 +505,7 @@ public class PlayerModel extends CharacterModel {
         }
 
         else if(!throwing) {
-            if (angle100 == 0) {
+            if (angle100 == 0 || angle100 == 628) {
                 fireBuddyFilmstrip = fireBuddyUp;
             } else if (angle100 > 0 && angle100 < 314) {
                 fireBuddyFilmstrip = fireBuddyLeft;
