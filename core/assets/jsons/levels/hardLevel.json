@@ -35,20 +35,20 @@
           8.44
         ],
         [
-          16.36,
-          16.46
+          16.5,
+          12.9
         ],
         [
-          2.94,
-          16.46
+          2.58,
+          12.92
         ],
         [
-          2.9,
-          12.88
+          2.6,
+          10.3
         ],
         [
-          11.18,
-          12.82
+          11.16,
+          10.28
         ],
         [
           11.24,
@@ -137,7 +137,15 @@
       "enemytype": "typeA"
     }
   ],
-  "items": [],
+  "items": [
+    {
+      "itemPos": [
+        8.42,
+        11.4
+      ],
+      "itemType": "flare"
+    }
+  ],
   "trees": [],
   "lighting": {
     "color": [
@@ -210,13 +218,13 @@
     {
       "pos": [
         9.6,
-        18.56
+        17.28
       ],
       "size": [
         16.64,
-        1.28
+        3.84
       ],
-      "texture": "wall-side"
+      "texture": "wall-top"
     },
     {
       "pos": [
@@ -294,8 +302,22 @@
         1.28
       ],
       "texture": "wall-side"
+    },
+    {
+      "pos": [
+        9.6,
+        14.72
+      ],
+      "size": [
+        16.64,
+        1.28
+      ],
+      "texture": "wall-side"
     }
   ],
+  "startFlareCount": 3,
+  "maxFlareCount": 4,
+  "startSneakVal": 83,
   "graphicSize": [
     800,
     600

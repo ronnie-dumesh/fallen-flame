@@ -837,5 +837,6 @@
   "graphicSize": [
     800,
     600
-  ]
+  ],
+  "bgm": "ruins"
 }
