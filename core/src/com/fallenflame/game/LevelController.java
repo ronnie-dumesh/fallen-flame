@@ -648,6 +648,7 @@ public class LevelController implements ContactListener {
         if (player.isWinning() || player.isDying()) {
             if(player.isWinning()) player.setLightRadiusSprint(); //increase light radius to see fire buddy
             else player.setLightRadiusWalk();
+
             lightController.updateLights(flares, enemies, fireballs, items);
             return;
         }
