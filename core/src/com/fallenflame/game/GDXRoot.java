@@ -269,7 +269,7 @@ public class GDXRoot extends Game implements ScreenListener {
 //			levelSelect.reset();
 		}
 		else if (screen == story) {
-			if(levelSelect.getLevelSelected() == 0 && worldSelect.getWorldSelected() == 0){
+			if(story.storySelected == 0 && levelSelect.getLevelSelected() == 0 && worldSelect.getWorldSelected() == 0){
 				Gdx.input.setInputProcessor(engine);
 				engine.setScreenListener(this);
 				engine.setCanvas(canvas);
