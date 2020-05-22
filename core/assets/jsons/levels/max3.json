@@ -1,0 +1,653 @@
+{
+  "name": "max3",
+  "physicsSize": [
+    32,
+    32
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    15.98,
+    16.9
+  ],
+  "exitpos": [
+    30.12,
+    2.01
+  ],
+  "background": {
+    "texture": "volcano-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        12.22,
+        1.4
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        27.42,
+        16.68
+      ],
+      "enemytype": "typeA"
+    }
+  ],
+  "items": [],
+  "extras": [],
+  "texts": [],
+  "trees": [],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        10.24,
+        31.36
+      ],
+      "size": [
+        17.92,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        0.64,
+        16
+      ],
+      "size": [
+        1.28,
+        32
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        31.36,
+        16
+      ],
+      "size": [
+        1.28,
+        32
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        16,
+        0.64
+      ],
+      "size": [
+        32,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        8.32,
+        16
+      ],
+      "size": [
+        11.52,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        24.96,
+        16
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        8.96,
+        18.56
+      ],
+      "size": [
+        12.8,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        22.4,
+        18.56
+      ],
+      "size": [
+        11.52,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        14.72,
+        24.32
+      ],
+      "size": [
+        1.28,
+        10.24
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        17.28,
+        24.32
+      ],
+      "size": [
+        1.28,
+        10.24
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        7.68,
+        28.8
+      ],
+      "size": [
+        10.24,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        19.84,
+        26.24
+      ],
+      "size": [
+        1.28,
+        11.52
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        22.4,
+        22.4
+      ],
+      "size": [
+        1.28,
+        6.4
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        23.68,
+        27.52
+      ],
+      "size": [
+        3.84,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        25.6,
+        30.08
+      ],
+      "size": [
+        7.68,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        26.24,
+        24.96
+      ],
+      "size": [
+        1.28,
+        6.4
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        28.8,
+        22.4
+      ],
+      "size": [
+        1.28,
+        11.52
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        23.68,
+        23.68
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        23.68,
+        21.12
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        8.32,
+        26.24
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        12.16,
+        23.04
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        7.04,
+        23.68
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        17.28,
+        14.08
+      ],
+      "size": [
+        1.28,
+        5.12
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        14.72,
+        14.72
+      ],
+      "size": [
+        1.28,
+        3.84
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        10.24,
+        10.88
+      ],
+      "size": [
+        15.36,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        3.2,
+        12.8
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        8.32,
+        13.44
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        9.6,
+        8.32
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        3.2,
+        25.6
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        7.68,
+        21.12
+      ],
+      "size": [
+        10.24,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        26.24,
+        21.12
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        19.84,
+        12.8
+      ],
+      "size": [
+        1.28,
+        7.68
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        18.56,
+        16
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        21.12,
+        31.36
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        30.08,
+        31.36
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        25.6,
+        31.36
+      ],
+      "size": [
+        7.68,
+        1.28
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        3.2,
+        7.04
+      ],
+      "size": [
+        1.28,
+        3.84
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        3.2,
+        2.56
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        5.76,
+        3.2
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        5.76,
+        5.12
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        8.32,
+        6.4
+      ],
+      "size": [
+        1.28,
+        5.12
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        5.76,
+        8.32
+      ],
+      "size": [
+        3.84,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        8.32,
+        3.2
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        10.88,
+        5.12
+      ],
+      "size": [
+        1.28,
+        7.68
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        16,
+        8.32
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        26.24,
+        13.44
+      ],
+      "size": [
+        6.4,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        26.88,
+        10.88
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        22.4,
+        10.88
+      ],
+      "size": [
+        1.28,
+        6.4
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        25.6,
+        7.04
+      ],
+      "size": [
+        7.68,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        22.4,
+        3.2
+      ],
+      "size": [
+        16.64,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        12.16,
+        3.2
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        13.44,
+        5.76
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        19.84,
+        5.76
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        19.84,
+        7.04
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-top"
+    }
+  ],
+  "graphicSize": [
+    800,
+    600
+  ]
+}
