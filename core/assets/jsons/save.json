@@ -98,20 +98,6 @@
     "path":       "levels/medium.json"
   },
   {
-    "name": "Cave level 15",
-    "world":      0,
-    "unlocked":   true,
-    "completed":  true,
-    "path": "levels/Jalil-12.json"
-  },
-  {
-    "name": "Cave level 16",
-    "world":      0,
-    "unlocked":   true,
-    "completed":  true,
-    "path": "levels/Jalil-14.json"
-  },
-  {
     "name": "Fores level 1",
     "world":      1,
     "unlocked":   true,
@@ -137,31 +123,59 @@
     "world":      1,
     "unlocked":   true,
     "completed":  true,
-    "path": "levels/Jalil-15.json"
+    "path": "levels/bryanlevelfour.json"
   },
   {
     "name": "Forest level 5",
     "world":      1,
     "unlocked":   true,
     "completed":  true,
+    "path": "levels/Jalil-15.json"
+  },
+  {
+    "name": "Forest level 6",
+    "world":      1,
+    "unlocked":   true,
+    "completed":  true,
     "path": "levels/bryanleveltwo.json"
+  },
+  {
+    "name": "Forest level 7",
+    "world":      1,
+    "unlocked":   true,
+    "completed":  true,
+    "path": "levels/shooternest.json"
   },
   {
     "name": "Volcano level 1",
     "world":      2,
     "unlocked":   true,
     "completed":  true,
-    "path": "levels/maxLevelUpdated.json"
+    "path": "levels/Jalil-12.json"
   },
   {
     "name": "Volcano level 2",
     "world":      2,
     "unlocked":   true,
     "completed":  true,
-    "path": "levels/max2.json"
+    "path": "levels/Jalil-14.json"
   },
   {
     "name": "Volcano level 3",
+    "world":      2,
+    "unlocked":   true,
+    "completed":  true,
+    "path": "levels/maxLevelUpdated.json"
+  },
+  {
+    "name": "Volcano level 4",
+    "world":      2,
+    "unlocked":   true,
+    "completed":  true,
+    "path": "levels/max2.json"
+  },
+  {
+    "name": "Volcano level 4",
     "world":      2,
     "unlocked":   true,
     "completed":  true,
