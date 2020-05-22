@@ -692,15 +692,6 @@ public class GameEngine implements Screen, InputProcessor {
         if (Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.GO_DOWN))) {
             vertical -= 1.0f;
         }
-
-        //#region mouse wheel alternative
-        if(Gdx.input.isKeyPressed(Input.Keys.PERIOD) && ALLOW_DEBUG){
-            level.lightFromPlayer(0.5f);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.COMMA) && ALLOW_DEBUG){
-            level.lightFromPlayer(-0.5f);
-        }
-        //#endregion
     }
 
     /************************ EVENT-BASED INPUT HANDLING ************************/
@@ -789,12 +780,6 @@ public class GameEngine implements Screen, InputProcessor {
     public boolean scrolled (int amount) {
         if(!isScreenActive()){
             return true;
-        }
-        if(amount == 1 && ALLOW_DEBUG){
-            level.lightFromPlayer(-1.0f);
-        }
-        if(amount == -1 && ALLOW_DEBUG){
-            level.lightFromPlayer(1.0f);
         }
 
         return true;

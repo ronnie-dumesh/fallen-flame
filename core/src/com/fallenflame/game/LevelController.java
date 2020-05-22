@@ -640,12 +640,13 @@ public class LevelController implements ContactListener {
         // If victorious, mark victorious
         if (player.hasWon()) setLevelState(LevelState.WIN);
 
-        // If dying or dead, that's it. Don't update anything else.
+        // If player won or is dead, that's it. Don't update anything else.
         // (such as light, fog, enemies, etc)
-        if (player.isDead() || player.isDying() || player.hasWon()) return;
+        if (player.isDead() || player.hasWon()) return;
 
-        if (player.isWinning()) {
-            player.setLightRadius(player.getLightRadiusSprint()); //increase light radius to see fire buddy
+        //Update nothing except lights
+        if (player.isWinning() || player.isDying()) {
+            player.setLightRadiusSprint(); //increase light radius to see fire buddy and flair
             lightController.updateLights(flares, enemies, fireballs, items);
             return;
         }
@@ -898,8 +899,7 @@ public class LevelController implements ContactListener {
      * (Called by GameEngine)
      */
     public void makeSprint(){
-        player.setLightRadiusSaved(player.getLightRadius());
-        player.setLightRadius(player.getLightRadiusSprint());
+        player.setLightRadiusSprint();
         player.setSprinting();
     }
 
@@ -909,7 +909,7 @@ public class LevelController implements ContactListener {
      * (Called by GameEngine)
      */
     public void makeWalk(){
-        player.setLightRadius(player.getLightRadiusSaved());
+        player.setLightRadiusWalk();
         player.setWalking();
     }
 
@@ -919,18 +919,8 @@ public class LevelController implements ContactListener {
      * (Called by GameEngine)
      */
     public void makeSneak(){
-        player.setLightRadiusSaved(player.getLightRadius());
         player.setLightRadiusSneak();
         player.setSneaking();
-    }
-
-    /**
-     * Change lightRadius generated from player. (Called by GameEngine)
-     * @param lightRadius radius of light around player
-     */
-    public void lightFromPlayer(float lightRadius) {
-        if(player.isWalking())
-            player.incrementLightRadius(lightRadius);
     }
 
     /**
