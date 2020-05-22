@@ -1,8 +1,35 @@
 {
   "name": "shooter-tutorial",
+  "maxFlareCount": 1,
+  "startFlareCount": 1,
+  "startSneakVal": 500,
+  "texts": [
+    {
+      "pos": [
+        3.06,
+        4.74
+      ],
+      "size": [
+        5.84,
+        7.32
+      ],
+      "text": "Be careful, there is another type of enemy. The shooter. If you throw a flare at this enemy or expose it to your light, it will shoot you!"
+    },
+    {
+      "pos": [
+        9.44,
+        4.44
+      ],
+      "size": [
+        6.96,
+        7.96
+      ],
+      "text": "Use {sneak} to sneak around the enemy."
+    }
+  ],
   "physicsSize": [
     16.64,
-    8.96
+    10.24
   ],
   "fpsRange": [
     20,
@@ -12,6 +39,7 @@
     2.32,
     3.4
   ],
+  "bgm": "the-doll-thrown-away-in-rain",
   "exitpos": [
     14.44,
     5.13
@@ -22,37 +50,14 @@
   "enemies": [
     {
       "enemypos": [
-        8.28,
-        2.66
+        8.5,
+        3.92
       ],
       "enemytype": "typeB"
     }
   ],
   "items": [],
-  "texts": [
-    {
-      "pos": [
-        2.38,
-        3.82
-      ],
-      "size": [
-        2.52,
-        5
-      ],
-      "text": "Be careful, there is another type of enemy. The shooter. If you throw a flare at this enemy or expose it to your light, it will shoot you!"
-    },
-    {
-      "pos": [
-        7.28,
-        4.42
-      ],
-      "size": [
-        6.96,
-        7.96
-      ],
-      "text": "Use {sneak} to sneak around the enemy."
-    }
-  ],
+  "trees": [],
   "lighting": {
     "color": [
       0,
@@ -64,11 +69,12 @@
     "diffuse": true,
     "blur": 1
   },
+  "extras": [],
   "walls": [
     {
       "pos": [
         8.32,
-        8.32
+        9.6
       ],
       "size": [
         16.64,
@@ -90,11 +96,11 @@
     {
       "pos": [
         16,
-        4.48
+        5.12
       ],
       "size": [
         1.28,
-        8.96
+        10.24
       ],
       "texture": "wall-top"
     },
@@ -111,41 +117,49 @@
     },
     {
       "pos": [
-        8.32,
+        8.96,
+        9.6
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        8.96,
+        1.28
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        8.96,
         7.68
       ],
       "size": [
         5.12,
         1.28
       ],
-      "texture": "wall-top"
-    },
-    {
-      "pos": [
-        8.32,
-        1.28
-      ],
-      "size": [
-        5.12,
-        1.28
-      ],
-      "texture": "wall-top"
-    },
-    {
-      "pos": [
-        8.32,
-        6.4
-      ],
-      "size": [
-        5.12,
-        1.28
-      ],
       "texture": "wall-side"
+    },
+    {
+      "pos": [
+        8.96,
+        8.96
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "wall-top"
     }
   ],
-  "startFlareCount": 1,
-  "maxFlareCount": 1,
-  "startSneakVal": 500,
   "graphicSize": [
     800,
     600

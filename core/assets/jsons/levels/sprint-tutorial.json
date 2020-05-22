@@ -1,5 +1,21 @@
 {
   "name": "sprint-tutorial",
+  "maxFlareCount": 0,
+  "startFlareCount": 0,
+  "startSneakVal": 500,
+  "texts": [
+    {
+      "pos": [
+        8.02,
+        6.42
+      ],
+      "size": [
+        15.52,
+        2.12
+      ],
+      "text": "There's an enemy behind you, move while holding {sprint} to sprint to the exit!"
+    }
+  ],
   "physicsSize": [
     21.76,
     12.8
@@ -12,6 +28,7 @@
     4.62,
     6.04
   ],
+  "bgm": "the-doll-thrown-away-in-rain",
   "exitpos": [
     19.5,
     6.49
@@ -36,19 +53,7 @@
     }
   ],
   "items": [],
-  "texts": [
-    {
-      "pos": [
-        8.02,
-        6.42
-      ],
-      "size": [
-        15.52,
-        2.12
-      ],
-      "text": "There's an enemy behind you, move while holding {sprint} to sprint to the exit!"
-    }
-  ],
+  "trees": [],
   "lighting": {
     "color": [
       0,
@@ -60,6 +65,7 @@
     "diffuse": true,
     "blur": 1
   },
+  "extras": [],
   "walls": [
     {
       "pos": [
@@ -150,9 +156,6 @@
       "texture": "wall-top"
     }
   ],
-  "startFlareCount": 0,
-  "maxFlareCount": 0,
-  "startSneakVal": 500,
   "graphicSize": [
     800,
     600

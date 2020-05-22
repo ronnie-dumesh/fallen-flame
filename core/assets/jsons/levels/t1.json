@@ -37,6 +37,7 @@
     4.42,
     13.32
   ],
+  "bgm": "the-doll-thrown-away-in-rain",
   "exitpos": [
     17.98,
     3.53
@@ -46,6 +47,7 @@
   },
   "enemies": [],
   "items": [],
+  "trees": [],
   "lighting": {
     "color": [
       0,
@@ -57,6 +59,7 @@
     "diffuse": true,
     "blur": 1
   },
+  "extras": [],
   "walls": [
     {
       "pos": [
