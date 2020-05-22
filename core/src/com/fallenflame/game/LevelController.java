@@ -73,12 +73,16 @@ public class LevelController implements ContactListener {
     private List<EnemyModel> enemies;
     /** Reference to all walls */
     private List<WallModel> walls;
+    /** Reference to all trees */
+    private List<TreeModel> trees;
     /** Reference to all flares */
     private List<FlareModel> flares;
     /** Reference to all fireballs */
     private List<FireballModel> fireballs;
     /** Reference to all items */
     private List<ItemModel> items;
+    /** Reference to all extras*/
+    private List<ExtraModel> extras;
     /** Reference to continuing player-item contacts */
     private HashSet<ItemModel> itemContacts;
     /** Level Model for AI Pathfinding */
@@ -251,6 +255,13 @@ public class LevelController implements ContactListener {
     public List<WallModel> getWalls() { return walls; }
 
     /**
+     * Returns a reference to the trees
+     *
+     * @return a reference to the trees
+     */
+    public List<TreeModel> getTrees() { return trees; }
+
+    /**
      * Returns a reference to the flares
      *
      * @return a reference to the flares
@@ -368,6 +379,7 @@ public class LevelController implements ContactListener {
         textController = new TextController();
         // Models
         walls = new LinkedList<>();
+        trees = new LinkedList<>();
         enemies = new LinkedList<>();
         flares = new LinkedList<>();
         fireballs = new LinkedList<>();
@@ -394,7 +406,7 @@ public class LevelController implements ContactListener {
 
         String key = globalJson.get("background").get("texture").asString();
         if (levelJson.get("background").has("texture"))
-            levelJson.get("background").get("texture").asString(); // Get specific texture if available
+            key = levelJson.get("background").get("texture").asString(); // Get specific texture if available
         background = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
 
 
@@ -455,14 +467,31 @@ public class LevelController implements ContactListener {
 
             if(wallJSON.get("texture").asString().equals("wall-side")) {
                 wall.initialize(globalJson.get("wall-side"), wallJSON);
-            } else {
+            } else if(wallJSON.get("texture").asString().equals("wall-top")) {
                 wall.initialize(globalJson.get("wall-top"), wallJSON);
+            } else if(wallJSON.get("texture").asString().equals("volcano-side")) {
+                wall.initialize(globalJson.get("wall-side-volcano"), wallJSON);
+            } else if(wallJSON.get("texture").asString().equals("volcano-top")) {
+                wall.initialize(globalJson.get("wall-top-volcano"), wallJSON);
+            } else {
+                Gdx.app.error("LevelController", "Unknown wall texture.");
             }
 
             wall.setDrawScale(scale);
             wall.activatePhysics(world);
             walls.add(wall);
             assert inBounds(wall);
+        }
+        // Create walls.
+        if (levelJson.get("trees") != null) {
+            for(JsonValue treeJSON : levelJson.get("trees")) {
+                TreeModel tree = new TreeModel();
+                tree.initialize(globalJson.get("tree"), treeJSON);
+                tree.setDrawScale(scale);
+                tree.activatePhysics(world);
+                trees.add(tree);
+                assert inBounds(tree);
+            }
         }
         // Create enemies
         int enemyID = 0;
@@ -526,14 +555,27 @@ public class LevelController implements ContactListener {
             }
         }
 
+        // Create cosmetic extras (if any exist)
+        extras = new LinkedList<>();
+        if(levelJson.has("extras")){
+            JsonValue globalExtrasJson = globalJson.get("extras");
+            for(JsonValue levelExtraJson : levelJson.get("extras")){
+                ExtraModel extra = new ExtraModel(levelExtraJson.get("extraPos").asFloatArray());
+                extra.initialize(globalExtrasJson, levelExtraJson.get("extraType").asString());
+                extra.setDrawScale(scale);
+                assert inBounds(extra);
+                extras.add(extra);
+            }
+        }
+
         textController.initialize(levelJson.has("texts") ? levelJson.get("texts") : null);
 
         // Set background music
         bgm = levelJson.has("bgm") ? levelJson.get("bgm").asString() : null;
 
         // Initialize levelModel, lightController, and fogController
-        pathLevelModel.initialize(bounds, walls, enemies, PATH_GRID_SIZE);
-        fogLevelModel.initialize(bounds, walls, enemies, FOG_GRID_SIZE);
+        pathLevelModel.initialize(bounds, walls, trees, enemies, PATH_GRID_SIZE);
+        fogLevelModel.initialize(bounds, walls, trees, enemies, FOG_GRID_SIZE);
         lightController.initialize(player, exit, levelJson.get("lighting"), world, bounds, scale);
         fogController.initialize(fogTemplate, fogLevelModel, player, flares, enemies);
 
@@ -562,6 +604,11 @@ public class LevelController implements ContactListener {
             wall.dispose();
         }
         walls.clear();
+        for(TreeModel tree : trees) {
+            tree.deactivatePhysics(world);
+            tree.dispose();
+        }
+        trees.clear();
         for(EnemyModel enemy : enemies) {
             enemy.getConstantSound().stop();
             enemy.getActiveSound().stop();
@@ -584,6 +631,10 @@ public class LevelController implements ContactListener {
             item.dispose();
         }
         items.clear();
+        for(ExtraModel extra : extras) {
+            extra.dispose();
+        }
+        extras.clear();
         exit.deactivatePhysics(world);
         exit.dispose();
         player.getWalkSound().stop();
@@ -637,9 +688,18 @@ public class LevelController implements ContactListener {
         // If dead, mark dead.
         if (player.isDead()) setLevelState(LevelState.LOSS);
 
+        // If victorious, mark victorious
+        if (player.hasWon()) setLevelState(LevelState.WIN);
+
         // If dying or dead, that's it. Don't update anything else.
         // (such as light, fog, enemies, etc)
-        if (player.isDead() || player.isDying()) return;
+        if (player.isDead() || player.isDying() || player.hasWon()) return;
+
+        if (player.isWinning()) {
+            player.setLightRadius(player.getLightRadiusSprint()); //increase light radius to see fire buddy
+            lightController.updateLights(flares, enemies, fireballs, items);
+            return;
+        }
 
         assert inBounds(player);
 
@@ -703,7 +763,7 @@ public class LevelController implements ContactListener {
         Iterator<FlareModel> i = flares.iterator();
         while(i.hasNext()){
             FlareModel flare = i.next();
-            if(!(Float.compare(flare.timeToBurnout(), 0.0f) > 0)){
+            if(flare.timeToBurnout() == 0){
                 flare.deactivatePhysics(world);
                 flare.dispose();
                 i.remove();
@@ -943,24 +1003,28 @@ public class LevelController implements ContactListener {
                     bounds.width * scale.x, bounds.height * scale.y);
         }
 
-        // Draw all objects
+        // Things that should always be drawn in background
+        for(ExtraModel extra : extras){
+            extra.draw(canvas);
+        }
         exit.draw(canvas);
-        for(WallModel wall : walls) {
-            wall.draw(canvas);
-        }
-        for(EnemyModel enemy : enemies) {
-            enemy.draw(canvas);
-        }
-        for(FlareModel flare : flares) {
-            flare.draw(canvas);
-        }
-        for(FireballModel fireball : fireballs){
-            fireball.draw(canvas);
-        }
-        for(ItemModel item : items) {
+        for(ItemModel item : items){
             item.draw(canvas);
         }
-        player.draw(canvas);
+
+        // Draw all objects that are dynamically ordered
+        List<Obstacle> toBeDrawn = new LinkedList<>();
+        toBeDrawn.addAll(walls);
+        toBeDrawn.addAll(trees);
+        toBeDrawn.addAll(enemies);
+        toBeDrawn.addAll(flares);
+        toBeDrawn.addAll(fireballs);
+        toBeDrawn.add(player);
+        // Bigger Y = draw first.
+        toBeDrawn.sort((a, b) -> -Float.compare(a.getY(), b.getY()));
+        for (Obstacle o : toBeDrawn) {
+            o.draw(canvas);
+        }
         canvas.end();
 
         lightController.setDebug(debug2);
@@ -979,6 +1043,9 @@ public class LevelController implements ContactListener {
             for(WallModel wall : walls) {
                 wall.drawDebug(canvas);
             }
+            for(TreeModel tree : trees) {
+                tree.drawDebug(canvas);
+            }
             for(FlareModel flare : flares) {
                 flare.drawDebug(canvas);
             }
@@ -990,6 +1057,9 @@ public class LevelController implements ContactListener {
             }
             for(ItemModel item : items) {
                 item.drawDebug(canvas);
+            }
+            for(ExtraModel extra : extras) {
+                extra.drawDebug(canvas);
             }
             canvas.endDebug();
             if(ticks % 10 == 0){
@@ -1109,7 +1179,8 @@ public class LevelController implements ContactListener {
             // Check for win condition
             if ((bd1 == player && bd2 == exit  )
                     || (bd1 == exit && bd2 == player)) {
-            setLevelState(levelState.WIN);
+                stopAllSounds();
+                player.win();
                 return;
             }
             // Check for loss condition 1 (player runs into enemy)
@@ -1119,8 +1190,8 @@ public class LevelController implements ContactListener {
                 return;
             }
             // Check if flare collides with wall and if so stop it
-            if((bd1 instanceof FlareModel && bd2 instanceof WallModel
-                    || bd1 instanceof  WallModel && bd2 instanceof FlareModel)) {
+            if((bd1 instanceof FlareModel && bd2 instanceof IWallLike
+                    || bd1 instanceof  IWallLike && bd2 instanceof FlareModel)) {
                 if(bd1 instanceof FlareModel)
                     ((FlareModel) bd1).stopMovement();
                 else
@@ -1133,8 +1204,8 @@ public class LevelController implements ContactListener {
                 return;
             }
             // Check for fireball-wall collision and if so remove fireball
-            if((bd1 instanceof FireballModel && bd2 instanceof WallModel
-                    || bd1 instanceof  WallModel && bd2 instanceof FireballModel)) {
+            if((bd1 instanceof FireballModel && bd2 instanceof IWallLike
+                    || bd1 instanceof  IWallLike && bd2 instanceof FireballModel)) {
                 if(bd1 instanceof FireballModel){
                     ((FireballModel) bd1).deactivate();
                 }

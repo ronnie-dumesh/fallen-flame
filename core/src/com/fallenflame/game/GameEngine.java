@@ -101,6 +101,9 @@ public class GameEngine implements Screen, InputProcessor {
     /**Textures for win/lose border. Win border is for the last level in the game*/
     private TextureRegion border;
     private TextureRegion winBorder;
+    private TextureRegion winText;
+    private TextureRegion loseText;
+    private TextureRegion successText;
     /**Information to keep track of where the user is hovered/where they are clicked */
     private Rectangle[] hoverRects;
     private int[] hoverStates;
@@ -214,7 +217,10 @@ public class GameEngine implements Screen, InputProcessor {
         menuOptionsFont = generator.generateFont(parameter);
         generator.dispose();
         border = JsonAssetManager.getInstance().getEntry("border", TextureRegion.class);
-        winBorder = border = JsonAssetManager.getInstance().getEntry("winborder", TextureRegion.class);
+        winBorder = JsonAssetManager.getInstance().getEntry("winborder", TextureRegion.class);
+        winText = JsonAssetManager.getInstance().getEntry("wintext", TextureRegion.class);
+        successText = JsonAssetManager.getInstance().getEntry("successtext", TextureRegion.class);
+        loseText = JsonAssetManager.getInstance().getEntry("losetext", TextureRegion.class);
         currentAssetState = AssetState.COMPLETE;
     }
 
@@ -499,10 +505,14 @@ public class GameEngine implements Screen, InputProcessor {
         // Final message
         if (isSuccess) {
             displayFont.setColor(Color.CYAN);
+            TextureRegion toDraw;
             canvas.beginWithoutCamera(); // DO NOT SCALE
-            canvas.draw(lastLevelPlayed+1 > saveJson.size ? winBorder : border, canvas.getWidth()/2-(border.getRegionWidth()/2), canvas.getHeight()/2-(border.getRegionHeight()/2));
-            String titleText = lastLevelPlayed +1 < saveJson.size ? "Success!" : "You Won the Game!";
-            canvas.drawTextCentered(titleText, displayFont, +border.getRegionHeight()/6);
+            toDraw = lastLevelPlayed+1 >= saveJson.size ? winBorder : border;
+            canvas.draw(toDraw, canvas.getWidth()/2-(toDraw.getRegionWidth()/2),
+                    canvas.getHeight()/2-(toDraw.getRegionHeight()/2));
+            toDraw = lastLevelPlayed+1 >= saveJson.size ? winText : successText;
+            canvas.draw(toDraw, canvas.getWidth()/2-(toDraw.getRegionWidth()/2),
+                    canvas.getHeight()/2);
             menuOptionsFont.setColor(hoverStates[0] == 1 ? Color.CYAN : Color.WHITE);
             canvas.drawTextCentered("Continue", menuOptionsFont, -border.getRegionHeight()/6);
             gl.setText(menuOptionsFont, "Continue");
@@ -514,8 +524,8 @@ public class GameEngine implements Screen, InputProcessor {
         } else if (isFailed) {
             canvas.beginWithoutCamera(); // DO NOT SCALE
             canvas.draw(border, canvas.getWidth()/2-(border.getRegionWidth()/2), canvas.getHeight()/2-(border.getRegionHeight()/2));
-            displayFont.setColor(Color.CYAN);
-            canvas.drawTextCentered("Game Over!", displayFont, border.getRegionHeight()/6);
+            canvas.draw(loseText, canvas.getWidth()/2-(loseText.getRegionWidth()/2),
+                    canvas.getHeight()/2);
             menuOptionsFont.setColor(hoverStates[0] == 1 ? Color.CYAN : Color.WHITE);
             gl.setText(menuOptionsFont, "Retry");
             canvas.drawText("Retry", menuOptionsFont, (canvas.getWidth()/2-gl.width/2)-border.getRegionWidth()/6,
@@ -663,7 +673,7 @@ public class GameEngine implements Screen, InputProcessor {
         resetPressed = (Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.RESET_LEVEL)));
         debugPressed = (Gdx.input.isKeyPressed(Input.Keys.G));
         debug2Pressed = (Gdx.input.isKeyPressed(Input.Keys.E));
-        exitPressed  = (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
+        exitPressed  = (Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.PAUSE_LEVEL)));
         flarePressed  = (Gdx.input.isButtonPressed(Input.Buttons.LEFT));
         sprintPressed = (Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.SPRINTING)));
         sneakPressed = (Gdx.input.isKeyPressed(InputBindings.getBindingOf(InputBindings.Control.SNEAKING)));
