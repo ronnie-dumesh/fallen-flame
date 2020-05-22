@@ -538,7 +538,7 @@ public class PlayerModel extends CharacterModel {
             }
         }
 
-        if(fireBuddyCool > 0 && isWinning()) fireBuddyCool -= 4 * fireCoolDec;
+        if(fireBuddyCool > 0 && isWinning()) fireBuddyCool -= 2 * fireCoolDec;
         else if (fireBuddyCool > 0) fireBuddyCool -= fireCoolDec;
         else fireBuddyCool = fireBuddyCoolLimit;
 
