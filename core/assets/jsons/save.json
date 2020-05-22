@@ -175,14 +175,14 @@
     "path": "levels/max2.json"
   },
   {
-    "name": "Volcano level 4",
+    "name": "Volcano level 5",
     "world":      2,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/ronnie-levelUpdated.json"
   },
   {
-    "name": "Volcano level 4",
+    "name": "Volcano level 6",
     "world":      2,
     "unlocked":   true,
     "completed":  true,
