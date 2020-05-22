@@ -778,10 +778,6 @@ public class GameEngine implements Screen, InputProcessor {
      * @param amount representing if the wheel scrolled down (1) or up (-1). Can only be those two values.
      * @return boolean saying if the event was handled*/
     public boolean scrolled (int amount) {
-        if(!isScreenActive()){
-            return true;
-        }
-
         return true;
     }
 
