@@ -1,8 +1,12 @@
 {
-  "name": "Jalil (Frame 14)",
+  "name": "Jalil-14",
+  "maxFlareCount": 1,
+  "startFlareCount": 0,
+  "startSneakVal": 200,
+  "texts": [],
   "physicsSize": [
     26.88,
-    17.92
+    19.2
   ],
   "fpsRange": [
     20,
@@ -17,7 +21,7 @@
     8.99
   ],
   "background": {
-    "texture": "floor-tile"
+    "texture": "volcano-tile"
   },
   "enemies": [
     {
@@ -118,7 +122,7 @@
       "itemType": "flare"
     }
   ],
-  "texts": [],
+  "trees": [],
   "lighting": {
     "color": [
       0,
@@ -130,6 +134,7 @@
     "diffuse": true,
     "blur": 1
   },
+  "extras": [],
   "walls": [
     {
       "pos": [
@@ -140,7 +145,7 @@
         26.88,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -151,7 +156,7 @@
         1.28,
         17.92
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -162,7 +167,7 @@
         1.28,
         17.92
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -173,7 +178,7 @@
         26.88,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -184,7 +189,7 @@
         6.4,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -195,7 +200,7 @@
         6.4,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -206,7 +211,7 @@
         5.12,
         8.96
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -217,7 +222,7 @@
         6.4,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -228,7 +233,7 @@
         6.4,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -239,7 +244,7 @@
         6.4,
         6.4
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -250,7 +255,7 @@
         6.4,
         6.4
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -261,7 +266,7 @@
         6.4,
         6.4
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -272,14 +277,12 @@
         6.4,
         6.4
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     }
   ],
-  "startSneakVal": 200,
-  "startFlareCount": 0,
-  "maxFlareCount": 1,
   "graphicSize": [
     800,
     600
-  ]
+  ],
+  "bgm": "ruins"
 }
