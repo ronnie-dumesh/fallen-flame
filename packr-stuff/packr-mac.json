@@ -5,6 +5,7 @@
     "classpath": [
         "fallen-flame.jar"
     ],
+    "icon": "icon.icns",
     "mainclass": "com.fallenflame.game.desktop.DesktopLauncher",
     "vmargs": [
        "Xmx1G"

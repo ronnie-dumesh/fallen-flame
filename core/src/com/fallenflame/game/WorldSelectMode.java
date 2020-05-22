@@ -103,10 +103,10 @@ public class WorldSelectMode implements Screen, InputProcessor {
     /** The current state of whether any level buttons are being hovered over */
     private int[] hoverState;
 
-    private static final int BACK_BTN_WIDTH = 210;
+    private static final int BACK_BTN_WIDTH = 100;
     private static final int BACK_BTN_HEIGHT = 30;
-    private static final int BACK_BTN_X = 10;
-    private static final int BACK_BTN_Y = 10;
+    private static final int BACK_BTN_X = 80;
+    private static final int BACK_BTN_Y = 80;
 
     /** World selected by the player */
     public int worldSelected;
@@ -180,7 +180,7 @@ public class WorldSelectMode implements Screen, InputProcessor {
         canvas.draw(back, hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE, back.getWidth() / 2, back.getHeight(),
                 BACK_BTN_X, heightY - BACK_BTN_Y, 0, .75f, .75f);
         displayFont.setColor(hoverState[posVec.length] == 1 ? Color.CYAN : Color.WHITE);
-        canvas.drawText("Back to Main Menu", displayFont,BACK_BTN_X + (back.getWidth()/2), heightY - BACK_BTN_Y);
+        canvas.drawText("Back", displayFont,BACK_BTN_X + (back.getWidth()), heightY - BACK_BTN_Y);
         displayFont.setColor(Color.WHITE);
         displayFont.getData().setScale(1f);
         canvas.end();

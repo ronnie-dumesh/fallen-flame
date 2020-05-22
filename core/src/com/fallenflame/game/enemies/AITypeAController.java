@@ -162,7 +162,7 @@ public class AITypeAController extends AIController {
                 }
                 
                 // if flare died, or we reached investigation position and it wasn't a flare stop
-                if((enemy.isInvestigatingFlare() && (enemy.getInvestigateFlare().timeToBurnout() <= 0)) ||
+                if((enemy.isInvestigatingFlare() && (enemy.getInvestigateFlare().timeToBurnout() == 0)) ||
                         (investigateReached() && !enemy.isInvestigatingFlare())){
                     enemy.setInvestigatePosition(null);
                     enemy.clearInvestigateFlare();

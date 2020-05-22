@@ -75,7 +75,7 @@ public class FogController {
                     continue;
                 }
                 //To prevent drawing on tiles with the player or a wall as well as if its within the light radius
-                if (levelModel.hasWall(x, y)) continue;
+                if (levelModel.hasWall(x, y) || levelModel.hasTree(x, y)) continue;
 
                 //0.25 accounts for the aligning of the light to show the player's face instead of just the feet.
                 boolean withinLight = (Math.pow((Math.pow((x * tileSize) - (playerModel.getX()), 2) +
