@@ -1,22 +1,23 @@
 {
-  "bgm": "menu-music",
   "name": "medium",
+  "startSneakVal": 100,
+  "texts": [],
   "physicsSize": [
-    16,
-    12
+    16.64,
+    12.8
   ],
   "fpsRange": [
     20,
     60
   ],
   "playerpos": [
-    1.22,
-    2.38
+    2.38,
+    2.32
   ],
-  "startSneakVal" : 100,
+  "bgm": "the-doll-thrown-away-in-rain",
   "exitpos": [
-    14.72,
-    10.729999999999999
+    14.12,
+    10.39
   ],
   "background": {
     "texture": "floor-tile"
@@ -24,19 +25,21 @@
   "enemies": [
     {
       "enemypos": [
-        3.56,
-        6.76
+        2.64,
+        7.64
       ],
       "enemytype": "typeA"
     },
     {
       "enemypos": [
-        7.94,
-        6.2
+        7.92,
+        6.06
       ],
       "enemytype": "typeB"
     }
   ],
+  "items": [],
+  "trees": [],
   "lighting": {
     "color": [
       0,
@@ -48,105 +51,174 @@
     "diffuse": true,
     "blur": 1
   },
+  "extras": [
+    {
+      "extraPos": [
+        2.56,
+        10.24
+      ],
+      "extraType": "c-square"
+    },
+    {
+      "extraPos": [
+        8.96,
+        5.12
+      ],
+      "extraType": "c-square"
+    },
+    {
+      "extraPos": [
+        10.24,
+        2.5
+      ],
+      "extraType": "c-square"
+    },
+    {
+      "extraPos": [
+        14.72,
+        8.32
+      ],
+      "extraType": "c-square"
+    },
+    {
+      "extraPos": [
+        6.4,
+        7.68
+      ],
+      "extraType": "c-vertical"
+    },
+    {
+      "extraPos": [
+        8.32,
+        10.24
+      ],
+      "extraType": "c-patch"
+    },
+    {
+      "extraPos": [
+        14.08,
+        6.4
+      ],
+      "extraType": "c-patch"
+    },
+    {
+      "extraPos": [
+        2.56,
+        2.56
+      ],
+      "extraType": "c-patch"
+    },
+    {
+      "extraPos": [
+        13.92,
+        5.34
+      ],
+      "extraType": "c-vertical"
+    }
+  ],
   "walls": [
     {
       "pos": [
-        0.25,
-        6
+        8.32,
+        12.16
       ],
       "size": [
-        0.5,
-        12
+        16.64,
+        1.28
       ],
       "texture": "wall-side"
     },
     {
       "pos": [
-        8,
-        0.25
-      ],
-      "size": [
         16,
-        0.5
+        6.4
+      ],
+      "size": [
+        1.28,
+        12.8
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        11.52,
+        6.4
+      ],
+      "size": [
+        2.56,
+        5.12
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        4.48,
+        3.84
+      ],
+      "size": [
+        1.28,
+        7.68
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        8.32,
+        0.64
+      ],
+      "size": [
+        16.64,
+        1.28
       ],
       "texture": "wall-side"
     },
     {
       "pos": [
-        8,
-        11.75
+        0.64,
+        6.4
       ],
       "size": [
-        16,
-        0.5
+        1.28,
+        12.8
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        9.6,
+        10.88
+      ],
+      "size": [
+        3.84,
+        1.28
       ],
       "texture": "wall-side"
     },
     {
       "pos": [
-        15.75,
-        6
+        12.16,
+        10.88
       ],
       "size": [
-        0.5,
-        12
+        1.28,
+        3.84
       ],
-      "texture": "wall-side"
+      "texture": "wall-top"
     },
     {
       "pos": [
-        1.2999999999999998,
-        9.18
+        9.6,
+        11.52
       ],
       "size": [
-        2.24,
-        5.640000000000001
+        3.84,
+        1.28
       ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        4.84,
-        3.3099999999999996
-      ],
-      "size": [
-        0.5,
-        6.619999999999999
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        12.260000000000002,
-        11.239999999999998
-      ],
-      "size": [
-        2.400000000000002,
-        0.9200000000000017
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        13.38,
-        7.680000000000001
-      ],
-      "size": [
-        1.0400000000000027,
-        8.639999999999999
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        12.18,
-        5.940000000000001
-      ],
-      "size": [
-        2.3599999999999994,
-        5.119999999999998
-      ],
-      "texture": "wall-side"
+      "texture": "wall-top"
     }
+  ],
+  "graphicSize": [
+    800,
+    600
   ]
 }

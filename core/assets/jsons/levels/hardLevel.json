@@ -1,5 +1,6 @@
 {
   "name": "exHardLevel",
+  "texts": [],
   "physicsSize": [
     33.28,
     25.6
@@ -127,8 +128,17 @@
         7.1
       ],
       "enemytype": "typeB"
+    },
+    {
+      "enemypos": [
+        26.78,
+        6.02
+      ],
+      "enemytype": "typeA"
     }
   ],
+  "items": [],
+  "trees": [],
   "lighting": {
     "color": [
       0,
@@ -140,6 +150,7 @@
     "diffuse": true,
     "blur": 1
   },
+  "extras": [],
   "walls": [
     {
       "pos": [

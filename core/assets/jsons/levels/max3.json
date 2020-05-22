@@ -1,0 +1,841 @@
+{
+  "name": "max3",
+  "physicsSize": [
+    32,
+    32
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    15.98,
+    16.9
+  ],
+  "exitpos": [
+    30.12,
+    2.01
+  ],
+  "background": {
+    "texture": "volcano-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        12.22,
+        1.4
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        29.96,
+        18.26
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        28.74,
+        9.16
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        21.2,
+        4.44
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          21.08,
+          14.6
+        ],
+        [
+          29.88,
+          14.68
+        ],
+        [
+          29.92,
+          4.5
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        12.22,
+        7.04
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          12.16,
+          4.48
+        ],
+        [
+          14.78,
+          4.44
+        ],
+        [
+          14.76,
+          7.02
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        24.22,
+        28.28
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        3.42,
+        16.64
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        7.92,
+        26.96
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        3.18,
+        3.96
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        18.52,
+        29.46
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        18.62,
+        14.14
+      ],
+      "enemytype": "typeA"
+    }
+  ],
+  "items": [
+    {
+      "itemPos": [
+        5.8,
+        1.9
+      ],
+      "itemType": "flare"
+    },
+    {
+      "itemPos": [
+        5.82,
+        7.02
+      ],
+      "itemType": "flare"
+    },
+    {
+      "itemPos": [
+        10.86,
+        22.4
+      ],
+      "itemType": "flare"
+    },
+    {
+      "itemPos": [
+        21.08,
+        30.06
+      ],
+      "itemType": "flare"
+    }
+  ],
+  "extras": [],
+  "texts": [],
+  "trees": [],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        10.24,
+        31.36
+      ],
+      "size": [
+        17.92,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        0.64,
+        16
+      ],
+      "size": [
+        1.28,
+        32
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        31.36,
+        16
+      ],
+      "size": [
+        1.28,
+        32
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        16,
+        0.64
+      ],
+      "size": [
+        32,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        8.32,
+        16
+      ],
+      "size": [
+        11.52,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        24.96,
+        16
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        8.96,
+        18.56
+      ],
+      "size": [
+        12.8,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        23.04,
+        18.56
+      ],
+      "size": [
+        12.8,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        14.72,
+        21.12
+      ],
+      "size": [
+        1.28,
+        3.84
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        17.28,
+        24.32
+      ],
+      "size": [
+        1.28,
+        10.24
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        7.68,
+        28.8
+      ],
+      "size": [
+        10.24,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        19.84,
+        26.24
+      ],
+      "size": [
+        1.28,
+        11.52
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        22.4,
+        22.4
+      ],
+      "size": [
+        1.28,
+        6.4
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        23.68,
+        27.52
+      ],
+      "size": [
+        3.84,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        25.6,
+        30.08
+      ],
+      "size": [
+        7.68,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        26.24,
+        24.96
+      ],
+      "size": [
+        1.28,
+        6.4
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        28.8,
+        24.96
+      ],
+      "size": [
+        1.28,
+        6.4
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        23.68,
+        23.68
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        23.68,
+        21.12
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        8.32,
+        26.24
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        12.16,
+        23.04
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        7.04,
+        23.68
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        17.28,
+        15.36
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        14.72,
+        15.36
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        10.24,
+        10.88
+      ],
+      "size": [
+        15.36,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        3.2,
+        12.8
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        8.32,
+        13.44
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        17.28,
+        5.76
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        3.2,
+        25.6
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        7.68,
+        21.12
+      ],
+      "size": [
+        10.24,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        26.24,
+        21.12
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        19.84,
+        12.8
+      ],
+      "size": [
+        1.28,
+        7.68
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        18.56,
+        16
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        21.12,
+        31.36
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        30.08,
+        31.36
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        25.6,
+        31.36
+      ],
+      "size": [
+        7.68,
+        1.28
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        3.2,
+        7.04
+      ],
+      "size": [
+        1.28,
+        3.84
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        3.2,
+        2.56
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        5.76,
+        3.2
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        5.76,
+        5.12
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        8.32,
+        6.4
+      ],
+      "size": [
+        1.28,
+        5.12
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        5.76,
+        8.32
+      ],
+      "size": [
+        3.84,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        8.32,
+        3.2
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        10.88,
+        6.4
+      ],
+      "size": [
+        1.28,
+        5.12
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        15.36,
+        8.32
+      ],
+      "size": [
+        7.68,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        26.24,
+        13.44
+      ],
+      "size": [
+        6.4,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        26.88,
+        10.88
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        22.4,
+        10.24
+      ],
+      "size": [
+        1.28,
+        7.68
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        25.6,
+        5.76
+      ],
+      "size": [
+        7.68,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        22.4,
+        3.2
+      ],
+      "size": [
+        16.64,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        11.52,
+        3.2
+      ],
+      "size": [
+        2.56,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        13.44,
+        5.76
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        19.84,
+        5.76
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        19.84,
+        7.68
+      ],
+      "size": [
+        1.28,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        26.88,
+        8.32
+      ],
+      "size": [
+        5.12,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        14.72,
+        13.44
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        17.28,
+        13.44
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        28.8,
+        21.12
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        14.72,
+        24.96
+      ],
+      "size": [
+        1.28,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        14.72,
+        27.52
+      ],
+      "size": [
+        1.28,
+        3.84
+      ],
+      "texture": "volcano-top"
+    }
+  ],
+  "graphicSize": [
+    800,
+    600
+  ]
+}

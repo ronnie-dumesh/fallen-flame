@@ -1,21 +1,5 @@
 {
   "name": "sprint-lure-tutorial",
-  "maxFlareCount": 0,
-  "startFlareCount": 0,
-  "startSneakVal": 500,
-  "texts": [
-    {
-      "pos": [
-        7.97,
-        6.4
-      ],
-      "size": [
-        14.74,
-        12.8
-      ],
-      "text": "An enemy is blocking your path! It will only chase you if your light touches it. Hold {sprint} to lure it towards you, and release and move away to sneak by. The enemy will go to your last known location."
-    }
-  ],
   "physicsSize": [
     20.48,
     12.8
@@ -28,7 +12,6 @@
     2.62,
     5.68
   ],
-  "bgm": "the-doll-thrown-away-in-rain",
   "exitpos": [
     17.62,
     6.39
@@ -39,14 +22,26 @@
   "enemies": [
     {
       "enemypos": [
-        10.72,
-        5.14
+        10.74,
+        5.86
       ],
       "enemytype": "typeA"
     }
   ],
   "items": [],
-  "trees": [],
+  "texts": [
+    {
+      "pos": [
+        5.84,
+        6.4
+      ],
+      "size": [
+        11.68,
+        12.8
+      ],
+      "text": "There's an enemy blocking your path to the exit. Hold {sprint} to lure the enemy towards you, and then let go to maneuver around the enemy. Enemies can only see you if your light is touching them."
+    }
+  ],
   "lighting": {
     "color": [
       0,
@@ -58,7 +53,6 @@
     "diffuse": true,
     "blur": 1
   },
-  "extras": [],
   "walls": [
     {
       "pos": [
@@ -107,26 +101,29 @@
     {
       "pos": [
         10.88,
-        9.6
-      ],
-      "size": [
-        3.84,
-        6.4
-      ],
-      "texture": "wall-top"
-    },
-    {
-      "pos": [
-        10.88,
-        2.56
+        10.24
       ],
       "size": [
         3.84,
         5.12
       ],
       "texture": "wall-top"
+    },
+    {
+      "pos": [
+        10.88,
+        3.2
+      ],
+      "size": [
+        3.84,
+        3.84
+      ],
+      "texture": "wall-top"
     }
   ],
+  "startFlareCount": 0,
+  "maxFlareCount": 0,
+  "startSneakVal": 500,
   "graphicSize": [
     800,
     600

@@ -1,0 +1,194 @@
+{
+  "name": "onlypatrol",
+  "texts": [],
+  "physicsSize": [
+    17.92,
+    16.64
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    2.36,
+    1.98
+  ],
+  "exitpos": [
+    8.96,
+    14.21
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        6.78,
+        8.64
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          1.56,
+          8.76
+        ],
+        [
+          2.88,
+          5.44
+        ],
+        [
+          14.02,
+          5.4
+        ],
+        [
+          16,
+          8.56
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        11.32,
+        10.12
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          15.76,
+          10.18
+        ],
+        [
+          16.04,
+          6.3
+        ],
+        [
+          1.94,
+          6.16
+        ],
+        [
+          2.36,
+          10.08
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        3.38,
+        10.68
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          15.74,
+          10.72
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        15.38,
+        12.32
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          3.14,
+          12.76
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        6.9,
+        13.6
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          10.9,
+          13.6
+        ]
+      ]
+    }
+  ],
+  "items": [
+    {
+      "itemPos": [
+        1.86,
+        14.58
+      ],
+      "itemType": "flare"
+    }
+  ],
+  "trees": [],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "extras": [],
+  "walls": [
+    {
+      "pos": [
+        8.96,
+        16
+      ],
+      "size": [
+        17.92,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        0.64,
+        8.32
+      ],
+      "size": [
+        1.28,
+        16.64
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        17.28,
+        8.32
+      ],
+      "size": [
+        1.28,
+        16.64
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        8.96,
+        0.64
+      ],
+      "size": [
+        17.92,
+        1.28
+      ],
+      "texture": "wall-side"
+    }
+  ],
+  "startSneakVal": 170,
+  "startFlareCount": 0,
+  "maxFlareCount": 1,
+  "graphicSize": [
+    800,
+    600
+  ]
+}

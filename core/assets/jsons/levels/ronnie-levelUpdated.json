@@ -1,6 +1,9 @@
 {
   "name": "ronnie-level",
+  "maxFlareCount": 3,
+  "startFlareCount": 1,
   "startSneakVal": 200,
+  "texts": [],
   "physicsSize": [
     24.32,
     28.16
@@ -13,12 +16,13 @@
     2.96,
     5.02
   ],
+  "bgm": "ruins",
   "exitpos": [
     11.76,
     17.61
   ],
   "background": {
-    "texture": "floor-tile"
+    "texture": "volcano-tile"
   },
   "enemies": [
     {
@@ -103,13 +107,6 @@
     },
     {
       "enemypos": [
-        12.18,
-        17.58
-      ],
-      "enemytype": "typeA"
-    },
-    {
-      "enemypos": [
         15.34,
         14.46
       ],
@@ -132,7 +129,7 @@
       "itemType": "flare"
     }
   ],
-  "texts": [],
+  "trees": [],
   "lighting": {
     "color": [
       0,
@@ -144,6 +141,7 @@
     "diffuse": true,
     "blur": 1
   },
+  "extras": [],
   "walls": [
     {
       "pos": [
@@ -154,7 +152,7 @@
         24.32,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -165,7 +163,7 @@
         1.28,
         26.88
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -176,7 +174,7 @@
         1.28,
         26.88
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -187,7 +185,7 @@
         24.32,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -198,7 +196,7 @@
         7.68,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -209,7 +207,7 @@
         1.28,
         7.68
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -220,7 +218,7 @@
         1.28,
         2.56
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -231,7 +229,7 @@
         1.28,
         2.56
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -242,7 +240,7 @@
         5.12,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -253,7 +251,7 @@
         1.28,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -264,7 +262,7 @@
         1.28,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -275,7 +273,7 @@
         1.28,
         2.56
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -286,7 +284,7 @@
         10.24,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -297,7 +295,7 @@
         1.28,
         7.68
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -308,7 +306,7 @@
         5.12,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -319,7 +317,7 @@
         1.28,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -330,7 +328,7 @@
         1.28,
         7.68
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -341,7 +339,7 @@
         1.28,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -352,11 +350,9 @@
         5.12,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     }
   ],
-  "startFlareCount": 1,
-  "maxFlareCount": 3,
   "graphicSize": [
     800,
     600

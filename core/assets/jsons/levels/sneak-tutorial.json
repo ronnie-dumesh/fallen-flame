@@ -1,5 +1,7 @@
 {
   "name": "sneak tutorial",
+  "maxFlareCount": 0,
+  "startFlareCount": 0,
   "startSneakVal": 500,
   "texts": [
     {
@@ -26,7 +28,6 @@
     1.9,
     5.48
   ],
-  "bgm": "the-doll-thrown-away-in-rain",
   "exitpos": [
     14.64,
     5.81
@@ -65,7 +66,6 @@
     }
   ],
   "items": [],
-  "trees": [],
   "lighting": {
     "color": [
       0,
@@ -77,7 +77,6 @@
     "diffuse": true,
     "blur": 1
   },
-  "extras": [],
   "walls": [
     {
       "pos": [
@@ -212,8 +211,6 @@
       "texture": "wall-top"
     }
   ],
-  "startFlareCount": 0,
-  "maxFlareCount": 0,
   "graphicSize": [
     800,
     600

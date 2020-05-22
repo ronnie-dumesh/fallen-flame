@@ -1,21 +1,20 @@
 {
-  "name": "forceSneak",
-  "texts": [],
+  "name": "Jalil-15",
   "physicsSize": [
-    23.04,
-    23.04
+    20.48,
+    19.2
   ],
   "fpsRange": [
     20,
     60
   ],
   "playerpos": [
-    10.8,
-    2.26
+    2.36,
+    2.86
   ],
   "exitpos": [
-    19.18,
-    19.83
+    16.88,
+    14.13
   ],
   "background": {
     "texture": "floor-tile"
@@ -23,122 +22,94 @@
   "enemies": [
     {
       "enemypos": [
-        14.76,
-        20.82
+        6.16,
+        4.3
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        7.84,
+        4.26
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        10.5,
+        9.54
       ],
       "enemytype": "typeA",
       "subtype": "pathing",
       "pathCoors": [
         [
-          17.66,
-          20.82
+          14.96,
+          9.54
         ],
         [
-          17.66,
-          18.28
+          15.12,
+          2.74
         ],
         [
-          14.8,
-          18.24
+          10.5,
+          2.74
         ]
       ]
     },
     {
       "enemypos": [
-        20.32,
-        16.52
+        15.08,
+        2.78
       ],
       "enemytype": "typeA",
       "subtype": "pathing",
       "pathCoors": [
         [
-          16.4,
-          16.52
+          10.48,
+          2.7
         ],
         [
-          16.36,
-          14.08
+          10.5,
+          9.54
         ],
         [
-          20.46,
-          14.06
+          14.96,
+          9.54
         ]
       ]
     },
     {
       "enemypos": [
-        3.64,
-        15.38
+        2.32,
+        12.64
       ],
       "enemytype": "typeB"
     },
     {
       "enemypos": [
-        9.16,
-        5.76
+        8.7,
+        13.56
       ],
       "enemytype": "typeA"
-    },
-    {
-      "enemypos": [
-        9.12,
-        8.2
-      ],
-      "enemytype": "typeA"
-    },
-    {
-      "enemypos": [
-        12.66,
-        8.14
-      ],
-      "enemytype": "typeA"
-    },
-    {
-      "enemypos": [
-        12.68,
-        5.78
-      ],
-      "enemytype": "typeA"
-    },
-    {
-      "enemypos": [
-        5.42,
-        19.98
-      ],
-      "enemytype": "typeA",
-      "subtype": "pathing",
-      "pathCoors": [
-        [
-          9.42,
-          19.98
-        ],
-        [
-          9.3,
-          12.6
-        ],
-        [
-          5.26,
-          12.5
-        ]
-      ]
     }
   ],
   "items": [
     {
       "itemPos": [
-        2.78,
-        18.76
+        4.1,
+        9.54
       ],
       "itemType": "flare"
     },
     {
       "itemPos": [
-        19.5,
-        13.48
+        5.46,
+        13.2
       ],
       "itemType": "flare"
     }
   ],
+  "texts": [],
   "lighting": {
     "color": [
       0,
@@ -153,11 +124,11 @@
   "walls": [
     {
       "pos": [
-        11.52,
-        22.4
+        10.24,
+        18.56
       ],
       "size": [
-        23.04,
+        20.48,
         1.28
       ],
       "texture": "wall-side"
@@ -165,32 +136,43 @@
     {
       "pos": [
         0.64,
-        11.52
+        9.6
       ],
       "size": [
         1.28,
-        23.04
+        19.2
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        22.4,
-        11.52
+        19.84,
+        9.6
       ],
       "size": [
         1.28,
-        23.04
+        19.2
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        11.52,
+        10.24,
         0.64
       ],
       "size": [
-        23.04,
+        20.48,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        3.2,
+        4.48
+      ],
+      "size": [
+        3.84,
         1.28
       ],
       "texture": "wall-side"
@@ -198,51 +180,117 @@
     {
       "pos": [
         5.12,
-        3.2
+        1.92
       ],
       "size": [
         7.68,
-        3.84
+        1.28
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        17.28,
-        3.2
+        3.2,
+        5.76
       ],
       "size": [
-        8.96,
-        3.84
+        3.84,
+        1.28
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        5.12,
+        7.68
+      ],
+      "size": [
+        7.68,
+        2.56
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        12.8,
+        6.4
+      ],
+      "size": [
+        2.56,
+        5.12
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        12.8,
+        11.52
+      ],
+      "size": [
+        12.8,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        17.92,
+        6.4
+      ],
+      "size": [
+        2.56,
+        11.52
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
         4.48,
-        7.68
+        17.92
       ],
       "size": [
         6.4,
-        5.12
+        2.56
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        17.92,
-        7.68
+        4.48,
+        16
+      ],
+      "size": [
+        6.4,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        15.36,
+        16
       ],
       "size": [
         7.68,
-        5.12
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        15.36,
+        17.92
+      ],
+      "size": [
+        7.68,
+        2.56
       ],
       "texture": "wall-top"
     }
   ],
   "startFlareCount": 0,
   "maxFlareCount": 2,
-  "startSneakVal": 500,
+  "startSneakVal": 260,
   "graphicSize": [
     800,
     600

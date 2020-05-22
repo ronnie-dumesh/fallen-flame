@@ -1,20 +1,20 @@
 {
-  "name": "exHardLevel",
+  "name": "Jalil (Frame 14)",
   "physicsSize": [
-    33.28,
-    25.6
+    26.88,
+    17.92
   ],
   "fpsRange": [
     20,
     60
   ],
   "playerpos": [
-    3.3,
-    4.28
+    2.04,
+    8.6
   ],
   "exitpos": [
-    4.5,
-    20.47
+    24.64,
+    8.99
   ],
   "background": {
     "texture": "floor-tile"
@@ -22,112 +22,103 @@
   "enemies": [
     {
       "enemypos": [
-        13.94,
-        8.4
+        17.68,
+        14.6
       ],
       "enemytype": "typeA",
       "subtype": "pathing",
       "pathCoors": [
         [
-          16.34,
-          8.44
+          9.24,
+          14.64
         ],
         [
-          16.36,
-          16.46
+          9.26,
+          2.8
         ],
         [
-          2.94,
-          16.46
-        ],
-        [
-          2.9,
-          12.88
-        ],
-        [
-          11.18,
-          12.82
-        ],
-        [
-          11.24,
-          8.36
+          17.72,
+          2.76
         ]
       ]
     },
     {
       "enemypos": [
-        28.66,
-        5.7
-      ],
-      "enemytype": "typeA"
-    },
-    {
-      "enemypos": [
-        27.4,
-        19.52
+        9.28,
+        2.86
       ],
       "enemytype": "typeA",
       "subtype": "pathing",
       "pathCoors": [
         [
-          31.1,
-          19.52
+          17.7,
+          2.74
         ],
         [
-          31.1,
-          20.62
+          17.68,
+          14.6
         ],
         [
-          27.36,
-          20.62
+          9.26,
+          14.64
         ]
       ]
     },
     {
       "enemypos": [
-        21.74,
-        23.52
+        17.74,
+        2.78
       ],
       "enemytype": "typeA",
       "subtype": "pathing",
       "pathCoors": [
         [
-          19.56,
-          23.54
+          17.68,
+          14.6
         ],
         [
-          19.48,
-          20.06
+          9.24,
+          14.64
         ],
         [
-          21.72,
-          20.06
+          9.3,
+          2.82
         ]
       ]
     },
     {
       "enemypos": [
-        7.04,
-        19.74
+        9.24,
+        14.66
       ],
       "enemytype": "typeA",
       "subtype": "pathing",
       "pathCoors": [
         [
-          11.04,
-          19.74
+          9.28,
+          2.8
         ],
         [
-          11.06,
-          21.22
+          17.72,
+          2.74
         ],
         [
-          7.04,
-          21.22
+          17.68,
+          14.62
         ]
       ]
     }
   ],
+  "items": [
+    {
+      "itemPos": [
+        10.64,
+        3.3
+      ],
+      "itemType": "flare"
+    }
+  ],
+  "texts": [],
   "lighting": {
     "color": [
       0,
@@ -142,11 +133,11 @@
   "walls": [
     {
       "pos": [
-        21.12,
-        24.96
+        13.44,
+        17.28
       ],
       "size": [
-        21.76,
+        26.88,
         1.28
       ],
       "texture": "wall-side"
@@ -154,136 +145,139 @@
     {
       "pos": [
         0.64,
-        12.8
+        8.96
       ],
       "size": [
         1.28,
-        25.6
+        17.92
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        32.64,
-        12.8
+        26.24,
+        8.96
       ],
       "size": [
         1.28,
-        25.6
+        17.92
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        16.64,
+        13.44,
         0.64
       ],
       "size": [
-        33.28,
+        26.88,
         1.28
       ],
       "texture": "wall-side"
-    },
-    {
-      "pos": [
-        5.76,
-        8.32
-      ],
-      "size": [
-        8.96,
-        1.28
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        9.6,
-        18.56
-      ],
-      "size": [
-        16.64,
-        1.28
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        21.76,
-        14.08
-      ],
-      "size": [
-        7.68,
-        10.24
-      ],
-      "texture": "wall-top"
-    },
-    {
-      "pos": [
-        19.84,
-        8.32
-      ],
-      "size": [
-        3.84,
-        1.28
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        23.68,
-        7.04
-      ],
-      "size": [
-        3.84,
-        3.84
-      ],
-      "texture": "wall-top"
-    },
-    {
-      "pos": [
-        23.68,
-        4.48
-      ],
-      "size": [
-        3.84,
-        1.28
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        8.96,
-        22.4
-      ],
-      "size": [
-        2.56,
-        1.28
-      ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        8.96,
-        24.32
-      ],
-      "size": [
-        2.56,
-        2.56
-      ],
-      "texture": "wall-top"
     },
     {
       "pos": [
         4.48,
-        24.96
+        10.88
       ],
       "size": [
         6.4,
         1.28
       ],
       "texture": "wall-side"
+    },
+    {
+      "pos": [
+        4.48,
+        7.04
+      ],
+      "size": [
+        6.4,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        13.44,
+        8.96
+      ],
+      "size": [
+        5.12,
+        8.96
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        22.4,
+        10.88
+      ],
+      "size": [
+        6.4,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        22.4,
+        7.04
+      ],
+      "size": [
+        6.4,
+        1.28
+      ],
+      "texture": "wall-side"
+    },
+    {
+      "pos": [
+        4.48,
+        14.72
+      ],
+      "size": [
+        6.4,
+        6.4
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        22.4,
+        14.08
+      ],
+      "size": [
+        6.4,
+        6.4
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        4.48,
+        3.84
+      ],
+      "size": [
+        6.4,
+        6.4
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        22.4,
+        3.84
+      ],
+      "size": [
+        6.4,
+        6.4
+      ],
+      "texture": "wall-top"
     }
   ],
+  "startSneakVal": 200,
+  "startFlareCount": 0,
+  "maxFlareCount": 1,
   "graphicSize": [
     800,
     600

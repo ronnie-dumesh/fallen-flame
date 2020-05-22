@@ -1,5 +1,9 @@
 {
-  "name": "level5",
+  "name": "enemySurroundingPlayerUpdated",
+  "maxFlareCount": 0,
+  "startFlareCount": 0,
+  "startSneakVal": 465,
+  "texts": [],
   "physicsSize": [
     26.88,
     20.48
@@ -149,6 +153,7 @@
     }
   ],
   "items": [],
+  "trees": [],
   "lighting": {
     "color": [
       0,
@@ -160,6 +165,7 @@
     "diffuse": true,
     "blur": 1
   },
+  "extras": [],
   "walls": [
     {
       "pos": [
@@ -206,7 +212,6 @@
       "texture": "wall-side"
     }
   ],
-  "startSneakVal": 465,
   "graphicSize": [
     800,
     600

@@ -1,13 +1,60 @@
 {
   "name": "ghost-tutorial",
-  "maxFlareCount": 0,
-  "startFlareCount": 0,
-  "startSneakVal": 36,
+  "physicsSize": [
+    20.48,
+    8.96
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    2,
+    4.1
+  ],
+  "exitpos": [
+    18.34,
+    4.57
+  ],
+  "background": {
+    "texture": "floor-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        8.16,
+        2.18
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        8.08,
+        5.58
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        9.86,
+        5.58
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        9.84,
+        2.18
+      ],
+      "enemytype": "typeA"
+    }
+  ],
+  "items": [],
   "texts": [
     {
       "pos": [
-        16.5,
-        4.76
+        14.66,
+        4.84
       ],
       "size": [
         11.64,
@@ -17,68 +64,16 @@
     },
     {
       "pos": [
-        5.58,
-        4.8
+        4.73,
+        4.98
       ],
       "size": [
-        9.56,
+        7.86,
         5
       ],
       "text": "Be careful! If you use too much sneak/sprint (indicated by the top left bar) a ghost will start chasing you! Try to sneak past the enemies in front of you."
     }
   ],
-  "physicsSize": [
-    25.6,
-    10.24
-  ],
-  "fpsRange": [
-    20,
-    60
-  ],
-  "playerpos": [
-    2.48,
-    5.06
-  ],
-  "bgm": "the-doll-thrown-away-in-rain",
-  "exitpos": [
-    22.86,
-    5.37
-  ],
-  "background": {
-    "texture": "floor-tile"
-  },
-  "enemies": [
-    {
-      "enemypos": [
-        7.7,
-        2.02
-      ],
-      "enemytype": "typeA"
-    },
-    {
-      "enemypos": [
-        7.38,
-        6.58
-      ],
-      "enemytype": "typeA"
-    },
-    {
-      "enemypos": [
-        9.38,
-        6.66
-      ],
-      "enemytype": "typeA"
-    },
-    {
-      "enemypos": [
-        9.42,
-        2
-      ],
-      "enemytype": "typeA"
-    }
-  ],
-  "items": [],
-  "trees": [],
   "lighting": {
     "color": [
       0,
@@ -90,15 +85,14 @@
     "diffuse": true,
     "blur": 1
   },
-  "extras": [],
   "walls": [
     {
       "pos": [
-        12.8,
-        9.6
+        10.24,
+        8.32
       ],
       "size": [
-        25.6,
+        20.48,
         1.28
       ],
       "texture": "wall-side"
@@ -106,17 +100,6 @@
     {
       "pos": [
         0.64,
-        5.12
-      ],
-      "size": [
-        1.28,
-        10.24
-      ],
-      "texture": "wall-top"
-    },
-    {
-      "pos": [
-        24.96,
         4.48
       ],
       "size": [
@@ -127,11 +110,22 @@
     },
     {
       "pos": [
-        12.8,
+        19.84,
+        4.48
+      ],
+      "size": [
+        1.28,
+        8.96
+      ],
+      "texture": "wall-top"
+    },
+    {
+      "pos": [
+        10.24,
         0.64
       ],
       "size": [
-        25.6,
+        20.48,
         1.28
       ],
       "texture": "wall-side"
@@ -139,18 +133,7 @@
     {
       "pos": [
         3.84,
-        8.96
-      ],
-      "size": [
-        5.12,
-        2.56
-      ],
-      "texture": "wall-top"
-    },
-    {
-      "pos": [
-        3.2,
-        2.56
+        7.04
       ],
       "size": [
         6.4,
@@ -160,49 +143,41 @@
     },
     {
       "pos": [
-        17.92,
-        8.96
+        3.84,
+        2.56
       ],
       "size": [
-        15.36,
+        6.4,
         2.56
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        17.92,
-        2.56
+        15.36,
+        7.04
       ],
       "size": [
-        15.36,
+        8.96,
         3.84
       ],
       "texture": "wall-top"
     },
     {
       "pos": [
-        3.84,
-        7.04
+        15.36,
+        2.56
       ],
       "size": [
-        5.12,
-        1.28
+        8.96,
+        2.56
       ],
-      "texture": "wall-side"
-    },
-    {
-      "pos": [
-        17.28,
-        7.04
-      ],
-      "size": [
-        14.08,
-        1.28
-      ],
-      "texture": "wall-side"
+      "texture": "wall-top"
     }
   ],
+  "startFlareCount": 0,
+  "maxFlareCount": 0,
+  "startSneakVal": 36,
   "graphicSize": [
     800,
     600

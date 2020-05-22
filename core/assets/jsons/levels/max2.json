@@ -1,0 +1,597 @@
+{
+  "name": "max2",
+  "physicsSize": [
+    24.32,
+    32
+  ],
+  "fpsRange": [
+    20,
+    60
+  ],
+  "playerpos": [
+    2.56,
+    4
+  ],
+  "exitpos": [
+    3.68,
+    28.83
+  ],
+  "background": {
+    "texture": "volcano-tile"
+  },
+  "enemies": [
+    {
+      "enemypos": [
+        2.62,
+        9.26
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          6.62,
+          9.26
+        ],
+        [
+          6.78,
+          18.84
+        ],
+        [
+          2.66,
+          18.86
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        18.08,
+        15.22
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        3.42,
+        24.34
+      ],
+      "enemytype": "typeB"
+    },
+    {
+      "enemypos": [
+        15.62,
+        24.02
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        17.98,
+        2.5
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          22,
+          2.4
+        ],
+        [
+          21.88,
+          12.22
+        ],
+        [
+          18.06,
+          12.16
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        5.36,
+        10.56
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          3.68,
+          10.52
+        ],
+        [
+          3.58,
+          18
+        ],
+        [
+          5.52,
+          17.88
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        18.02,
+        20.22
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          22.02,
+          20.22
+        ],
+        [
+          22,
+          29.76
+        ],
+        [
+          18.02,
+          29.82
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        17.96,
+        5.62
+      ],
+      "enemytype": "typeA",
+      "subtype": "pathing",
+      "pathCoors": [
+        [
+          21.96,
+          5.62
+        ],
+        [
+          21.92,
+          8.38
+        ],
+        [
+          18.02,
+          8.42
+        ]
+      ]
+    },
+    {
+      "enemypos": [
+        14.84,
+        28.62
+      ],
+      "enemytype": "typeA"
+    },
+    {
+      "enemypos": [
+        10.02,
+        28.52
+      ],
+      "enemytype": "typeA"
+    }
+  ],
+  "items": [
+    {
+      "itemPos": [
+        22.04,
+        15.62
+      ],
+      "itemType": "flare"
+    }
+  ],
+  "extras": [
+    {
+      "extraPos": [
+        5.76,
+        28.8
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        14.72,
+        26.24
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        4.48,
+        7.68
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        19.84,
+        2.56
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        19.84,
+        5.76
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        21.76,
+        1.92
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        3.84,
+        13.44
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        5.12,
+        10.88
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        19.2,
+        18.56
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        3.2,
+        23.04
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        5.12,
+        23.04
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        3.2,
+        21.76
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        20.48,
+        28.16
+      ],
+      "extraType": "v-square"
+    },
+    {
+      "extraPos": [
+        19.2,
+        21.76
+      ],
+      "extraType": "v-square"
+    },
+    {
+      "extraPos": [
+        5.76,
+        26.24
+      ],
+      "extraType": "v-horizontal"
+    },
+    {
+      "extraPos": [
+        5.12,
+        14.08
+      ],
+      "extraType": "v-vertical"
+    },
+    {
+      "extraPos": [
+        3.2,
+        14.72
+      ],
+      "extraType": "v-square"
+    },
+    {
+      "extraPos": [
+        16,
+        2.56
+      ],
+      "extraType": "v-square"
+    },
+    {
+      "extraPos": [
+        17.28,
+        4.48
+      ],
+      "extraType": "v-horizontal"
+    },
+    {
+      "extraPos": [
+        16.64,
+        14.72
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        20.48,
+        11.52
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        9.6,
+        8.96
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        10.5,
+        14.38
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        4.48,
+        2.56
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        3.08,
+        2.91
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        20.48,
+        30.08
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        21.76,
+        29.44
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        22.4,
+        28.16
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        18.56,
+        23.68
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        3.26,
+        1.86
+      ],
+      "extraType": "v-square"
+    },
+    {
+      "extraPos": [
+        21.76,
+        10.88
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        22.4,
+        9.6
+      ],
+      "extraType": "v-patch"
+    },
+    {
+      "extraPos": [
+        20.48,
+        18.56
+      ],
+      "extraType": "v-patch"
+    }
+  ],
+  "texts": [],
+  "trees": [],
+  "lighting": {
+    "color": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gamma": true,
+    "diffuse": true,
+    "blur": 1
+  },
+  "walls": [
+    {
+      "pos": [
+        12.16,
+        31.36
+      ],
+      "size": [
+        24.32,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        0.64,
+        16
+      ],
+      "size": [
+        1.28,
+        32
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        23.68,
+        16
+      ],
+      "size": [
+        1.28,
+        32
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        12.16,
+        0.64
+      ],
+      "size": [
+        24.32,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        4.48,
+        7.68
+      ],
+      "size": [
+        6.4,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        12.16,
+        5.76
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        12.16,
+        12.16
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        12.16,
+        2.56
+      ],
+      "size": [
+        8.96,
+        2.56
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        12.16,
+        8.32
+      ],
+      "size": [
+        8.96,
+        3.84
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        12.16,
+        14.72
+      ],
+      "size": [
+        8.96,
+        3.84
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        19.84,
+        14.08
+      ],
+      "size": [
+        6.4,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        12.16,
+        18.56
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        12.16,
+        21.12
+      ],
+      "size": [
+        8.96,
+        3.84
+      ],
+      "texture": "volcano-top"
+    },
+    {
+      "pos": [
+        4.48,
+        20.48
+      ],
+      "size": [
+        6.4,
+        1.28
+      ],
+      "texture": "volcano-side"
+    },
+    {
+      "pos": [
+        12.16,
+        26.88
+      ],
+      "size": [
+        8.96,
+        1.28
+      ],
+      "texture": "volcano-side"
+    }
+  ],
+  "startFlareCount": 5,
+  "maxFlareCount": 6,
+  "graphicSize": [
+    800,
+    600
+  ]
+}

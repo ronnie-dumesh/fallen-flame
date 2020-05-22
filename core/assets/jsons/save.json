@@ -49,80 +49,129 @@
     "path": "levels/shooter-tutorial.json"
   },
   {
-    "name": "level 5",
+    "name": "Cave level 8",
     "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/easyLevel.json"
   },
   {
-    "name": "level 6",
+    "name": "Cave level 9",
     "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/mediumLevel.json"
   },
   {
-    "name": "level 7",
+    "name": "Cave level 10",
     "world":      0,
     "unlocked":   true,
     "completed":  true,
     "path": "levels/hardLevel.json"
   },
   {
-    "name": "level 8",
+    "name": "Cave level 11",
     "world":      0,
     "unlocked":   true,
     "completed":  true,
-    "path": "levels/enemySurroundingPlayer.json"
+    "path": "levels/enemySurroundingPlayerUpdated.json"
   },
   {
-    "name": "level 9",
+    "name": "Cave level 12",
     "world":      0,
     "unlocked":   true,
     "completed":  true,
-    "path": "levels/forceSneak.json"
+    "path": "levels/forceSneakUpdated.json"
   },
   {
-    "name": "level 10",
+    "name": "Cave level 13",
     "world":      0,
     "unlocked":   true,
     "completed":  true,
-    "path": "levels/shooterAndPatrol.json"
+    "path": "levels/Jalil-11.json"
   },
   {
-    "name":       "level 11",
+    "name":       "Cave level 14",
     "world":      0,
     "unlocked":   true,
     "completed":  true,
-    "path":       "levels/maxLevel.json"
+    "path":       "levels/medium.json"
   },
   {
-    "name": "level 12",
+    "name": "Cave level 15",
     "world":      0,
     "unlocked":   true,
     "completed":  true,
-    "path": "levels/onlypatrol.json"
+    "path": "levels/Jalil-12.json"
   },
   {
-    "name": "level 13",
+    "name": "Cave level 16",
+    "world":      0,
+    "unlocked":   true,
+    "completed":  true,
+    "path": "levels/Jalil-14.json"
+  },
+  {
+    "name": "Fores level 1",
     "world":      1,
     "unlocked":   true,
-    "completed":  true,
-    "path": "levels/ronnie-level.json"
-  },
-  {
-    "name": "level 14",
-    "world":      2,
-    "unlocked":   false,
     "completed":  true,
     "path": "levels/bryansfirstlevel.json"
   },
   {
-    "name": "level 16",
-    "world":      2,
-    "unlocked":   false,
+    "name": "Forest level 2",
+    "world":      1,
+    "unlocked":   true,
     "completed":  true,
-    "path": "levels/medium.json"
+    "path": "levels/onlypatrolUpdated.json"
+  },
+  {
+    "name": "Forest level 3",
+    "world":      1,
+    "unlocked":   true,
+    "completed":  true,
+    "path": "levels/lauraforest.json"
+  },
+  {
+    "name": "Forest level 4",
+    "world":      1,
+    "unlocked":   true,
+    "completed":  true,
+    "path": "levels/Jalil-15.json"
+  },
+  {
+    "name": "Forest level 5",
+    "world":      1,
+    "unlocked":   true,
+    "completed":  true,
+    "path": "levels/bryanleveltwo.json"
+  },
+  {
+    "name": "Volcano level 1",
+    "world":      2,
+    "unlocked":   true,
+    "completed":  true,
+    "path": "levels/maxLevelUpdated.json"
+  },
+  {
+    "name": "Volcano level 2",
+    "world":      2,
+    "unlocked":   true,
+    "completed":  true,
+    "path": "levels/max2.json"
+  },
+  {
+    "name": "Volcano level 3",
+    "world":      2,
+    "unlocked":   true,
+    "completed":  true,
+    "path": "levels/ronnie-levelUpdated.json"
+  },
+  {
+    "name": "Volcano level 4",
+    "world":      2,
+    "unlocked":   true,
+    "completed":  true,
+    "path": "levels/max3.json"
   }
 ]
