@@ -169,19 +169,8 @@ public class GameEngine implements Screen, InputProcessor {
 
         jsonReader = new JsonReader();
         assetJson = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
-        if(Gdx.files.external("savedata/save.json").exists()){
-            saveJson = jsonReader.parse(Gdx.files.external("savedata/save.json"));
-            levelSaves = json.readValue(LevelSave[].class, saveJson);
-        }
-        else {
-            // If local save file doesn't exist (like when jar is first opened), create it from internal template
-            saveJson = jsonReader.parse(Gdx.files.internal("jsons/save.json"));
-            FileHandle file = Gdx.files.external(SAVE_PATH);
-            JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
-            settings.outputType = JsonWriter.OutputType.json;
-            levelSaves = json.readValue(LevelSave[].class, saveJson);
-            file.writeString(json.prettyPrint(levelSaves, settings), false);
-        }
+        saveJson = jsonReader.parse(Gdx.files.internal("jsons/save.json"));
+        levelSaves = json.readValue(LevelSave[].class, saveJson);
         // Read save data from local save JSON file
         globalJson = jsonReader.parse(Gdx.files.internal("jsons/global.json"));
         fogTemplate = new ParticleEffect();
@@ -466,16 +455,6 @@ public class GameEngine implements Screen, InputProcessor {
         isFailed = level.getLevelState() == LevelController.LevelState.LOSS || prevFailed;
         // If new win, mark level complete in save json and ensure next level is unlocked
         if(isSuccess && !prevSuccess) {
-            // Update save data
-            levelSaves[lastLevelPlayed].completed = true;
-            if(lastLevelPlayed + 1 < levelSaves.length){
-                levelSaves[lastLevelPlayed + 1].unlocked = true;
-            }
-            // Write save data to local save JSON file
-            JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
-            settings.outputType = JsonWriter.OutputType.json;
-            FileHandle file = Gdx.files.external(SAVE_PATH);
-            file.writeString(json.prettyPrint(levelSaves, settings), false);
             // Update level select
             levelSelect.resetNumberUnlocked();
         }
