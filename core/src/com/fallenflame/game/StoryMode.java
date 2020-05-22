@@ -29,7 +29,15 @@ public class StoryMode implements Screen, InputProcessor {
     private static final String INTRO_4 = "textures/intro_page4.png";
     private static final String TREES_1 = "textures/trees_page1.png";
     private static final String VOLCANO_1 = "textures/volcano_page1.png";
-    private static final int LOCATION_RATIO = 10;
+    private static final String PROGRESS_1 = "textures/progress-1.png";
+    private static final String PROGRESS_2 = "textures/progress-2.png";
+    private static final String PROGRESS_3 = "textures/progress-3.png";
+    private static final String PROGRESS_4 = "textures/progress-4.png";
+    private static final Texture P_1 = new Texture(PROGRESS_1);
+    private static final Texture P_2 = new Texture(PROGRESS_2);
+    private static final Texture P_3 = new Texture(PROGRESS_3);
+    private static final Texture P_4 = new Texture(PROGRESS_4);
+    private static final Texture[] progress_textures= {P_1, P_2, P_3, P_4};
 
     /**
      * Display font
@@ -93,14 +101,12 @@ public class StoryMode implements Screen, InputProcessor {
     public StoryMode(GameCanvas canvas) {
         this.canvas = canvas;
         pressState = 0;
-        hoverState = new int[2];
-        hoverState[0] = 0;
-        hoverState[1] = 0;
+        hoverState = new int[3];
         storyTextures = new HashMap<>();
         nextPrev = new Vector2[nextPrevRel.length];
         nextPrev[0] = new Vector2(0,0);
         nextPrev[1] = new Vector2(0,0);
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < hoverState.length; i++) {
             hoverState[i] = 0;
         }
         storySelected = 0;
@@ -125,6 +131,9 @@ public class StoryMode implements Screen, InputProcessor {
         canvas.draw(background, 0, 0);
         displayFont.setColor(Color.BLACK);
         displayFont.getData().setScale(.5f);
+        if(storyTextures.get(storySelected).hasSkip){
+            canvas.draw(progress_textures[page], canvas.getWidth()/2, canvas.getHeight()/9);
+        }
         canvas.draw(pageNext, hoverState[1] == 1 ? Color.CYAN : Color.WHITE, pageNext.getWidth() / 2, pageNext.getHeight() / 2,
                 nextPrev[1].x, nextPrev[1].y, 0, 1, 1);
         if(page != 0){
