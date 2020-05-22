@@ -11,8 +11,6 @@ public class DesktopLauncher {
 		config.height = 720;
 		config.title = "Fallen Flame";
 		config.resizable = false;
-//		config.foregroundFPS = 60;
-//		config.backgroundFPS = 60;
 		new LwjglApplication(new GDXRoot(), config);
 	}
 }
