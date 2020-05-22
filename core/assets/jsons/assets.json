@@ -392,6 +392,12 @@
 		},
 		"the-doll-thrown-away-in-rain": {
 			"file": "sounds/new-sounds/the-doll-thrown-away-in-rain.mp3"
+		},
+		"hazy-moon": {
+			"file": "sounds/new-sounds/hazy-moon.mp3"
+		},
+		"ruins": {
+			"file": "sounds/new-sounds/ruins.mp3"
 		}
 	}
 }
