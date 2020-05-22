@@ -61,6 +61,12 @@ public class PlayerModel extends CharacterModel {
     private FilmStrip fireBuddyThrow;
     private FilmStrip fireBuddyWin;
 
+    /** Number of frames until fire buddy animates the next frame*/
+    private float fireBuddyCool;
+
+    /** Max number of frames until fire buddy animates the next frame */
+    private float fireBuddyCoolLimit;
+
     /** Offset of firebuddy texture from center of player in meters */
     protected Vector2 fireBuddyTextureOffset;
 
@@ -118,6 +124,9 @@ public class PlayerModel extends CharacterModel {
         deathDelay = globalJson.get("deathdelay").asInt();
 
         winDelay = globalJson.get("windelay").asInt();
+
+        fireBuddyCoolLimit =  globalJson.get("firebuddylimit").asFloat();
+        fireBuddyCool = fireBuddyCoolLimit;
     }
 
     @Override
@@ -450,6 +459,7 @@ public class PlayerModel extends CharacterModel {
      */
     @Override
     public void update(float dt) {
+        float walkCoolDec = dt * 60;
         //getAngle has up as 0 radians, down as pi radians, pi/2 is left, -pi/2 is right.
         double angle = getAngle();
         if(angle < 0) angle = angle + 2 * Math.PI;
@@ -465,42 +475,39 @@ public class PlayerModel extends CharacterModel {
             setTexture(filmstrip, textureOffset.x, textureOffset.y);
 
             int frame = filmstrip.getFrame();
-            if (walkCool == 0 && frame < filmstrip.getSize() - 1) {
+            if (walkCool <= 0 && frame < filmstrip.getSize() - 1) {
                 walkCool = walkLimit;
                 filmstrip.setFrame(frame + 1);
-            } else if (walkCool > 0) {
-                walkCool--;
+            } else if (walkCool > 0f) {
+                walkCool -= walkCoolDec;
             } else if (deathDelay <= 0){
                 life = LifeState.DEAD;
             } else if (frame == filmstrip.getSize() - 1) {
-                deathDelay--;
-            }
-        } else if (isWinning()) {
-            if (walkCool <= 0){
-                walkCool = walkLimit;
-            } else if (walkCool > 0) {
-                walkCool = walkCool - 2;
+                deathDelay -= walkCoolDec;
             }
         } else if (isAlive()) super.update(dt);
 
-        if (isAlive() || isWinning())  animateFireBuddy(angle100);
+        if (isAlive() || isWinning())  animateFireBuddy(angle100, dt);
     }
 
     /**
      * A helper method for drawing the fire buddy
      * @param angle100 the angle which the player is facing rounded down to the nearest int
+     * @param dt Number of seconds since last animation frame
      */
-    protected void animateFireBuddy(int angle100){
+    protected void animateFireBuddy(int angle100, float dt){
+        float fireCoolDec = dt * 60;
+
         if(isWinning()){
             fireBuddyFilmstrip = fireBuddyWin;
 
             int frame = fireBuddyFilmstrip.getFrame();
-            if(walkCool == 0 && frame < fireBuddyFilmstrip.getSize() - 1) {
+            if(fireBuddyCool <= 0 && frame < fireBuddyFilmstrip.getSize() - 1) {
                 fireBuddyFilmstrip.setFrame(frame + 1);
             } else if (winDelay <= 0){
                 life = LifeState.WON;
             } else if (frame == fireBuddyFilmstrip.getSize() - 1){
-                winDelay--;
+                winDelay -= fireCoolDec;
             }
         }
 
@@ -515,27 +522,26 @@ public class PlayerModel extends CharacterModel {
                 fireBuddyFilmstrip = fireBuddyRight;
             }
 
-            // Animate if necessary
-            // Do not change values of walkCool and animate, to be done in PlayerModel.update();
-            if (animate && walkCool == 0 && fireBuddyFilmstrip != null) {
+            if (fireBuddyCool <= 0 && fireBuddyFilmstrip != null) {
                 int next = (fireBuddyFilmstrip.getFrame() + 1) % fireBuddyFilmstrip.getSize();
                 fireBuddyFilmstrip.setFrame(next);
-            } else if (!animate && fireBuddyFilmstrip != null) {
-                fireBuddyFilmstrip.setFrame(startFrame);
             }
         } else {
             fireBuddyFilmstrip = fireBuddyThrow;
 
-            // Do not change values of walkCool and animate, to be done in PlayerModel.update();
             int frame = fireBuddyFilmstrip.getFrame();
-            if (walkCool == 0 && frame < fireBuddyFilmstrip.getSize() - 1) {
-                walkCool = walkLimit;
+            if (fireBuddyCool <= 0 && frame < fireBuddyFilmstrip.getSize() - 1) {
                 fireBuddyFilmstrip.setFrame(frame + 1);
             } else if (frame == fireBuddyFilmstrip.getSize() - 1){
                 throwing = false;
                 fireBuddyFilmstrip.setFrame(0);
             }
         }
+
+        if(fireBuddyCool > 0 && isWinning()) fireBuddyCool -= 2 * fireCoolDec;
+        else if (fireBuddyCool > 0) fireBuddyCool -= fireCoolDec;
+        else fireBuddyCool = fireBuddyCoolLimit;
+
     }
 
     public void draw(GameCanvas canvas) {
