@@ -331,10 +331,10 @@ public abstract class CharacterModel extends WheelObstacle implements ILight {
         if(angle < 0) angle = angle + 2 * Math.PI;
         int angle100 = (int) (angle * 100);
 
-        if(angle100 == 0){
+        if(angle100 == 0 || angle100 == 628){
             filmstrip = filmstripWalkUp;
         } else if (angle100 > 0 && angle100 < 314){
-            filmstrip =filmstripWalkLeft;
+            filmstrip = filmstripWalkLeft;
         } else if (angle100 == 314){
             filmstrip = filmstripWalkDown;
         } else {
