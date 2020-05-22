@@ -226,12 +226,32 @@
 			"file": "textures/double-wall-top-view.png",
 			"wrap": true
 		},
+		"wall-side-volcano": {
+			"file": "textures/wall-side-view-volcano.png",
+			"wrap": true
+		},
+		"wall-top-volcano": {
+			"file": "textures/wall-top-view-volcano.png",
+			"wrap": true
+		},
 		"floor-tile": {
 			"file": "textures/floor-tile.png",
 			"wrap": true
 		},
+		"forest-tile": {
+			"file": "textures/floor-tile-forest.png",
+			"wrap": true
+		},
+		"volcano-tile": {
+			"file": "textures/floor-tile-volcano.png",
+			"wrap": true
+		},
 		"flare": {
 			"file": "textures/flare.png",
+			"wrap": false
+		},
+		"tree": {
+			"file": "textures/trees.png",
 			"wrap": false
 		},
 		"activeflarecounter": {

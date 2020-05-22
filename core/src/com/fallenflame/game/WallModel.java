@@ -1,11 +1,9 @@
 package com.fallenflame.game;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.fallenflame.game.physics.obstacle.BoxObstacle;
 import com.fallenflame.game.util.JsonAssetManager;
@@ -13,7 +11,7 @@ import com.fallenflame.game.util.JsonAssetManager;
 /**
  * A rectangle shape representing a wall.
  */
-public class WallModel extends BoxObstacle {
+public class WallModel extends BoxObstacle implements IWallLike {
     /** Texture information. */
     protected PolygonRegion region;
 

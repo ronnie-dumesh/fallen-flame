@@ -19,6 +19,8 @@ public class LevelModel {
         public boolean visited = false;
         /** Has wall? */
         public boolean wall = false;
+        /** Has tree? */
+        public boolean tree = false;
         /** Has enemy? */
         public boolean enemy = false;
         /** Has player? */
@@ -33,7 +35,7 @@ public class LevelModel {
     }
 
     private enum TileOccupiedBy {
-        WALL, ENEMY, PLAYER
+        WALL, ENEMY, PLAYER, TREE
     }
 
 
@@ -49,7 +51,7 @@ public class LevelModel {
 
     public LevelModel(){ }
 
-    public void initialize(Rectangle bounds, List<WallModel> walls, List<EnemyModel> enemies, float tileSize) {
+    public void initialize(Rectangle bounds, List<WallModel> walls, List<TreeModel> trees, List<EnemyModel> enemies, float tileSize) {
         width = bounds.getWidth();
         height = bounds.getHeight();
         this.tileSize = tileSize;
@@ -64,6 +66,10 @@ public class LevelModel {
         // TODO: place enemies?
         for(WallModel w : walls) {
             setBoxObstacleInGrid(w, true, TileOccupiedBy.WALL);
+        }
+
+        for(TreeModel t : trees) {
+            setBoxObstacleInGrid(t, true, TileOccupiedBy.TREE);
         }
     }
 
@@ -110,6 +116,9 @@ public class LevelModel {
         switch (o) {
             case WALL:
                 tileGrid[x][y].wall = b;
+                break;
+            case TREE:
+                tileGrid[x][y].tree = b;
                 break;
             case ENEMY:
                 tileGrid[x][y].enemy = b;
@@ -210,11 +219,14 @@ public class LevelModel {
      * @return isSafe boolean
      */
     public boolean isSafe(int x, int y) {
-        return inBounds(x,y) && (!(tileGrid[x][y].wall) ||tileGrid[x][y].goal);
+        return inBounds(x,y) && (!(tileGrid[x][y].wall || tileGrid[x][y].tree) ||tileGrid[x][y].goal);
     } //TODO: temporary change
 
     /** Whether wall is on a tile. */
     public boolean hasWall(int x, int y) { return tileGrid[x][y].wall; }
+
+    /** Whether tree is on a tile. */
+    public boolean hasTree(int x, int y) { return tileGrid[x][y].tree; }
 
     /** Whether player is on a tile. */
     public boolean hasPlayer(int x, int y) { return tileGrid[x][y].player; }
