@@ -1,13 +1,13 @@
 {
-  "name": "t2",
+  "name": "t4",
   "texts": [
     {
       "pos": [
-        6.3,
-        11
+        5.1,
+        11.2
       ],
       "size": [
-        6.36,
+        8.68,
         7.88
       ],
       "text": "Aim with the mouse and click to throw a flare"
@@ -33,17 +33,6 @@
         7.72
       ],
       "text": "Your remaining flare count is on the right side of the screen"
-    },
-    {
-      "pos": [
-        19.26,
-        10.98
-      ],
-      "size": [
-        2.36,
-        7.48
-      ],
-      "text": "Walk to the exit"
     }
   ],
   "physicsSize": [
@@ -59,8 +48,8 @@
     11.28
   ],
   "exitpos": [
-    20.86,
-    11.37
+    19,
+    11.53
   ],
   "background": {
     "texture": "floor-tile"
@@ -75,6 +64,7 @@
     }
   ],
   "items": [],
+  "trees": [],
   "lighting": {
     "color": [
       0,
@@ -86,6 +76,7 @@
     "diffuse": true,
     "blur": 1
   },
+  "extras": [],
   "walls": [
     {
       "pos": [
@@ -134,11 +125,11 @@
     {
       "pos": [
         11.52,
-        18.56
+        17.92
       ],
       "size": [
         20.48,
-        5.12
+        7.68
       ],
       "texture": "wall-top"
     },
@@ -156,7 +147,7 @@
     {
       "pos": [
         11.52,
-        15.36
+        13.44
       ],
       "size": [
         20.48,
@@ -167,11 +158,11 @@
     {
       "pos": [
         11.52,
-        7.04
+        8.32
       ],
       "size": [
         20.48,
-        1.28
+        3.84
       ],
       "texture": "wall-top"
     }
