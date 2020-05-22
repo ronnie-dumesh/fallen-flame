@@ -1,7 +1,7 @@
 {
   "name": "bryansfirstlevel",
-  "maxFlareCount": 3,
-  "startFlareCount": 3,
+  "maxFlareCount": 0,
+  "startFlareCount": 0,
   "startSneakVal": 407,
   "texts": [],
   "physicsSize": [
