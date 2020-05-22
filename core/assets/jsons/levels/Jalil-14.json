@@ -16,13 +16,12 @@
     2.04,
     8.6
   ],
-  "bgm": "the-doll-thrown-away-in-rain",
   "exitpos": [
     24.64,
     8.99
   ],
   "background": {
-    "texture": "floor-tile"
+    "texture": "volcano-tile"
   },
   "enemies": [
     {
@@ -146,7 +145,7 @@
         26.88,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -157,7 +156,7 @@
         1.28,
         17.92
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -168,7 +167,7 @@
         1.28,
         17.92
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -179,7 +178,7 @@
         26.88,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -190,7 +189,7 @@
         6.4,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -201,7 +200,7 @@
         6.4,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -212,7 +211,7 @@
         5.12,
         8.96
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -223,7 +222,7 @@
         6.4,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -234,7 +233,7 @@
         6.4,
         1.28
       ],
-      "texture": "wall-side"
+      "texture": "volcano-side"
     },
     {
       "pos": [
@@ -245,7 +244,7 @@
         6.4,
         6.4
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -256,7 +255,7 @@
         6.4,
         6.4
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -267,7 +266,7 @@
         6.4,
         6.4
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     },
     {
       "pos": [
@@ -278,11 +277,12 @@
         6.4,
         6.4
       ],
-      "texture": "wall-top"
+      "texture": "volcano-top"
     }
   ],
   "graphicSize": [
     800,
     600
-  ]
+  ],
+  "bgm": "ruins"
 }

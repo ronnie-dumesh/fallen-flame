@@ -914,5 +914,6 @@
   "graphicSize": [
     800,
     600
-  ]
+  ],
+  "bgm": "hazy-moon"
 }
