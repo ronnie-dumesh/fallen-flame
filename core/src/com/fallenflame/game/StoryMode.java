@@ -33,6 +33,7 @@ public class StoryMode implements Screen, InputProcessor {
     private static final String PROGRESS_2 = "textures/progress-2.png";
     private static final String PROGRESS_3 = "textures/progress-3.png";
     private static final String PROGRESS_4 = "textures/progress-4.png";
+    private static final String WIN_1 = "textures/end_page1.png";
     private static final Texture P_1 = new Texture(PROGRESS_1);
     private static final Texture P_2 = new Texture(PROGRESS_2);
     private static final Texture P_3 = new Texture(PROGRESS_3);
@@ -114,6 +115,7 @@ public class StoryMode implements Screen, InputProcessor {
         storyTextures.put(0, new Story(new Texture[]{new Texture(INTRO_1), new Texture(INTRO_2), new Texture(INTRO_3), new Texture(INTRO_4)}, true));
         storyTextures.put(1, new Story(new Texture[]{new Texture(TREES_1)}, false));
         storyTextures.put(2, new Story(new Texture[]{new Texture(VOLCANO_1)}, false));
+        storyTextures.put(3, new Story(new Texture[]{new Texture(WIN_1)}, false));
 
     }
 
