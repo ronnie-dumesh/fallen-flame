@@ -20,10 +20,11 @@ public class FogController {
     private int tileGridW;
     private int tileGridH;
     private final int NUM_FOG_ENEMIES = 12;
-    private final int NUM_FOG_SHOOTER = 3;
+    private final int NUM_FOG_SHOOTER = 4;
     private float tileSize;
     private final int NUM_FOG_NORMAL = 1;
     private final float NUM_FOG_AROUND_ENEMIES = 11.0f;
+    private final float NUM_FOG_AROUND_SHOOTERS = 13.0f;
     private static Logger log = Logger.getLogger("FogController");
 
     private final int[] DIRECTIONS = {1, -1};
@@ -148,8 +149,8 @@ public class FogController {
                                 for (int i = 0; i < ((levelModel.hasEnemy(x, y) ? levelModel.hasLessFog(x, y) ? NUM_FOG_SHOOTER : NUM_FOG_ENEMIES : NUM_FOG_NORMAL)); i++) {
                                     ParticleEffectPool.PooledEffect effect = fogPool.obtain();
                                     effect.reset();
-                                    float incX = levelModel.hasEnemy(x, y) ? (float) ((Math.random() - 0.5) * NUM_FOG_AROUND_ENEMIES) : 0;
-                                    float incY = levelModel.hasEnemy(x, y) ? (float) ((Math.random() - 0.5) * NUM_FOG_AROUND_ENEMIES) : 0;
+                                    float incX = levelModel.hasEnemy(x, y) ? (float) ((Math.random() - 0.5) * (levelModel.hasLessFog(x, y) ? NUM_FOG_AROUND_SHOOTERS : NUM_FOG_AROUND_ENEMIES)) : 0;
+                                    float incY = levelModel.hasEnemy(x, y) ? (float) ((Math.random() - 0.5) * (levelModel.hasLessFog(x, y) ? NUM_FOG_AROUND_SHOOTERS : NUM_FOG_AROUND_ENEMIES)) : 0;
                                     float randomVal = levelModel.hasEnemy(x, y) ? 6.0f : 1.0f;
                                     float randomX = levelModel.hasEnemy(x, y) ? (float) (((Math.random() - 0.5f)*randomVal))*tileSize : 0;
                                     float randomY = levelModel.hasEnemy(x, y) ? (float) (((Math.random() - 0.5f)*randomVal))*tileSize : 0;
