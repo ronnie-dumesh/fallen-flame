@@ -26,6 +26,7 @@ public class StoryMode implements Screen, InputProcessor {
     private static final String INTRO_1 = "textures/intro_page1.png";
     private static final String INTRO_2 = "textures/intro_page2.png";
     private static final String INTRO_3 = "textures/intro_page3.png";
+    private static final String INTRO_4 = "textures/intro_page4.png";
     private static final String TREES_1 = "textures/trees_page1.png";
     private static final String VOLCANO_1 = "textures/volcano_page1.png";
     private static final int LOCATION_RATIO = 10;
@@ -84,7 +85,7 @@ public class StoryMode implements Screen, InputProcessor {
     /**
      * Position vectors for the next page and prev page buttons
      */
-    private Vector2[] nextPrevRel = {new Vector2(1f / 8f, 1f / 2f), new Vector2(7f / 8f, 1f / 2f)};
+    private Vector2[] nextPrevRel = {new Vector2(1f / 25f, 0.15f), new Vector2(24f / 25f, 0.15f)};
     private Vector2[] nextPrev;
 
 
@@ -104,9 +105,9 @@ public class StoryMode implements Screen, InputProcessor {
         }
         storySelected = 0;
         page = 0;
-        storyTextures.put(0, new Story(new Texture[]{new Texture(INTRO_1), new Texture(INTRO_2), new Texture(INTRO_3)}));
-        storyTextures.put(1, new Story(new Texture[]{new Texture(TREES_1)}));
-        storyTextures.put(2, new Story(new Texture[]{new Texture(VOLCANO_1)}));
+        storyTextures.put(0, new Story(new Texture[]{new Texture(INTRO_1), new Texture(INTRO_2), new Texture(INTRO_3), new Texture(INTRO_4)}, true));
+        storyTextures.put(1, new Story(new Texture[]{new Texture(TREES_1)}, false));
+        storyTextures.put(2, new Story(new Texture[]{new Texture(VOLCANO_1)}, false));
 
     }
 
@@ -296,8 +297,10 @@ public class StoryMode implements Screen, InputProcessor {
 
    protected class Story{
         Texture[] stories;
-        public Story(Texture[] arr){
+        boolean hasSkip;
+        public Story(Texture[] arr, boolean hs){
             stories = arr;
+            hasSkip = hs;
         }
     }
 }
